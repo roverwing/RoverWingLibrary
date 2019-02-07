@@ -1,0 +1,60 @@
+#######################################
+# Syntax Coloring Map For RoverWing
+####################################### 
+# Datatypes
+#######################################
+
+Rover		KEYWORD1
+motor_t 	KEYWORD1
+servo_t 	KEYWORD1
+sonar_t 	KEYWORD1
+motorconfig_t 	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+init                  	KEYWORD2
+getAnalog             	KEYWORD2
+getVoltage            	KEYWORD2
+getAllAnalog          	KEYWORD2
+activateSonars        	KEYWORD2
+stopSonars            	KEYWORD2
+getSonar              	KEYWORD2
+getAllSonar           	KEYWORD2
+setServo              	KEYWORD2
+setAllServo           	KEYWORD2
+setMotorPwr           	KEYWORD2
+setAllMotorPwr        	KEYWORD2
+stopMotors            	KEYWORD2
+configureMotor        	KEYWORD2
+getPosition           	KEYWORD2
+getAllPosition        	KEYWORD2
+getSpeed              	KEYWORD2
+getAllSpeed           	KEYWORD2
+resetEncoder          	KEYWORD2
+resetAllEncoder       	KEYWORD2
+initIMU               	KEYWORD2 
+IMUisActive           	KEYWORD2
+getOrientationQuat    	KEYWORD2
+getAccel              	KEYWORD2
+getGyro               	KEYWORD2
+getYaw                	KEYWORD2
+getPitch              	KEYWORD2
+getRoll               	KEYWORD2
+setPixelBrightness    	KEYWORD2
+setPixelRGB           	KEYWORD2 
+etPixelHSV            	KEYWORD2  
+showPixel             	KEYWORD2
+#######################################
+# Constants
+#######################################
+ROVERWING_ADDRESS   	LITERAL1
+SERVO1          	LITERAL1
+SERVO2          	LITERAL1
+SERVO3          	LITERAL1
+SERVO4          	LITERAL1
+SONAR1          	LITERAL1
+SONAR2          	LITERAL1
+SONAR3          	LITERAL1
+MOTOR1          	LITERAL1
+MOTOR2          	LITERAL1
