@@ -22,16 +22,16 @@ This example code is in the public domain.
 */
 #include <Wire.h>
 #include <RoverWing.h>
-#define MAX_POWER 1.0f
+#define MAX_POWER 100
 
 Rover r; //this is the name of the rover!
 bool blink=false;
 //array to set servo posiitons. Each poisition must be a float between -1.0..1.0
 float servoPos[]={0.0f, 0.0f, 0.0f, 0.0f};
 //motor power
-float power=0.0;
+int power=0; //range  -100..100
 //step to change motor at each loop
-float pwrDelta=0.2;
+int pwrDelta=20;
 
 
 void setup(){
@@ -51,21 +51,24 @@ void setup(){
   Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
   Serial.print("."); Serial.println(r.fwVersionMinor);
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
-  Serial.println("STarting Servos and Motors test");
+  Serial.println("Starting Servos and Motors test");
   //now, initilaize the servos
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
+  //reverse one of the motors
+  r.reverseMotor(MOTOR2);
 }
 void loop(){
 
   power+=pwrDelta;
-  Serial.print("Setting power to "); Serial.println(power);
+  Serial.print("Setting power to "); Serial.print(power);Serial.println("%");
   //check if we reached the limits
   if (abs(power)>=MAX_POWER) pwrDelta =-pwrDelta;
-  //set motor power
-  r.setAllMotorPwr(power,-power);
+  //set motor power,
+  // arguments must be floats between  -1...1
+  r.setAllMotorPwr(0.01f*power,0.01f*power);
   //now, set servo power
   for (int i=0; i<4; i++){
-    servoPos[i]=power;
+    servoPos[i]=0.01f*power;
   }
   r.setAllServo(servoPos);
   //Alternatively, you can also set power of one motor/servo  at a time:
