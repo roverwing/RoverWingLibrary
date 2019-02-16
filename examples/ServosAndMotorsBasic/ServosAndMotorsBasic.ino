@@ -22,16 +22,16 @@ This example code is in the public domain.
 */
 #include <Wire.h>
 #include <RoverWing.h>
-#define MAX_POWER 100
+#define MAX_POWER 1.0f
 
 Rover r; //this is the name of the rover!
 bool blink=false;
 //array to set servo posiitons. Each poisition must be a float between -1.0..1.0
 float servoPos[]={0.0f, 0.0f, 0.0f, 0.0f};
 //motor power
-int power=0; //range  -100..100
+float power=0; //range  -1.0 ... 1.0
 //step to change motor at each loop
-int pwrDelta=20;
+float pwrDelta=0.12;
 
 
 void setup(){
@@ -53,29 +53,37 @@ void setup(){
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
   Serial.println("Starting Servos and Motors test");
   //now, initilaize the servos
+  // set the range of PWM signal duration  accepted by servos, in us
+  // this is optional; if you do no t set it explicitly, default value of 1000-2000
+  // will be used
+  r.setServoRange(SERVO1, 1900,2100); //this is  the range for HiTec servos,
+  r.setServoRange(SERVO2, 1900,2100); //see https://hitecrcd.com/faqs/servos/general-servos
+  r.setServoRange(SERVO3, 1900,2100);
+  r.setServoRange(SERVO4, 1900,2100);
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
   //reverse one of the motors
   r.reverseMotor(MOTOR2);
 }
 void loop(){
-
+  //go to next value for power
   power+=pwrDelta;
-  Serial.print("Setting power to "); Serial.print(power);Serial.println("%");
-  //check if we reached the limits
-  if (abs(power)>=MAX_POWER) pwrDelta =-pwrDelta;
+  Serial.print("Setting power to "); Serial.print((int)(power*100));Serial.println("%");
   //set motor power,
-  // arguments must be floats between  -1...1
-  r.setAllMotorPwr(0.01f*power,0.01f*power);
-  //now, set servo power
+  // arguments must be floats between  -1.0...1.0
+  r.setAllMotorPwr(power, power);
+  //now, set servo power. Again, the range should be between -1.0 and 1.0
   for (int i=0; i<4; i++){
-    servoPos[i]=0.01f*power;
+    servoPos[i]=power;
   }
   r.setAllServo(servoPos);
   //Alternatively, you can also set power of one motor/servo  at a time:
   //r.setMotorPwr(MOTOR1, power);
   //r.setServo(SERVO1, power);
 
-
+  //check if the next step would exceed the range - if so, reverse the sweep direction
+  // fabs is the absolute value function for floats; regular abs doesn't work on floats,
+  // see https://github.com/arduino/reference-en/issues/362
+  if (fabs(power+pwrDelta)>MAX_POWER) pwrDelta =-pwrDelta;
   //do the blink
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;

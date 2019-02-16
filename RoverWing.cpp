@@ -22,6 +22,12 @@ bool Rover::init(){
       for (i=0; i<2; i++){
         motorIsReversed[i] = false;
       }
+      //set up servos
+      for (i=0; i<4; i++){
+        //set servo range 1000...2000 us
+        servoCenterPos[i]=1500;
+        servoHalfRange[i]=500;
+      }
       return true;
    } else {
      //failed to get correct response
@@ -75,8 +81,7 @@ bool Rover::init(){
  //servos
  void Rover::setServo(servo_t s, float pos){
    uint16_t pulseWidth;
-   //FIXME: servo range shoudl be adjustable
-   pulseWidth = 1500 + (uint16_t)(pos*1000.0f);
+   pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
    write16(REGB_SERVO+s, pulseWidth);
  }
  void Rover::setAllServo(float* pos){
@@ -86,6 +91,11 @@ bool Rover::init(){
    }
    write16(REGB_SERVO, 4, pulseWidth);
  }
+ void Rover::setServoRange(servo_t s, int minPulse, int maxPulse){
+   servoCenterPos[s]=(minPulse+maxPulse)/2;
+   servoHalfRange[s]=(maxPulse-minPulse)/2;
+ }
+
 
 //motors
 void Rover::setMotorPwr(motor_t m, float pwr){
@@ -110,7 +120,7 @@ void Rover::setAllMotorPwr(float pwr1, float pwr2){
   if (motorIsReversed[MOTOR1]) pwr1=-pwr1;
   if (motorIsReversed[MOTOR2]) pwr2=-pwr2;
 
-  int16_t power[2]= {(int16_t)(pwr1*500.0f), (int16_t)(pwr1*500.0f)} ;
+  int16_t power[2]= {(int16_t)(pwr1*500.0f), (int16_t)(pwr2*500.0f)} ;
   write16(REGB_MOTOR_POWER,2,(uint16_t *)power );
 }
 void Rover::stopMotors(){

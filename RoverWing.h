@@ -122,6 +122,7 @@ class Rover {
     //servos
     void setServo(servo_t s, float pos); // -1<= pos <=1
     void setAllServo(float* pos);
+    void setServoRange(servo_t s, int minPulse, int maxPulse);
 
     //motors
     void setMotorPwr(motor_t m, float pwr);
@@ -165,6 +166,10 @@ class Rover {
     uint8_t activeSonarsBitmask;
     motorconfig_t motorsConfig[2];
     bool motorIsReversed[2];
+    // records servo cetner posiiton and half range for each servo
+    // full range is [center-halfrange, center+halfrange]
+    uint8_t servoCenterPos[4];
+    uint8_t servoHalfRange[4];
 
 
 
