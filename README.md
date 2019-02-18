@@ -48,3 +48,4 @@ used in [First Tech Challenge](https://www.firstinspires.org/robotics/ftc>)  rob
 The main webpage for RoverWing is https://github.com/roverwing
 
 Detailed user guides are available in `extras` directory of this repository
+<a href="/docs/readme.md">Page 2</a>
