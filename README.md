@@ -49,4 +49,4 @@ The main webpage for RoverWing is https://github.com/roverwing
 
 Detailed user guides are available in `extras` directory of this repository
 
-<a href="/docs/readme.md">test</a>
+<a href="/docs/index.html">test</a>
