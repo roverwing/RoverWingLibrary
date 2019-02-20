@@ -106,7 +106,7 @@ void Rover::setMotorPwr(motor_t m, float pwr){
   if (power>500) power=500;
   else if (power<-500) power=-500;
   if (motorIsReversed[m]) power=-power;
-  write16(REGB_MOTOR_POWER + m, (uint16_t)power );
+  write16(REGB_MOTOR_POWER +2*m, (uint16_t)power );
 }
 void Rover::setAllMotorPwr(float pwr1, float pwr2){
   float m = max (abs(pwr1), abs(pwr2));
@@ -136,23 +136,50 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
   motorsConfig[m].noloadRPM=c.noloadRPM;
   if (c.Kp>0){
     motorsConfig[m].Kp=c.Kp;
-    motorsConfig[m].Ki=c.Ki;
-    motorsConfig[m].Kd=c.Kd;
-    motorsConfig[m].Ilim=c.Ilim;
+    motorsConfig[m].Ti=c.Ti;
+    motorsConfig[m].Td=c.Td;
+    motorsConfig[m].iLim=c.iLim;
   } else {
-    //FIXME --- need to to try and get our own PID coef
+    motorsConfig[m].Ti=1.0;
+    /*//let us try some defaults
+    float maxspeed=c.encoderCPR*c.noloadRPM/60.0f; //maximal speed, encoder ticks/s
+    float Kp=1.4/maxspeed; //thus, error of 0.5 maxspeed makes proportional term be 25% of maximal power
+    Serial.print("Maxspeed: "); Serial.println(maxspeed);
+    Serial.print("Kp: "); Serial.println(Kp,4);
+    motorsConfig[m].Kp=Kp;
+    motorsConfig[m].Ti=1.0; //set Ti=0.5 s
+    motorsConfig[m].Td=0.1; //set Td=0.1 s
+    motorsConfig[m].Ilim=500; //FIXME*/
   }
   //
-  float PIDcoef[4]={motorsConfig[m].Kp, motorsConfig[m].Ki, motorsConfig[m].Kd, motorsConfig[m].Ilim};
+
+  float PIDcoef[4]={motorsConfig[m].Kp,
+                    motorsConfig[m].Kp/motorsConfig[m].Ti, //Ki
+                    motorsConfig[m].Kp*motorsConfig[m].Td, //Kd
+                    motorsConfig[m].iLim};
   if (m==MOTOR1) {
     write32(REGB_MOTOR1_PID, 4, (uint32_t *)PIDcoef);
+    Serial.print("Setting PID coef1: Ilim=");
+    Serial.println(PIDcoef[3],5);
   } else {
     write32(REGB_MOTOR2_PID, 4, (uint32_t *)PIDcoef);
-  }
+    Serial.print("Setting PID coef2: Ilim=");
+    Serial.println(PIDcoef[3],5);  }
 }
 void Rover::reverseMotor(motor_t m){
   motorIsReversed[m]=true;
 }
+void Rover::setMotorSpeed(motor_t m, float s){ //speed in rpm
+  //
+  int32_t speed = (int32_t) (s*motorsConfig[m].encoderCPR/60.0); //convert rpms to encoder ticks/s
+  if (motorIsReversed[m]) speed=-speed;
+  write32(REGB_MOTOR_TARGET + 4*m, speed );
+  //set mode
+  writeByte(REGB_MOTOR_MODE+m,(uint8_t)MOTOR_MODE_SPEEDPID);
+}
+
+
+
 //encoders
 float Rover::getPosition(motor_t m){
   int32_t encoderCount=(int32_t)read32(REGA_ENCODER+4*m);
@@ -185,12 +212,11 @@ void Rover::getAllSpeed(){
 
 }
 void Rover::resetEncoder(motor_t m){
-  position[m]=0;
-  writeByte(REGB_ENC_RESET+m, 0x01);
+  byte reset=0x01<<(uint8_t)m;
+  writeByte(REGB_ENC_RESET, reset);
 }
 void Rover::resetAllEncoder(){
-  uint8_t reset[]={1,1}; //two reset bytes
-  writeByte(REGB_ENC_RESET,2,reset);
+  writeByte(REGB_ENC_RESET,0x03);
 }
 
 //imu
@@ -199,8 +225,8 @@ void  Rover::initIMU(){
 }
 bool Rover::IMUisActive(){
   byte b=readByte(REGA_IMU_STATUS);
-  Serial.println(b);
-  return (bool)readByte(REGA_IMU_STATUS); //FIXME: what if roverwing is not connected??
+  //Serial.println(b);
+  return (b==0x01);
 }
 void Rover::getOrientationQuat(){
   read32(REGA_QUAT,4,(uint32_t*)quat);

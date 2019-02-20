@@ -32,6 +32,7 @@ float servoPos[]={0.0f, 0.0f, 0.0f, 0.0f};
 float power=0; //range  -1.0 ... 1.0
 //step to change motor at each loop
 float pwrDelta=0.12;
+motorconfig_t myMotor; //to hold configuration data for the motor - for encoder enabled motors
 
 
 void setup(){
@@ -63,6 +64,11 @@ void setup(){
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
   //reverse one of the motors
   r.reverseMotor(MOTOR2);
+  //if your motors are equipped with encoders, uncommnet the lines below and change as necessary
+  myMotor.encoderCPR = 1440;  //encoder counts per revolution of output shaft
+                              //"count" refers to any observable chnage - rise/fall on channel A or B
+  r.configureMotor(MOTOR1, myMotor);
+  r.configureMotor(MOTOR2, myMotor);
 }
 void loop(){
   //go to next value for power
@@ -89,5 +95,13 @@ void loop(){
   blink=!blink;
   //now, wait
   delay(500);
+  //uncomment if your motors are equipped with encoders
+  //get current encoder values - position (in revolutions) and speed (RPM)
+  r.getAllPosition();
+  r.getAllSpeed();
+  Serial.print("Current motor position (revolutions): "); Serial.print(r.position[MOTOR1]);
+  Serial.print(" "); Serial.println(r.position[MOTOR2]);
+  Serial.print("Current motor speed (RPM): "); Serial.print(r.speed[MOTOR1]);
+  Serial.print(" "); Serial.println(r.speed[MOTOR2]);
 
 }

@@ -21,19 +21,13 @@ This example code is in the public domain.
 #include <Wire.h>
 #include <RoverWing.h>
 
-#define MAX_POWER 1.0f
-
 
 Rover r; //this is the name of the rover!
 bool blink=false;
-//array to set servo posiitons. Each poisition must be a float between -1.0..1.0
-float servoPos[]={0.0f, 0.0f, 0.0f, 0.0f};
+int loopCount=0;
 //motor power
-float power=0.0;
-//step to change motor at each loop
-float pwrDelta=0.2;
-
-motorconfig_t myMotor;
+float power=0.5; //motor power for testing
+motorconfig_t myMotor; //to hold configuration data for the motor
 
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
@@ -61,25 +55,27 @@ void setup(){
   r.configureMotor(MOTOR2, myMotor);
 }
 void loop(){
-  //get current encoder values
+  if (loopCount%40==0){
+    //change power mode - every 40 cycles, or 10 sec
+    power=-power;
+    r.resetAllEncoder();
+    Serial.print("Resetting encoders and setting new motor power: ");
+    Serial.println(power);
+    r.setAllMotorPwr(power,power);
+  }
+
+  //do the blink
+  digitalWrite(LED_BUILTIN, blink);
+  blink=!blink;
+  //now, wait
+  delay(250);
+
+  //get current encoder values - position (in rotations) and speed (RPM) 
   r.getAllPosition();
   r.getAllSpeed();
   Serial.print("Current motor position (rotations): "); Serial.print(r.position[MOTOR1]);
   Serial.print(" "); Serial.println(r.position[MOTOR2]);
   Serial.print("Current motor speed (RPM): "); Serial.print(r.speed[MOTOR1]);
   Serial.print(" "); Serial.println(r.speed[MOTOR2]);
-  // set new power
-  power+=pwrDelta;
-  Serial.print("Setting power to "); Serial.println(power);
-
-  if (abs(power)>=MAX_POWER) pwrDelta =-pwrDelta;
-  //set motor power
-  r.setAllMotorPwr(power,power);
-
-  //do the blink
-  digitalWrite(LED_BUILTIN, blink);
-  blink=!blink;
-  //now, wait
-  delay(500);
-
+  loopCount++;
 }

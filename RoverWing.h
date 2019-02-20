@@ -14,12 +14,14 @@ enum sonar_t {
 #define SONAR2_ACT (0x02u)
 #define SONAR3_ACT (0x04u)
 struct motorconfig_t{
-  uint16_t encoderCPR;
-  float noloadRPM;
-  float Kp;
-  float Ki;
-  float Kd;
-  float Ilim;
+  uint16_t encoderCPR; //encoder counts per revolution of output shaft
+  float noloadRPM;     // no load motor speed in RPM
+  float Kp;            // PID coefficicients for speed control. They will be used as follows
+                       // motor power = maxpower * Kp * (error+1/T_i errorInt + Td*errorDer)
+                       // where time is in seconds, and error is speed error  in encoder tick/s
+  float Ti;
+  float Td;
+  float iLim;        // this limits the contribution of integral term: |errorInt|<=iLim
 };
 // Motor configuration modes
 #define MOTOR_MODE_POWER 0 //includes brake
@@ -130,6 +132,7 @@ class Rover {
     void stopMotors();
     void configureMotor(motor_t m, motorconfig_t c);
     void reverseMotor(motor_t m);
+    void setMotorSpeed(motor_t m, float speed);//speed in RPM
 
     //encoders
     float getPosition(motor_t m);
