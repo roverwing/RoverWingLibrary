@@ -109,7 +109,7 @@ void Rover::setMotorPwr(motor_t m, float pwr){
   write16(REGB_MOTOR_POWER +2*m, (uint16_t)power );
 }
 void Rover::setAllMotorPwr(float pwr1, float pwr2){
-  float m = max (abs(pwr1), abs(pwr2));
+  float m = max (fabs(pwr1), fabs(pwr2));
   //set mode
   write16(REGB_MOTOR_MODE, (uint16_t)(MOTOR_MODE_POWER<<8|MOTOR_MODE_POWER));
   //rescale power
@@ -133,7 +133,6 @@ void Rover::stopMotors(){
 }
 void Rover::configureMotor(motor_t m, motorconfig_t c){
   motorsConfig[m].encoderCPR=c.encoderCPR;
-  motorsConfig[m].noloadRPM=c.noloadRPM;
   if (c.Kp>0){
     motorsConfig[m].Kp=c.Kp;
     motorsConfig[m].Ti=c.Ti;
@@ -159,12 +158,13 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
                     motorsConfig[m].iLim};
   if (m==MOTOR1) {
     write32(REGB_MOTOR1_PID, 4, (uint32_t *)PIDcoef);
-    Serial.print("Setting PID coef1: Ilim=");
-    Serial.println(PIDcoef[3],5);
+    //Serial.print("Setting PID coef1: Ilim=");
+    //Serial.println(PIDcoef[3],5);
   } else {
     write32(REGB_MOTOR2_PID, 4, (uint32_t *)PIDcoef);
-    Serial.print("Setting PID coef2: Ilim=");
-    Serial.println(PIDcoef[3],5);  }
+    //Serial.print("Setting PID coef2: Ilim=");
+    //Serial.println(PIDcoef[3],5);
+  }
 }
 void Rover::reverseMotor(motor_t m){
   motorIsReversed[m]=true;

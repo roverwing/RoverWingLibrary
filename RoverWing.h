@@ -15,7 +15,6 @@ enum sonar_t {
 #define SONAR3_ACT (0x04u)
 struct motorconfig_t{
   uint16_t encoderCPR; //encoder counts per revolution of output shaft
-  float noloadRPM;     // no load motor speed in RPM
   float Kp;            // PID coefficicients for speed control. They will be used as follows
                        // motor power = maxpower * Kp * (error+1/T_i errorInt + Td*errorDer)
                        // where time is in seconds, and error is speed error  in encoder tick/s
@@ -31,7 +30,6 @@ struct motorconfig_t{
 // Normally, motor power is an int between -500...500
 // this special value indicates that the motor should be stopped in coast state
 #define POWER_COAST 1000
-
 
 
 //register A - read only
