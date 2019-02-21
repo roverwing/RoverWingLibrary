@@ -262,9 +262,21 @@ float Rover::getRoll(){
 }
 
 //neopixels
+void Rover::setLowVoltage(float v){
+  writeByte(REGB_LOW_VOLTAGE, (uint8_t)(v*10.0f));
+}
+
+void Rover::setPixelNumber(uint8_t n){
+  writeByte(REGB_NUM_PIXELS,n);
+}
 void Rover::setPixelBrightness(uint8_t b){
   writeByte(REGB_PIXEL_BRIGHTNESS, b);
 }
+void Rover::setPixelColor(uint8_t i, uint32_t c){
+  uint8_t color[]={c, (c>>8), (c>>16)}; //B, G, R components
+  writeByte(REGB_PIXEL_COLORS+4*i, 3, color);
+}
+
 void Rover::setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B){
   uint8_t color[]={B, G, R};
   writeByte(REGB_PIXEL_COLORS+4*i, 3, color);

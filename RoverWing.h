@@ -31,6 +31,14 @@ struct motorconfig_t{
 // this special value indicates that the motor should be stopped in coast state
 #define POWER_COAST 1000
 
+// named colors
+#define RED 0xFF0000
+#define GREEN 0x00FF00
+#define BLUE 0x0000FF
+#define YELLOW 0xFFFF00
+#define WHITE 0XFFFFFF
+#define OFF 0x000000
+
 
 //register A - read only
 #define REGA_FW_VERSION    0
@@ -154,9 +162,12 @@ class Rover {
     float getRoll();
 
     //neopixels
+    void setLowVoltage(float v);
+    void setPixelNumber(uint8_t n);
     void setPixelBrightness(uint8_t b);
-    void setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B);
-    void setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V);
+    void setPixelColor(uint8_t pixel_index, uint32_t c); // C is a hex color: c=0xRRGGBB
+    void setPixelRGB(uint8_t pixel_index, uint8_t R, uint8_t G, uint8_t B);
+    void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V);
     void showPixel();
 
 

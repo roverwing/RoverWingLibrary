@@ -56,7 +56,7 @@ void setup(){
 
   //If you do not know the best PID coefficicients for your motor,
   // try using the values below and adjust as needed. If you do know the values
-  // already, you can comment these lines.
+  // already, you can comment these lines 
   float noloadRPM = 250; // the motor RPM under maximal power; can be found in motor specs
   float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max speed in encoder counts/s
   float Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
@@ -80,7 +80,7 @@ void loop(){
     //change direction  - every 40 cycles, or 10 sec
     r.stopMotors();
     r.resetAllEncoder();
-    delay(250); //pause for 1/4 second 
+    delay(250); //pause for 1/4 second
     speed=-speed;
     Serial.print("Resetting encoders and setting new motor speed: ");
     Serial.println(speed);
