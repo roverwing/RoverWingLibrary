@@ -1,6 +1,6 @@
 #######################################
 # Syntax Coloring Map For RoverWing
-####################################### 
+#######################################
 # Datatypes
 #######################################
 
@@ -11,9 +11,10 @@ sonar_t 	KEYWORD1
 motorconfig_t 	KEYWORD1
 
 #######################################
-# Methods and Functions 
-#######################################	
+# Methods and Functions
+#######################################
 init                  	KEYWORD2
+setLowVoltage         	KEYWORD2
 getAnalog             	KEYWORD2
 getVoltage            	KEYWORD2
 getAllAnalog          	KEYWORD2
@@ -23,17 +24,20 @@ getSonar              	KEYWORD2
 getAllSonar           	KEYWORD2
 setServo              	KEYWORD2
 setAllServo           	KEYWORD2
+setServoRange         	KEYWORD2
 setMotorPwr           	KEYWORD2
 setAllMotorPwr        	KEYWORD2
 stopMotors            	KEYWORD2
 configureMotor        	KEYWORD2
+reverseMotor          	KEYWORD2
+setMotorSpeed         	KEYWORD2
 getPosition           	KEYWORD2
 getAllPosition        	KEYWORD2
 getSpeed              	KEYWORD2
 getAllSpeed           	KEYWORD2
 resetEncoder          	KEYWORD2
 resetAllEncoder       	KEYWORD2
-initIMU               	KEYWORD2 
+initIMU               	KEYWORD2
 IMUisActive           	KEYWORD2
 getOrientationQuat    	KEYWORD2
 getAccel              	KEYWORD2
@@ -41,9 +45,20 @@ getGyro               	KEYWORD2
 getYaw                	KEYWORD2
 getPitch              	KEYWORD2
 getRoll               	KEYWORD2
+initGPS               	KEYWORD2
+GPSstatus             	KEYWORD2
+getGPSlocation        	KEYWORD2
+saveGPSlocation       	KEYWORD2
+latitude              	KEYWORD2
+latitudeL             	KEYWORD2
+longitude             	KEYWORD2
+longitudeL            	KEYWORD2
+GPStimestamp          	KEYWORD2
+distanceTo            	KEYWORD2
+bearingTo             	KEYWORD2
 setPixelBrightness    	KEYWORD2
-setPixelRGB           	KEYWORD2 
-etPixelHSV            	KEYWORD2  
+setPixelRGB           	KEYWORD2
+etPixelHSV            	KEYWORD2
 showPixel             	KEYWORD2
 #######################################
 # Constants

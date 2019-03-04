@@ -3,6 +3,8 @@ const float voltageScale=(3.3f/1023.0f)*(122.0f/22.0f); //voltage divider uses 1
 const float analogScale=(3.3f/1023.0f);
 const float aScale=1/16384.0f; //acceleration scale: this is the value of LSB of accel data, in g
 const float gScale=250.0f / 32768.0f; //gyro resolution, in (deg/s)/LSB
+const float  microsToMm=0.171f; //half of speed of sound, which is 343 m/s = 0.343 mm/us
+
 /* *******************************************
  *  PUBLIC FUNCTIONS
  *********************************************
@@ -56,9 +58,10 @@ bool Rover::init(){
    }
  }
  //sonars
- void Rover::activateSonars(uint8_t bitmask){
+ void Rover::activateSonars(uint8_t bitmask, int maxDistance){
    activeSonarsBitmask = bitmask;
-   Serial.println(bitmask, BIN);
+   //Serial.println(bitmask, BIN);
+   write16(REGB_SONAR_TIMEOUT, maxDistance/microsToMm);
    writeByte(REGB_SONAR_BITMASK, bitmask);
  }
  void Rover::stopSonars(){
@@ -260,12 +263,47 @@ float Rover::getRoll(){
   roll=(float)rollRaw/100.0f;
   return roll;
 }
+//GPS
+void Rover::initGPS(){
+  writeByte(REGB_GPS_CONFIG, 0x01);
+}
+uint8_t Rover::GPSstatus(){
+  return readByte(REGA_GPS_STATUS);
+}
+void Rover::getGPSlocation(){
+  int32_t loc[2];
+  uint32_t timestamp;
+  read32(REGA_GPS_LAT,2,(uint32_t*)loc);
+  location.latitude=loc[0];
+  location.longitude=loc[1];
+  location.timestamp=read32(REGA_GPS_TIMESTAMP);
+}
+void Rover::saveGPSlocation(location_t & l){
+  l.latitude=location.latitude;
+  l.longitude=location.longitude;
+  l.timestamp=location.timestamp;
+}
+float Rover::distanceTo(const location_t & l ){
+  // Equirectangular calculation from http://www.movable-type.co.uk/scripts/latlong.html
+  double y = (l.latitude - location.latitude) * RAD_PER_DEG * LOC_SCALE;
+  double dLon = (l.longitude- location.longitude) * RAD_PER_DEG * LOC_SCALE;
+  double x    = dLon * cosf( location.latitude * RAD_PER_DEG * LOC_SCALE + y/2 );
+  float angle=sqrt( x*x + y*y );//angle in radians
+  return (angle * EARTH_RADIUS_KM * 1000.0f);
+}
+float Rover::bearingTo(const location_t & l ){
+  double y = (l.latitude - location.latitude) * RAD_PER_DEG * LOC_SCALE;
+  double dLon = (l.longitude- location.longitude) * RAD_PER_DEG * LOC_SCALE;
+  double x    = dLon * cosf( location.latitude * RAD_PER_DEG * LOC_SCALE + y/2 );
+  return (90.0-DEG_PER_RAD*atan2(y,x));
+}
+
+
 
 //neopixels
 void Rover::setLowVoltage(float v){
   writeByte(REGB_LOW_VOLTAGE, (uint8_t)(v*10.0f));
 }
-
 void Rover::setPixelNumber(uint8_t n){
   writeByte(REGB_NUM_PIXELS,n);
 }
@@ -356,7 +394,7 @@ void Rover::readByte(uint8_t regAddress, uint8_t count, uint8_t * dest){
       dest[i++] = Wire.read();
     }         // Put read results in the Rx buffer
   } else {
-    Serial.print("Failed to get data from wing at register "); Serial.println(regAddress);
+    Serial.print("Failed to get "); Serial.print(count); Serial.print(" bytes from wing at register "); Serial.println(regAddress);
   }
 }
 

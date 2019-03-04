@@ -1,6 +1,10 @@
 #include "Arduino.h"
 #include "Wire.h"
+#include "regmap.h" //register map definitions
 #define ROVERWING_ADDRESS 0x11
+/* ***************************************
+ * Motors and servo related definitions
+ *******************************************/
 enum motor_t {
   MOTOR1=0, MOTOR2
 };
@@ -10,6 +14,7 @@ enum servo_t {
 enum sonar_t {
   SONAR1=0, SONAR2, SONAR3
 };
+// servo codes used in activation bitmask
 #define SONAR1_ACT (0x01u)
 #define SONAR2_ACT (0x02u)
 #define SONAR3_ACT (0x04u)
@@ -30,60 +35,35 @@ struct motorconfig_t{
 // Normally, motor power is an int between -500...500
 // this special value indicates that the motor should be stopped in coast state
 #define POWER_COAST 1000
-
-// named colors
+/* ***************************************
+ * Neopixel named colors
+ *******************************************/
 #define RED 0xFF0000
 #define GREEN 0x00FF00
 #define BLUE 0x0000FF
 #define YELLOW 0xFFFF00
 #define WHITE 0XFFFFFF
 #define OFF 0x000000
+/* ***************************************
+ * GPS
+ *******************************************/
+//gps statuses
+#define GPS_OFF 0
+#define GPS_WAITING 1 //waiting for fix
+#define GPS_OK 2      // has fix
+//location
+struct location_t {
+  int32_t latitude; //latitude, in units of 10^{-7} degree
+  int32_t longitude;
+  uint32_t timestamp; //in ms, as reported by millis()
+};
+//other constants for GPS
+#define EARTH_RADIUS_KM  (6371.0f)
+#define  RAD_PER_DEG  (PI / 180.0f)
+#define   DEG_PER_RAD  (180.0f / PI)
+const double  LOC_SCALE = 1.0e-7;
 
 
-//register A - read only
-#define REGA_FW_VERSION    0
-#define REGA_ANALOG_RAW    2
-#define REGA_ANALOG        16
-#define REGA_SONAR_RAW     30
-#define REGA_SONAR         36
-#define REGA_WHO_AM_I      42
-#define REGA_ENCODER       44
-#define REGA_SPEED         52
-#define REGA_IMU_STATUS    56
-#define REGA_ACCEL         60
-#define REGA_GYRO          66
-#define REGA_QUAT          72
-#define REGA_YAW           88
-#define REGA_PITCH         90
-#define REGA_ROLL          92
-#define REGA_MAG_STATUS    94
-#define REGA_MAG           96
-#define REGA_HEADING       102
-#define REGA_GPS_STATUS    104
-#define REGA_GPS_LAT       106
-#define REGA_GPS_LONG      110
-#define REGA_GPS_TIMESTAMP 114
-
-
-//Register B - write only
-#define REGB_ANALOG_BITMASK    0
-#define REGB_SONAR_BITMASK     1
-#define REGB_SONAR_TIMEOUT     2
-#define REGB_SERVO             4
-#define REGB_MOTOR1_PID        12
-#define REGB_MOTOR2_PID        28
-#define REGB_ENC_RESET         42
-#define REGB_MOTOR_MODE        43
-#define REGB_MOTOR_POWER       48
-#define REGB_MOTOR_TARGET      52
-#define REGB_IMU_CONFIG        60
-#define REGB_MAG_CONFIG        61
-#define REGB_GPS_CONFIG        62
-#define REGB_LOW_VOLTAGE       63
-#define REGB_NUM_PIXELS        64
-#define REGB_PIXEL_BRIGHTNESS  65
-#define REGB_PIXEL_COMMAND     66
-#define REGB_PIXEL_COLORS      68
 
 class Rover {
   public:
@@ -110,7 +90,6 @@ class Rover {
     float gx;             //gyro rotation speeds, in deg/s
     float gy;
     float gz;
-
     /////////////////
     // Public functions
     ////////////////
@@ -118,11 +97,12 @@ class Rover {
     //general functions
     bool init(); //returns true if init was successfull
     //analog inputs
+    void setLowVoltage(float v);
     float getAnalog(uint8_t input);
     float getVoltage();
     void getAllAnalog();
     //sonars
-    void activateSonars(uint8_t bitmask);
+    void activateSonars(uint8_t bitmask, int maxDistance=6000); //max distance in mm
     void stopSonars();
     void getAllSonar();
     float getSonar(sonar_t s);
@@ -160,15 +140,27 @@ class Rover {
     float getYaw();    //return yaw, pitch, and roll angles, in degrees
     float getPitch();
     float getRoll();
-
+    //GPS
+    void initGPS();        //start GPS
+    uint8_t GPSstatus();   //get current GPS status from the wing
+    void getGPSlocation(); //get current GPS location
+    void saveGPSlocation(location_t & l); //save current GPS location to l
+    double latitude() const {return (double)location.latitude*LOC_SCALE;} //latitude, as a double
+    double longitude() const {return (double)location.longitude*LOC_SCALE;}//longitude, as double
+    int32_t latitudeL() const {return location.latitude;}   //latitude as an int, in untis of 10^{-7} deg
+    int32_t longitudeL() const {return location.longitude;} //longitude as an int, in untis of 10^{-7} deg
+    uint32_t GPStimestamp() const {return location.timestamp;}
+    float  distanceTo(const location_t & l );  //distance form currrent location to l, in meters
+    float  bearingTo(const location_t & l );   //bearing from current position to l, in degrees relative to true north 
     //neopixels
-    void setLowVoltage(float v);
-    void setPixelNumber(uint8_t n);
-    void setPixelBrightness(uint8_t b);
+
+    void setPixelNumber(uint8_t n);     //configure how many neopixels we have connected (not counting the internal one )
+    void setPixelBrightness(uint8_t b); //0-255. Usually brightness of 32 (1/8 of maximum) is bright enough
     void setPixelColor(uint8_t pixel_index, uint32_t c); // C is a hex color: c=0xRRGGBB
     void setPixelRGB(uint8_t pixel_index, uint8_t R, uint8_t G, uint8_t B);
-    void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V);
-    void showPixel();
+    void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V); //pixel color, in hue-saturation-value form
+    void showPixel();   //after setting individual pixel colors, you need to use this to make the changes effective
+
 
 
   private:
@@ -178,10 +170,12 @@ class Rover {
     uint8_t activeSonarsBitmask;
     motorconfig_t motorsConfig[2];
     bool motorIsReversed[2];
-    // records servo cetner posiiton and half range for each servo
+    // records servo center position and half range for each servo
     // full range is [center-halfrange, center+halfrange]
     uint8_t servoCenterPos[4];
     uint8_t servoHalfRange[4];
+    //current location
+    location_t location;
 
 
 
@@ -194,6 +188,7 @@ class Rover {
     uint8_t readByte(uint8_t regAddress);
     // read multiple bytes and save to dest[] array
     void readByte(uint8_t regAddress, uint8_t count, uint8_t * dest);
+
     //write single byte
     void writeByte(uint8_t regAddress, uint8_t data);
     // write multiple bytes  from data[] array
