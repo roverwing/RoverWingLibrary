@@ -342,12 +342,12 @@ void loop(){
 
 
 ## Additional information
-`Roverwing Home Page Details <https://roverwing.readthedocs.io/en/latest/>`_
 
-`Hardware Details <https://roverwing.github.io/RoverWingHardware/>`_
+<a href="https://roverwing.readthedocs.io/en/latest//">Roverwing Home Page</a>
+
+<a href="https://roverwing.github.io/RoverWingHardware/">Hardware</a>
 
 <a href="https://roverwing.github.io/RoverWingFirmware/">Firmware</a>
 
 Detailed user guides are available in `extras` directory of this repository
 
-<a href="/docs/index.html">test</a>
