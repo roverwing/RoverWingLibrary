@@ -346,8 +346,7 @@ void loop(){
 
 `Hardware Details <https://roverwing.github.io/RoverWingHardware/>`_
 
-
-<a href="https://roverwing.github.io/RoverWingFirmware/"<Firmware></a>
+<a href="https://roverwing.github.io/RoverWingFirmware/">Firmware</a>
 
 Detailed user guides are available in `extras` directory of this repository
 
