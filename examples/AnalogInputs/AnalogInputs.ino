@@ -31,15 +31,14 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.print("Firmware version: "); Serial.print(r.fwVersion());
 }
 void loop(){
   v=r.getVoltage();
@@ -53,7 +52,7 @@ void loop(){
     Serial.print("  ");
     Serial.print(r.analog[i]); //note that index i runs 1..6, not 0..5 !
                                // values of analog[i] are floats, representing
-                               // the voltage; they range 0 - 3.3 volts 
+                               // the voltage; they range 0 - 3.3 volts
   }
   Serial.println(" ");
   delay(500);

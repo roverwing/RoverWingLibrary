@@ -36,15 +36,14 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
   Serial.println("Starting PID  speed control  test");
   //now, configure the motors.
@@ -56,8 +55,8 @@ void setup(){
 
   //If you do not know the best PID coefficicients for your motor,
   // try using the values below and adjust as needed. If you do know the values
-  // already, you can comment these lines 
-  float noloadRPM = 250; // the motor RPM under maximal power; can be found in motor specs
+  // already, you can comment these lines
+  float noloadRPM = 250; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
   float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max speed in encoder counts/s
   float Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
   float Ti=0.3;           // time constant for integral gain, in seconds
@@ -77,10 +76,10 @@ void setup(){
 }
 void loop(){
   if (loopCount%40==0){
-    //change direction  - every 40 cycles, or 10 sec
+    //change direction  - every 40 cycles, or 8 sec
     r.stopMotors();
     r.resetAllEncoder();
-    delay(250); //pause for 1/4 second
+    delay(250);
     speed=-speed;
     Serial.print("Resetting encoders and setting new motor speed: ");
     Serial.println(speed);
@@ -92,7 +91,7 @@ void loop(){
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;
   //now, wait
-  delay(250);
+  delay(200);
 
   //get current encoder values - position (in revolutions) and speed (RPM)
   //r.getAllPosition();

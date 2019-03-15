@@ -33,20 +33,19 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
   //configure internal neopixel turn yellow if voltage drops below threshold
   r.setLowVoltage(LOW_VOLTAGE);
   //now let us setup the neopixels
-  r.setPixelNumber(NUM_PIXELS);
+  r.setPixelCount(NUM_PIXELS);
   r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
   //setup initial hues
   for (int i=0; i<NUM_PIXELS; i++){
@@ -55,7 +54,7 @@ void setup(){
 }
 
 void loop(){
-  for (int i=0; i<NUM_PIXELS; i++) {
+  for (int i=1; i<=NUM_PIXELS; i++) {
     //update hues
     hues[i]+=25; // this way, at every loop we are rotatiang by 25/255, or approximately 1/10 of the revolution of the color wheel
     r.setPixelHSV(i,hues[i], 255, 255);

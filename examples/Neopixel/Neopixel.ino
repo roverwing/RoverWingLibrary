@@ -22,8 +22,8 @@ This example code is in the public domain.
 Rover r; //this is the name of the rover!
 bool blink=false;
 int currentPixel=0;
-#define NUM_PIXELS 4 //number of connected Neopixels; edit to match your configuration
-#define LOW_VOLTAGE 7.0 //voltage limit; if voltage drops below this limit, internal neopixel turns yellow
+#define NUM_PIXELS 2 //number of connected Neopixels; edit to match your configuration
+#define LOW_VOLTAGE 8.0 //voltage limit; if voltage drops below this limit, internal neopixel turns yellow
 
 
 void setup(){
@@ -33,20 +33,19 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
   //configure internal neopixel turn yellow if voltage drops below threshold
   r.setLowVoltage(LOW_VOLTAGE);
   //now let us setup the neopixels
-  r.setPixelNumber(NUM_PIXELS);
+  r.setPixelCount(NUM_PIXELS);
   r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
 }
 
@@ -54,7 +53,7 @@ void loop(){
   r.setPixelRGB(currentPixel, 0,0,0); //turn off
   //move to next pixel
   currentPixel++;
-  if (currentPixel==NUM_PIXELS) currentPixel=0;
+  if (currentPixel==NUM_PIXELS+1) currentPixel=1;//wrap around
   //and set it blue
   r.setPixelRGB(currentPixel, 0,0,255);
   //Alternatively, you could use :
@@ -64,7 +63,7 @@ void loop(){
   // you can use the following named colors:
   // RED, GREEN, BLUE, YELLOW, WHITE, OFF
   r.showPixel(); //this must be called to push the new colors to the actual neopixels
-  //blink the built-in LED of the feather board 
+  //blink the built-in LED of the feather board
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;
   delay(500);

@@ -20,12 +20,11 @@
 #define REGA_ROLL          92
 #define REGA_MAG_STATUS    94
 #define REGA_MAG           96
-#define REGA_HEADING       102
-#define REGA_GPS_STATUS    104
-#define REGA_GPS_LAT       108
-#define REGA_GPS_LONG      112
-#define REGA_GPS_TIMESTAMP 116
-
+#define REGA_MAG_OFFSET    104
+#define REGA_GPS_STATUS    110
+#define REGA_GPS_LAT       112
+#define REGA_GPS_LONG      116
+#define REGA_GPS_TIMESTAMP 120
 
 //Register B - write only
 #define REGB_ANALOG_BITMASK    0
@@ -36,13 +35,17 @@
 #define REGB_MOTOR2_PID        28
 #define REGB_ENC_RESET         42
 #define REGB_MOTOR_MODE        43
-#define REGB_MOTOR_POWER       48
-#define REGB_MOTOR_TARGET      52
-#define REGB_IMU_CONFIG        60
-#define REGB_MAG_CONFIG        61
-#define REGB_GPS_CONFIG        62
-#define REGB_LOW_VOLTAGE       63
-#define REGB_NUM_PIXELS        64
-#define REGB_PIXEL_BRIGHTNESS  65
-#define REGB_PIXEL_COMMAND     66
-#define REGB_PIXEL_COLORS      68
+#define REGB_MOTOR_POWER       46
+#define REGB_MOTOR_STEERING    50
+#define REGB_MOTOR_TARGET      56
+#define REGB_IMU_CONFIG        64
+#define REGB_GYRO_OFFSET       66
+#define REGB_ACCEL_OFFSET      72
+#define REGB_MAG_CONFIG        78
+#define REGB_MAG_OFFSET        80
+#define REGB_GPS_CONFIG        86
+#define REGB_LOW_VOLTAGE       87
+#define REGB_NUM_PIXELS        88
+#define REGB_PIXEL_BRIGHTNESS  89
+#define REGB_PIXEL_COMMAND     90
+#define REGB_PIXEL_COLOR       92

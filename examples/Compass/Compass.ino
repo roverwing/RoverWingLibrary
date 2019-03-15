@@ -1,5 +1,5 @@
 /*
-RoverWing GPS  test
+RoverWing Compass  test
 
 This code is part of RoverWing library: https://github.com/roverwing
 
@@ -7,7 +7,7 @@ It can be used with any Adafruit Feather board (or compatible) plugged into
 RoverWing  board.
 
 For this test, RoverWing must be  powered through the main power connector,
-using 7-14V power source, and a GPS receiver connceted to the GPS port.
+using 7-14V power source, and a magnetometer (compass) sensor connceted to the compass port.
 
 Written in 2019 by David Bershadsky, Alexander Kirillov
 
@@ -17,10 +17,9 @@ This example code is in the public domain.
 #include <RoverWing.h>
 
 Rover r; //this is the name of the rover!
-location_t base; //starting location
-float distance;
 bool blink=false;
-
+float h;
+int16_t offsets[3]; //for storing offsets i.e. sensor calibration data
 
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
@@ -37,25 +36,26 @@ void setup(){
   Serial.println("");
   Serial.println("Roverwing is connected");
   Serial.println("Firmware version: "+ r.fwVersion());
-  Serial.println("Starting GPS. Please be patient, it can take a while ");
-  r.GPSbegin();
-  while (r.GPSstatus()!=GPS_OK){
-    //still no GPS fix - let's wait more...
+  Serial.println("Starting compass");
+  r.magBegin();
+  while (r.magStatus()!=MAG_STATUS_ON){
     delay(500);
     Serial.print(".");
   }
   Serial.println("");
-  Serial.println("GPS has location fix!");
-  //fetch our location
-  r.getGPSlocation();
-  //and save it to variable base
-  r.saveGPSlocation(base);
+  Serial.println("Compass connected");
+  Serial.println("Starting calibration. Please move the sensor in figure 8 shape for next 20 seconds");
+  //now calibrate
+  r.magCalibrate(offsets)
+  Serial.println("Calibration complete. For future use, the found offsets are: ");
+  for (int i=0; i<3; i++){
+    Serial.print(offsets[i]); Serial.print(" ");
+  }
+  Serial.println("");
 }
 void loop(){
-  r.getGPSlocation(); //update curretn location
-  distance=r.distanceTo(base); //distance in meters
-  Serial.print(r.latitude(),6); Serial.print(" "); Serial.print(r.longitude(),6);
-  Serial.print(" "); Serial.println(distance);
+  h=r.getHeading();
+  Serial.print("Heading: "); Serial.println(h);
   delay(500);
   //do the blink
   digitalWrite(LED_BUILTIN, blink);

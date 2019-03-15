@@ -11,7 +11,7 @@ const float  microsToMm=0.171f; //half of speed of sound, which is 343 m/s = 0.3
  */
 
  //general functions
-bool Rover::init(){
+bool Rover::begin(){
    int i;
    //try getting response from the roverwing
    if (readByte(REGA_WHO_AM_I) == ROVERWING_ADDRESS) {
@@ -30,6 +30,7 @@ bool Rover::init(){
         servoCenterPos[i]=1500;
         servoHalfRange[i]=500;
       }
+      //if top cover is present, configure the top display
       return true;
    } else {
      //failed to get correct response
@@ -38,6 +39,9 @@ bool Rover::init(){
    }
 
  }
+String Rover::fwVersion(){
+  return(String(fwVersionMajor)+"."+String(fwVersionMinor));
+}
  //analog inputs
  float Rover::getAnalog(uint8_t input){
    float result=(float)read16(REGA_ANALOG+2*input)*0.1f*analogScale;
@@ -223,8 +227,14 @@ void Rover::resetAllEncoder(){
 }
 
 //imu
-void  Rover::initIMU(){
+void  Rover::IMUbegin(){
   writeByte(REGB_IMU_CONFIG, 0x01);
+}
+void  Rover::IMUend(){
+  writeByte(REGB_IMU_CONFIG, 0x00);
+}
+void IMUcalibrate(int16_t * gyroOffsets){
+  //FIXME
 }
 bool Rover::IMUisActive(){
   byte b=readByte(REGA_IMU_STATUS);
@@ -264,8 +274,11 @@ float Rover::getRoll(){
   return roll;
 }
 //GPS
-void Rover::initGPS(){
+void Rover::GPSbegin(){
   writeByte(REGB_GPS_CONFIG, 0x01);
+}
+void Rover::GPSend(){
+  writeByte(REGB_GPS_CONFIG, 0x00);
 }
 uint8_t Rover::GPSstatus(){
   return readByte(REGA_GPS_STATUS);
@@ -298,26 +311,59 @@ float Rover::bearingTo(const location_t & l ){
   return (90.0-DEG_PER_RAD*atan2(y,x));
 }
 
-
+//magnetometer
+void Rover::magBegin(){
+  writeByte(REGB_MAG_CONFIG, MAG_CONFIG_BEGIN);
+}
+void Rover::magEnd(){
+  writeByte(REGB_MAG_CONFIG, MAG_CONFIG_END);
+}
+uint8_t Rover::magStatus(){
+  return readByte(REGA_MAG_STATUS);
+}
+void Rover::magCalibrate(int16_t * offsets){
+  writeByte(REGB_MAG_CONFIG, MAG_CONFIG_CALIBRATE);
+  while (magStatus()!=MAG_STATUS_ON){
+    delay(10);//wait...
+  }
+  //get the computed offsets
+  read16(REGA_MAG_OFFSET,2, (uint16_t *) offsets);
+}
+void Rover::magSetOffsets(int16_t * offsets){
+  write16(REGB_MAG_OFFSET,2,(uint16_t *)offsets);
+}
+void Rover::setDeclination(float d){
+  declination=d;
+}
+float Rover::getHeading(){
+  int16_t mag[2];
+  read16(REGA_MAG,2,(uint16_t *)mag);
+  Serial.print(mag[0]); Serial.print(" "); Serial.println(mag[1]);
+  float h=atan2(-mag[0],-mag[1])*DEG_PER_RAD; //heading relative to magnetic North: 0=N, 90=E
+  h+=declination;
+  if (h>360.0f) h-=360.0;
+  else if (h<0.0f) h+=360.0;
+  return h;
+}
 
 //neopixels
 void Rover::setLowVoltage(float v){
   writeByte(REGB_LOW_VOLTAGE, (uint8_t)(v*10.0f));
 }
-void Rover::setPixelNumber(uint8_t n){
+void Rover::setPixelCount(uint8_t n){
   writeByte(REGB_NUM_PIXELS,n);
 }
 void Rover::setPixelBrightness(uint8_t b){
   writeByte(REGB_PIXEL_BRIGHTNESS, b);
 }
 void Rover::setPixelColor(uint8_t i, uint32_t c){
-  uint8_t color[]={c, (c>>8), (c>>16)}; //B, G, R components
-  writeByte(REGB_PIXEL_COLORS+4*i, 3, color);
+  uint8_t color[]={c, (c>>8), (c>>16), i}; //B, G, R components
+  writeByte(REGB_PIXEL_COLOR, 4, color);
 }
 
 void Rover::setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B){
-  uint8_t color[]={B, G, R};
-  writeByte(REGB_PIXEL_COLORS+4*i, 3, color);
+  uint8_t color[]={B, G, R,i};
+  writeByte(REGB_PIXEL_COLOR, 4, color);
 }
 void Rover::setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V){
   //algorithm is borrowed from
@@ -357,8 +403,8 @@ void Rover::setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V){
 
   } //of (if S==0)
   //now that we have R, G, B values, let us use them
-  uint8_t color[]={B, G, R};
-  writeByte(REGB_PIXEL_COLORS+4*i, 3, color);
+  uint8_t color[]={B, G, R,i};
+  writeByte(REGB_PIXEL_COLOR, 4, color);
 }
 void Rover::showPixel(){
   writeByte(REGB_PIXEL_COMMAND, 0x01);

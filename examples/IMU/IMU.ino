@@ -28,23 +28,22 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   Serial.println("Initializing and calibrating the IMU");
-  r.initIMU();
+  r.IMUbegin();
   delay(2000);
   if (r.IMUisActive() ){
     Serial.println("IMU initialized");
   } else{
     //if connecting fails, wait and try again...
-    Serial.print("Problem getting IMU sttaus");
+    Serial.print("Failed to initialize IMU");
     delay(1000);
   }
 

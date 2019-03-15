@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 #include "regmap.h" //register map definitions
+
 #define ROVERWING_ADDRESS 0x11
 /* ***************************************
  * Motors and servo related definitions
@@ -62,6 +63,15 @@ struct location_t {
 #define  RAD_PER_DEG  (PI / 180.0f)
 #define   DEG_PER_RAD  (180.0f / PI)
 const double  LOC_SCALE = 1.0e-7;
+// Magnetomoter
+//statuses
+#define MAG_STATUS_OFF 0x00
+#define MAG_STATUS_ON 0x01
+#define MAG_STATUS_CALIBRATING 0x02
+//configuration modes
+#define MAG_CONFIG_BEGIN 0x01
+#define MAG_CONFIG_CALIBRATE 0x02
+#define MAG_CONFIG_END 0x00
 
 
 
@@ -70,7 +80,6 @@ class Rover {
     /////////////////
     // Class members
     ////////////////
-    String fwVersion;
     uint8_t fwVersionMajor; //major version #
     uint8_t fwVersionMinor;
     float analog[7];      //averaged readings of analog sensors, in volts
@@ -95,7 +104,8 @@ class Rover {
     ////////////////
 
     //general functions
-    bool init(); //returns true if init was successfull
+    bool begin(); //returns true if init was successfull
+    String fwVersion();
     //analog inputs
     void setLowVoltage(float v);
     float getAnalog(uint8_t input);
@@ -129,10 +139,14 @@ class Rover {
     void resetAllEncoder();
 
     //imu
-    void  initIMU();   //initializes IMU. Note: part of initialization is calibration
+    void  IMUbegin(); //initializes IMU. Note: part of initialization is calibration
                       // of gyro and accelerometer sensors, which takes some time (about 1sec)
                       //During this time, robot should be absolutely still and even
                       //Avoid using other commnads that communicate with the robot during this time
+    void IMUend();    //deactivate IMU
+    void IMUcalibrate(int16_t * gyroOffsets); //calibrates IMU; saves found offsets for gyro in array
+                                          // offsets, for future use
+    void IMUsetOffsets();
     bool IMUisActive();
     void getOrientationQuat();
     void getAccel();
@@ -141,7 +155,8 @@ class Rover {
     float getPitch();
     float getRoll();
     //GPS
-    void initGPS();        //start GPS
+    void GPSbegin();        //start GPS
+    void GPSend();
     uint8_t GPSstatus();   //get current GPS status from the wing
     void getGPSlocation(); //get current GPS location
     void saveGPSlocation(location_t & l); //save current GPS location to l
@@ -151,16 +166,23 @@ class Rover {
     int32_t longitudeL() const {return location.longitude;} //longitude as an int, in untis of 10^{-7} deg
     uint32_t GPStimestamp() const {return location.timestamp;}
     float  distanceTo(const location_t & l );  //distance form currrent location to l, in meters
-    float  bearingTo(const location_t & l );   //bearing from current position to l, in degrees relative to true north 
+    float  bearingTo(const location_t & l );   //bearing from current position to l, in degrees relative to true north
+    //magnetometer
+    void magBegin();
+    void magEnd();
+    void magCalibrate(int16_t * offsets); //calibrates magnetometer and saves values
+    void magSetOffsets(int16_t * offsets);
+    uint8_t magStatus();
+    void setDeclination(float d); //set magentic declination for current location
+    float getHeading(); // current robot heading in degrees, relative to true north
     //neopixels
 
-    void setPixelNumber(uint8_t n);     //configure how many neopixels we have connected (not counting the internal one )
+    void setPixelCount(uint8_t n);     //configure how many neopixels we have connected (not counting the internal one )
     void setPixelBrightness(uint8_t b); //0-255. Usually brightness of 32 (1/8 of maximum) is bright enough
     void setPixelColor(uint8_t pixel_index, uint32_t c); // C is a hex color: c=0xRRGGBB
     void setPixelRGB(uint8_t pixel_index, uint8_t R, uint8_t G, uint8_t B);
     void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V); //pixel color, in hue-saturation-value form
     void showPixel();   //after setting individual pixel colors, you need to use this to make the changes effective
-
 
 
   private:
@@ -176,7 +198,7 @@ class Rover {
     uint8_t servoHalfRange[4];
     //current location
     location_t location;
-
+    float declination; //magnetic declination, in degrees
 
 
     //////////////////////////////////////////////

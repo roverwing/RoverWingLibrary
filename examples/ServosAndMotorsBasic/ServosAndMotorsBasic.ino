@@ -42,15 +42,14 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
   }
   Serial.println("");
   Serial.println("Roverwing is connected");
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   Serial.print("Voltage: "); Serial.println(r.getVoltage());
   Serial.println("Starting Servos and Motors test");
   //now, initilaize the servos
@@ -66,7 +65,7 @@ void setup(){
   r.reverseMotor(MOTOR2);
   //if your motors are equipped with encoders, uncommnet the lines below and change as necessary
   myMotor.encoderCPR = 1440;  //encoder counts per revolution of output shaft
-                              //"count" refers to any observable chnage - rise/fall on channel A or B
+                              //"count" refers to any observable change - rise/fall on channel A or B
   r.configureMotor(MOTOR1, myMotor);
   r.configureMotor(MOTOR2, myMotor);
 }

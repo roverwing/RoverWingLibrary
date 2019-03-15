@@ -31,7 +31,7 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.init() ){
+  while (!r.begin() ){
     //if connecting fails, wait and try again...
     Serial.print(".");
     delay(200);
@@ -39,8 +39,7 @@ void setup(){
   Serial.println("");
   Serial.println("Roverwing is connected");
   //Print basic info
-  Serial.print("Firmware version: "); Serial.print(r.fwVersionMajor);
-  Serial.print("."); Serial.println(r.fwVersionMinor);
+  Serial.println("Firmware version: "+ r.fwVersion());
   float v=r.getVoltage();
   Serial.print("Voltage: "); Serial.print(v);Serial.println("V");
   //now, let us activate sonars
@@ -58,7 +57,7 @@ void loop(){
 
   //get and print analog inputs
 
-  r.getAllSonar(); //fetches values from RoverBoard and saves them in r.sonar[] array
+  r.getAllSonar(); //fetches values from RoverWing and saves them in r.sonar[] array
   Serial.print("Sonar readings (mm): ");
   for (int i=0; i<3; i++){
     Serial.print("  ");
@@ -66,7 +65,7 @@ void loop(){
                               // distance in mm
                               // note that even though the values returned can contain
                               // decimals, e.g. 272.3 mm, in reality, accuracy of HC-SR04 sensor is
-                              // about 5mm 
+                              // about 5mm
   }
   //instead of index i=0..2, you can alos use predefined values SONAR1, SONAR2, SONAR3
   // e.g. r.sonar[0] is the same as r.sonar[SONAR1];
