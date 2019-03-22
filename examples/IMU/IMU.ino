@@ -19,14 +19,22 @@ This example code is in the public domain.
 
 Rover r; //this is the name of the rover!
 float yaw, pitch, roll;
+uint8_t i;
 bool blink=false;
+//if you already know the offsets for accelerometer and gyro,
+//change this variable to true:
+bool haveOffsets = false;
+// and enter the values below
+int16_t accelOffset[]={0,0,0};
+int16_t gyroOffset[]={0,0,0};
+
 
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
   Wire.begin();
   //Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
-  delay(1000); //wait for 1 second, so that roverwing initializes
+  delay(5000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
   while (!r.begin() ){
     //if connecting fails, wait and try again...
@@ -38,15 +46,37 @@ void setup(){
   Serial.println("Firmware version: "+ r.fwVersion());
   Serial.println("Initializing and calibrating the IMU");
   r.IMUbegin();
-  delay(2000);
-  if (r.IMUisActive() ){
-    Serial.println("IMU initialized");
-  } else{
-    //if connecting fails, wait and try again...
-    Serial.print("Failed to initialize IMU");
-    delay(1000);
+  delay(500);
+  if (! r.IMUisActive() ){
+    Serial.println("IMU not found!");
+    return;
   }
-
+  //if we reached here, IMU is ok
+  if (haveOffsets){
+    Serial.println("Applying hardcoded offsets: ");
+    r.IMUsetOffsets(accelOffset, gyroOffset);
+  } else {
+    Serial.println("Starting calibration. Please make sure robot is completely stationary and level.");
+    Serial.println("The process will take about a second");
+    //delay(1000);
+    r.IMUcalibrate(accelOffset, gyroOffset);
+    Serial.println("Calibration complete. For future reference, here are the found offsets:");
+  }
+  //let us print results
+  Serial.print("Accelerometer:");
+  for (i=0;i<3;i++) {
+    Serial.print("  ");
+    Serial.print(accelOffset[i]);
+  }
+  Serial.println(" ");
+  Serial.print("Gyro:");
+  for (i=0;i<3;i++) {
+    Serial.print("  ");
+    Serial.print(gyroOffset[i]);
+  }
+  Serial.println(" ");
+  Serial.println("Now, let us test the  calibrated IMU...");
+  delay(2000);
 }
 void loop(){
   Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.print(" ");

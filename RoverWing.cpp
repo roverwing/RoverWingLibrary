@@ -228,18 +228,29 @@ void Rover::resetAllEncoder(){
 
 //imu
 void  Rover::IMUbegin(){
-  writeByte(REGB_IMU_CONFIG, 0x01);
+  writeByte(REGB_IMU_CONFIG, IMU_CONFIG_BEGIN);
 }
 void  Rover::IMUend(){
   writeByte(REGB_IMU_CONFIG, 0x00);
 }
-void IMUcalibrate(int16_t * gyroOffsets){
-  //FIXME
+void Rover::IMUcalibrate(int16_t * aOffsets, int16_t * gOffsets){
+  uint8_t i;
+  writeByte(REGB_IMU_CONFIG, IMU_CONFIG_CALIBRATE);
+  delay(500);
+  //wait until completed
+  while (readByte(REGA_IMU_STATUS) != IMU_OK) delay(100);
+  //get calculated offsets
+  read16(REGA_ACCEL_OFFSET,3, (uint16_t *) aOffsets);
+  read16(REGA_GYRO_OFFSET,3, (uint16_t *) gOffsets);
+}
+void Rover::IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets){
+  write16(REGB_ACCEL_OFFSET, 3, (uint16_t *)aOffsets);
+  write16(REGB_GYRO_OFFSET, 3, (uint16_t *)gOffsets);
 }
 bool Rover::IMUisActive(){
   byte b=readByte(REGA_IMU_STATUS);
-  //Serial.println(b);
-  return (b==0x01);
+  Serial.println(b);
+  return (b==IMU_OK);
 }
 void Rover::getOrientationQuat(){
   read32(REGA_QUAT,4,(uint32_t*)quat);
@@ -260,17 +271,17 @@ void Rover::getGyro(){
 }
 float Rover::getYaw(){
   int16_t yawRaw=(int16_t)read16(REGA_YAW);
-  yaw=(float)yawRaw/100.0f;
+  yaw=(float)yawRaw/10.0f;
   return yaw;
 }
 float Rover::getPitch(){
   int16_t pitchRaw=(int16_t)read16(REGA_PITCH);
-  pitch=(float)pitchRaw/100.0f;
+  pitch=(float)pitchRaw/10.0f;
   return pitch;
 }
 float Rover::getRoll(){
   int16_t rollRaw=(int16_t)read16(REGA_ROLL);
-  roll=(float)rollRaw/100.0f;
+  roll=(float)rollRaw/10.0f;
   return roll;
 }
 //GPS
@@ -313,6 +324,7 @@ float Rover::bearingTo(const location_t & l ){
 
 //magnetometer
 void Rover::magBegin(){
+  int i,j;
   writeByte(REGB_MAG_CONFIG, MAG_CONFIG_BEGIN);
 }
 void Rover::magEnd(){
@@ -321,31 +333,40 @@ void Rover::magEnd(){
 uint8_t Rover::magStatus(){
   return readByte(REGA_MAG_STATUS);
 }
-void Rover::magCalibrate(int16_t * offsets){
-  writeByte(REGB_MAG_CONFIG, MAG_CONFIG_CALIBRATE);
-  while (magStatus()!=MAG_STATUS_ON){
-    delay(10);//wait...
+void Rover::magSetCalData (int16_t  offsets[3], float matrix[3][3]) {
+  int16_t buf[9]; //
+  write16(REGB_MAG_OFFSET,3,(uint16_t *)offsets);
+  //now the matrix
+  for (int i=0;i<3;i++){
+    for (int j=0;j<3; j++){
+      //convert float to integers
+      buf[3*i+j]=(int16_t)(matrix[i][j]*1000.0f);
+    }
   }
-  //get the computed offsets
-  read16(REGA_MAG_OFFSET,2, (uint16_t *) offsets);
+  write16(REGB_MAG_MATRIX,9, (uint16_t *)buf);
 }
-void Rover::magSetOffsets(int16_t * offsets){
-  write16(REGB_MAG_OFFSET,2,(uint16_t *)offsets);
+void Rover::magStartCalibration(){
+  writeByte(REGB_MAG_CONFIG, MAG_CONFIG_CALIBRATE);
+}
+void Rover::magGetOffsets(int16_t offsets[3]){
+  read16(REGA_MAG_OFFSET, 3, (uint16_t *)offsets);
 }
 void Rover::setDeclination(float d){
   declination=d;
 }
+void Rover::getMagData(int16_t m[3]){
+  read16(REGA_MAG, 3, (uint16_t *)m);
+}
 float Rover::getHeading(){
   int16_t mag[2];
   read16(REGA_MAG,2,(uint16_t *)mag);
-  Serial.print(mag[0]); Serial.print(" "); Serial.println(mag[1]);
+  //Serial.print(mag[0]); Serial.print(" "); Serial.println(mag[1]);
   float h=atan2(-mag[0],-mag[1])*DEG_PER_RAD; //heading relative to magnetic North: 0=N, 90=E
   h+=declination;
   if (h>360.0f) h-=360.0;
   else if (h<0.0f) h+=360.0;
   return h;
 }
-
 //neopixels
 void Rover::setLowVoltage(float v){
   writeByte(REGB_LOW_VOLTAGE, (uint8_t)(v*10.0f));
@@ -360,7 +381,6 @@ void Rover::setPixelColor(uint8_t i, uint32_t c){
   uint8_t color[]={c, (c>>8), (c>>16), i}; //B, G, R components
   writeByte(REGB_PIXEL_COLOR, 4, color);
 }
-
 void Rover::setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B){
   uint8_t color[]={B, G, R,i};
   writeByte(REGB_PIXEL_COLOR, 4, color);
@@ -408,6 +428,68 @@ void Rover::setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V){
 }
 void Rover::showPixel(){
   writeByte(REGB_PIXEL_COMMAND, 0x01);
+}
+//drive
+void Rover::configureDrive(driveconfig_t d){
+  drive=d;
+  //get motor directions//turns
+  byte mConfig=0x00;
+  bool motor1dir,motor1turnDir, motor2dir, motor2turnDir;
+  if (d.leftMotor==MOTOR1){
+    //we assume that in this case, rightMotor is MOTOR2
+    motor1dir=d.leftMotorReversed;
+    motor2dir=d.rightMotorReversed;
+    motor1turnDir=motor1dir;
+    motor2turnDir=!motor2dir;
+  } else {
+    motor1dir=d.rightMotorReversed;
+    motor2dir=d.leftMotorReversed;
+    motor1turnDir=!motor1dir;
+    motor2turnDir=motor2dir;
+  }
+  mConfig=motor1dir|(motor1turnDir<<1)|(motor2dir<<2)|(motor2turnDir<<3);
+  //send it to roverwing
+  writeByte(REGB_DRIVE_MOTORCONFIG, (uint8_t)mConfig);
+  //now, let us compute max speed in encoder ticks/s, using configuration for motor1
+  uint16_t maxSpeed=( (uint32_t)motorsConfig[0].encoderCPR*motorsConfig[0].noloadRPM)/60;
+  //compute the turning speed
+  float maxSpeedMm=(float)motorsConfig[0].noloadRPM*PI*d.wheelDiameter/60.0; //maximal speed in mm/s
+  float maxTurnSpeed = 360.0*maxSpeedMm/(d.wheelBase*PI);
+  write16(REGB_DRIVE_MAXSPEED, maxSpeed);
+  write16(REGB_DRIVE_MAXTURNSPEED, (uint16_t)maxTurnSpeed);
+  //now, write or compute PID coef
+  //FIXME
+}
+void Rover::startForward(float power){
+  int16_t p=power*MOTOR_MAX_POWER;
+  p=abs(p);//make sure it is positive!
+  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT);
+}
+void Rover::startBackward(float power){
+  int16_t p=power*MOTOR_MAX_POWER;
+  p=-abs(p);//make sure it is negative
+  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT);
+}
+void Rover::stop(){
+  writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
+}
+int32_t Rover::distanceTravelled(){
+  //FIXME
+}
+void Rover::turn(float power, float degrees){
+  int16_t p=power*MOTOR_MAX_POWER;
+  p=abs(p);//make sure it is positive!
+  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  int16_t d=degrees*10.0f;
+  write16(REGB_DRIVE_TURNANGLE, (uint16_t)d);
+  writeByte(REGB_DRIVE_MODE, DRIVE_TURN);
+  while(driveInProgress()) delay(10);
+}
+
+bool Rover::driveInProgress(){
+  return (readByte(REGA_DRIVE_STATUS)==DRIVE_STATUS_INPROGRESS);
 }
 
 

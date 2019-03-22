@@ -21,6 +21,7 @@ enum sonar_t {
 #define SONAR3_ACT (0x04u)
 struct motorconfig_t{
   uint16_t encoderCPR; //encoder counts per revolution of output shaft
+  uint16_t noloadRPM;
   float Kp;            // PID coefficicients for speed control. They will be used as follows
                        // motor power = maxpower * Kp * (error+1/T_i errorInt + Td*errorDer)
                        // where time is in seconds, and error is speed error  in encoder tick/s
@@ -36,6 +37,21 @@ struct motorconfig_t{
 // Normally, motor power is an int between -500...500
 // this special value indicates that the motor should be stopped in coast state
 #define POWER_COAST 1000
+#define MOTOR_MAX_POWER 500
+
+/* ***************************************
+ * IMU 
+ *******************************************/
+//statuses
+#define IMU_OFF 0x00
+#define IMU_OK  0x01
+#define IMU_CALIBRATING 0x02
+//configuration mode used in communication with feather
+#define IMU_CONFIG_BEGIN 0x01
+#define IMU_CONFIG_CALIBRATE 0x02
+#define IMU_CONFIG_END 0x00
+
+
 /* ***************************************
  * Neopixel named colors
  *******************************************/
@@ -65,14 +81,43 @@ struct location_t {
 const double  LOC_SCALE = 1.0e-7;
 // Magnetomoter
 //statuses
-#define MAG_STATUS_OFF 0x00
-#define MAG_STATUS_ON 0x01
-#define MAG_STATUS_CALIBRATING 0x02
+#define MAG_OFF 0x00
+#define MAG_OK 0x01
+#define MAG_CALIBRATING 0x02
 //configuration modes
 #define MAG_CONFIG_BEGIN 0x01
 #define MAG_CONFIG_CALIBRATE 0x02
 #define MAG_CONFIG_END 0x00
+//drive modes
+#define DRIVE_OFF 0x00
+#define DRIVE_STRAIGHT 0x01
+#define DRIVE_STRAIGHT_DISTANCE 0x02
+#define DRIVE_TURN 0x03
+//drive statuses
+#define DRIVE_STATUS_COMPLETE 0x00
+#define DRIVE_STATUS_INPROGRESS 0x01
 
+
+
+/********************************************
+   ROVER DRIVING
+***********************************************/
+struct driveconfig_t {
+  //define defaults
+  driveconfig_t():  minPower(0.1f), leftMotorReversed(false), rightMotorReversed(false) {}
+  motor_t leftMotor;
+  motor_t rightMotor;
+  bool leftMotorReversed;
+  bool rightMotorReversed;
+  //bool withEncoders;
+  uint16_t wheelDiameter; //in mm
+  uint16_t wheelBase; //in mm
+  float minPower; //between 0-1.0; the minimal power necessary for the robot to move
+  float Kp;
+  float Ti;
+  float Td;
+  float Ilim;
+};
 
 
 class Rover {
@@ -99,6 +144,7 @@ class Rover {
     float gx;             //gyro rotation speeds, in deg/s
     float gy;
     float gz;
+
     /////////////////
     // Public functions
     ////////////////
@@ -144,9 +190,10 @@ class Rover {
                       //During this time, robot should be absolutely still and even
                       //Avoid using other commnads that communicate with the robot during this time
     void IMUend();    //deactivate IMU
-    void IMUcalibrate(int16_t * gyroOffsets); //calibrates IMU; saves found offsets for gyro in array
+    void IMUcalibrate(int16_t * aOffsets, int16_t * gOffsets);
+                                          //calibrates IMU; saves found offsets for gyro in array
                                           // offsets, for future use
-    void IMUsetOffsets();
+    void IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets);
     bool IMUisActive();
     void getOrientationQuat();
     void getAccel();
@@ -170,11 +217,14 @@ class Rover {
     //magnetometer
     void magBegin();
     void magEnd();
-    void magCalibrate(int16_t * offsets); //calibrates magnetometer and saves values
-    void magSetOffsets(int16_t * offsets);
+    void magSetCalData(int16_t  offsets[3], float matrix[3][3]);
+    void magStartCalibration();
+    void magGetOffsets(int16_t offsets[3]);
     uint8_t magStatus();
     void setDeclination(float d); //set magentic declination for current location
     float getHeading(); // current robot heading in degrees, relative to true north
+    void getMagData(int16_t  m[3]);
+
     //neopixels
 
     void setPixelCount(uint8_t n);     //configure how many neopixels we have connected (not counting the internal one )
@@ -183,6 +233,17 @@ class Rover {
     void setPixelRGB(uint8_t pixel_index, uint8_t R, uint8_t G, uint8_t B);
     void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V); //pixel color, in hue-saturation-value form
     void showPixel();   //after setting individual pixel colors, you need to use this to make the changes effective
+
+    //Rover driving
+    // before using these functions, you need to set rover.drive confiuration
+    void configureDrive(driveconfig_t d);
+    void startForward(float power); // between 0..1.0
+    void startBackward(float power);//between  0..1.0
+    void stop();
+    int32_t distanceTravelled();    //returns distance in mm, signed
+    void turn(float power, float degrees); //power between 0..1.0
+                                           // positive angle is for clockwise rotation
+    bool driveInProgress();
 
 
   private:
@@ -199,8 +260,7 @@ class Rover {
     //current location
     location_t location;
     float declination; //magnetic declination, in degrees
-
-
+    driveconfig_t drive;
     //////////////////////////////////////////////
     //     I2C helper functions
     /////////////////////////////////////////////

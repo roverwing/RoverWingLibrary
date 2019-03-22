@@ -9,11 +9,13 @@ motor_t 	KEYWORD1
 servo_t 	KEYWORD1
 sonar_t 	KEYWORD1
 motorconfig_t 	KEYWORD1
+location_t 	KEYWORD1
 
 #######################################
 # Methods and Functions
 #######################################
-init                  	KEYWORD2
+begin                 	KEYWORD2
+fwVersion             	KEYWORD2
 setLowVoltage         	KEYWORD2
 getAnalog             	KEYWORD2
 getVoltage            	KEYWORD2
@@ -37,7 +39,8 @@ getSpeed              	KEYWORD2
 getAllSpeed           	KEYWORD2
 resetEncoder          	KEYWORD2
 resetAllEncoder       	KEYWORD2
-initIMU               	KEYWORD2
+IMUbegin              	KEYWORD2
+IMUend                	KEYWORD2
 IMUisActive           	KEYWORD2
 getOrientationQuat    	KEYWORD2
 getAccel              	KEYWORD2
@@ -45,7 +48,8 @@ getGyro               	KEYWORD2
 getYaw                	KEYWORD2
 getPitch              	KEYWORD2
 getRoll               	KEYWORD2
-initGPS               	KEYWORD2
+GPSbegin              	KEYWORD2
+GPSend                	KEYWORD2
 GPSstatus             	KEYWORD2
 getGPSlocation        	KEYWORD2
 saveGPSlocation       	KEYWORD2
@@ -56,10 +60,23 @@ longitudeL            	KEYWORD2
 GPStimestamp          	KEYWORD2
 distanceTo            	KEYWORD2
 bearingTo             	KEYWORD2
+magBegin              	KEYWORD2
+magEnd                	KEYWORD2
+magStartCalibrati     	KEYWORD2
+magSetCalData         	KEYWORD2
+magStatus             	KEYWORD2
+magGetOffsets         	KEYWORD2
+getMagData            	KEYWORD2
+getHeading            	KEYWORD2
+setDeclination        	KEYWORD2
+setPixelCount         	KEYWORD2
 setPixelBrightness    	KEYWORD2
 setPixelRGB           	KEYWORD2
 etPixelHSV            	KEYWORD2
 showPixel             	KEYWORD2
+displayMessage        	KEYWORD2
+waitForButton         	KEYWORD2
+topDisplay            	KEYWORD2
 #######################################
 # Constants
 #######################################
@@ -73,3 +90,23 @@ SONAR2          	LITERAL1
 SONAR3          	LITERAL1
 MOTOR1          	LITERAL1
 MOTOR2          	LITERAL1
+SONAR1_ACT      	LITERAL1
+SONAR2_ACT      	LITERAL1
+SONAR3_ACT      	LITERAL1
+MOTOR_MODE_POWER	LITERAL1
+MOTOR_MODE_COAST	LITERAL1
+MOTOR_MODE_SPEEDPID 	LITERAL1
+RED             	LITERAL1
+BLUE            	LITERAL1
+GREEN           	LITERAL1
+YELLOW          	LITERAL1
+WHITE           	LITERAL1
+OFF             	LITERAL1
+GPS_OFF         	LITERAL1
+GPS_WAITING     	LITERAL1
+GPS_OK          	LITERAL1
+MAG_OFF         	LITERAL1
+MAG_CALIBRATING 	LITERAL1
+MAG_OK          	LITERAL1
+TWO_LINE_FONT   	LITERAL1
+THREE_LINE_FONT 	LITERAL1
