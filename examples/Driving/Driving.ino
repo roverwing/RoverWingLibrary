@@ -20,6 +20,11 @@ float yaw, pitch, roll;
 motorconfig_t myMotor; //to hold configuration data for the motors
 driveconfig_t drivetrain; // to hold configuration data about robot
 bool blink=false;
+//IMU calibration
+int16_t accelOffset[]={656, 41, 300};
+int16_t gyroOffset[]={-140, 145, -64};
+
+
 
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
@@ -39,14 +44,16 @@ void setup(){
   //initilaize the IMU. It is required for course corrections
   Serial.println("Initializing and calibrating the IMU");
   r.IMUbegin();
-  delay(2000);
+  delay(500);
   if (r.IMUisActive() ){
+    r.IMUsetOffsets(accelOffset, gyroOffset);
     Serial.println("IMU initialized");
   } else{
     //if connecting fails, wait and try again...
     Serial.print("Failed to initialize IMU");
     delay(1000);
   }
+
   //configure motors
   //Change the values to match your setup!!!
   myMotor.encoderCPR=1440; //if not using encoders, put 0
@@ -56,15 +63,29 @@ void setup(){
   //now, setup the drivetrain conifuration
   drivetrain.leftMotor=MOTOR1;
   drivetrain.rightMotor=MOTOR2;
-  drivetrain.rightMotorReversed=true;
+  drivetrain.leftMotorReversed=true;
   drivetrain.wheelDiameter=70;//in mm
   drivetrain.wheelBase=140;   //in mm
+  drivetrain.minPower=0.05;   // need at least 5% to move
   //now save these values
   r.configureDrive(drivetrain);
+  r.setDriveRampTime(1000); //set ramping up time to be 1 sec
 
 }
 void loop(){
-  Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.print(" ");
+  r.goForward(0.2, 400); //20% power, 400mm
+  /*r.startForward(0.1);
+  for (int i=0; i<16; i++){
+    r.getDebug();
+    Serial.print("Debug info: ");
+    Serial.print(r.debug[0]); Serial.print(" ");
+    Serial.print(r.debug[1]); Serial.print(" ");
+    Serial.println(r.debug[2]);
+    delay(250);
+  }*/
+  r.stop();
   delay(1000);
-  r.turn(0.5, 90); //turn clockwise by 90 degree at 50% power
+  r.turn(0.2, 90); //turn clockwise by 90 degree at 50% power
+  Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.println(" ");
+  delay(1000);
 }

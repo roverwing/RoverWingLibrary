@@ -77,6 +77,17 @@ showPixel             	KEYWORD2
 displayMessage        	KEYWORD2
 waitForButton         	KEYWORD2
 topDisplay            	KEYWORD2
+configureDrive        	KEYWORD2
+setDriveRampTime      	KEYWORD2
+startForward          	KEYWORD2
+startBackward         	KEYWORD2
+stop                  	KEYWORD2
+distanceTravelled     	KEYWORD2
+goForward             	KEYWORD2
+goBackward            	KEYWORD2
+turn                  	KEYWORD2
+driveInProgress       	KEYWORD2
+
 #######################################
 # Constants
 #######################################
@@ -110,3 +121,5 @@ MAG_CALIBRATING 	LITERAL1
 MAG_OK          	LITERAL1
 TWO_LINE_FONT   	LITERAL1
 THREE_LINE_FONT 	LITERAL1
+DRIVE_STATUS_COMPLETE 	LITERAL1
+DRIVE_STATUS_INPROGRESS 	LITERAL1 

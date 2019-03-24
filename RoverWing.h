@@ -40,7 +40,7 @@ struct motorconfig_t{
 #define MOTOR_MAX_POWER 500
 
 /* ***************************************
- * IMU 
+ * IMU
  *******************************************/
 //statuses
 #define IMU_OFF 0x00
@@ -104,7 +104,7 @@ const double  LOC_SCALE = 1.0e-7;
 ***********************************************/
 struct driveconfig_t {
   //define defaults
-  driveconfig_t():  minPower(0.1f), leftMotorReversed(false), rightMotorReversed(false) {}
+  driveconfig_t():  minPower(0.0f), leftMotorReversed(false), rightMotorReversed(false), Kp(-1.0) {}
   motor_t leftMotor;
   motor_t rightMotor;
   bool leftMotorReversed;
@@ -116,7 +116,7 @@ struct driveconfig_t {
   float Kp;
   float Ti;
   float Td;
-  float Ilim;
+  float iLim;
 };
 
 
@@ -144,7 +144,7 @@ class Rover {
     float gx;             //gyro rotation speeds, in deg/s
     float gy;
     float gz;
-
+    int16_t debug[3];   //misc debugging info
     /////////////////
     // Public functions
     ////////////////
@@ -237,14 +237,18 @@ class Rover {
     //Rover driving
     // before using these functions, you need to set rover.drive confiuration
     void configureDrive(driveconfig_t d);
+    void setDriveRampTime(uint16_t t);//time in ms to go from 0 to full power
     void startForward(float power); // between 0..1.0
     void startBackward(float power);//between  0..1.0
     void stop();
     int32_t distanceTravelled();    //returns distance in mm, signed
+    void goForward(float power, int32_t distance); //distance in mm
+    void goBackward(float power, int32_t distance); //distance in mm
     void turn(float power, float degrees); //power between 0..1.0
                                            // positive angle is for clockwise rotation
     bool driveInProgress();
-
+    //debug
+    void getDebug();
 
   private:
     /////////////////////////////////////////////

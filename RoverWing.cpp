@@ -140,6 +140,7 @@ void Rover::stopMotors(){
 }
 void Rover::configureMotor(motor_t m, motorconfig_t c){
   motorsConfig[m].encoderCPR=c.encoderCPR;
+  motorsConfig[m].noloadRPM=c.noloadRPM;
   if (c.Kp>0){
     motorsConfig[m].Kp=c.Kp;
     motorsConfig[m].Ti=c.Ti;
@@ -451,14 +452,40 @@ void Rover::configureDrive(driveconfig_t d){
   //send it to roverwing
   writeByte(REGB_DRIVE_MOTORCONFIG, (uint8_t)mConfig);
   //now, let us compute max speed in encoder ticks/s, using configuration for motor1
+  motorconfig_t m = motorsConfig[0];
+  Serial.print("encoder CPR");
+  Serial.println(m.encoderCPR);
+  Serial.print("RPM");
+  Serial.println(m.noloadRPM);
   uint16_t maxSpeed=( (uint32_t)motorsConfig[0].encoderCPR*motorsConfig[0].noloadRPM)/60;
   //compute the turning speed
-  float maxSpeedMm=(float)motorsConfig[0].noloadRPM*PI*d.wheelDiameter/60.0; //maximal speed in mm/s
-  float maxTurnSpeed = 360.0*maxSpeedMm/(d.wheelBase*PI);
+  float maxSpeedDegSec=(float)motorsConfig[0].noloadRPM*60.0; //maximal wheel rotation speed in deg/s
+  float maxTurnSpeed = maxSpeedDegSec*(float)d.wheelDiameter/d.wheelBase;
   write16(REGB_DRIVE_MAXSPEED, maxSpeed);
   write16(REGB_DRIVE_MAXTURNSPEED, (uint16_t)maxTurnSpeed);
+  write16(REGB_DRIVE_MINPOWER, (uint16_t)(d.minPower*MOTOR_MAX_POWER));
   //now, write or compute PID coef
-  //FIXME
+  if (d.Kp<0){
+    //let us set defaults
+    d.Kp=40/maxTurnSpeed;
+    d.Ti=5.0;
+    d.Td=0.0;
+    d.iLim=1.0*d.Ti/d.Kp;
+  };
+  float PIDcoef[4]={d.Kp,
+                      d.Kp/d.Ti, //Ki
+                      d.Kp*d.Td, //Kd
+                      d.iLim};
+   write32(REGB_DRIVE_PID_COEF, 4, (uint32_t *)PIDcoef);
+   Serial.print("MaxSpeed: ");
+   Serial.println(maxSpeed);
+   Serial.print("MaxTurnSpeed: ");
+   Serial.println(maxTurnSpeed);
+   Serial.print("Kp: ");
+   Serial.println(d.Kp,6);
+}
+void Rover::setDriveRampTime(uint16_t t){
+  write16(REGB_DRIVE_RAMPTIME, t);
 }
 void Rover::startForward(float power){
   int16_t p=power*MOTOR_MAX_POWER;
@@ -478,6 +505,33 @@ void Rover::stop(){
 int32_t Rover::distanceTravelled(){
   //FIXME
 }
+void Rover::goForward(float power, int32_t distance){
+  int16_t p=power*MOTOR_MAX_POWER;
+  p=abs(p);//make sure it is positive!
+  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  //compute ticks per mm
+  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
+  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
+  delay(20);
+  while(driveInProgress()) {
+    //getDebug();
+    //Serial.print("dPos, power :");
+    //Serial.print(debug[0]); Serial.print(" "); Serial.println(debug[1]);
+    delay(20);
+  }
+}
+void Rover::goBackward(float power, int32_t distance){
+  int16_t p=power*MOTOR_MAX_POWER;
+  p=-abs(p);//make sure it is negative!
+  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  //compute ticks per mm
+  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
+  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
+  delay(20);
+  while(driveInProgress()) delay(10);
+}
 void Rover::turn(float power, float degrees){
   int16_t p=power*MOTOR_MAX_POWER;
   p=abs(p);//make sure it is positive!
@@ -485,14 +539,16 @@ void Rover::turn(float power, float degrees){
   int16_t d=degrees*10.0f;
   write16(REGB_DRIVE_TURNANGLE, (uint16_t)d);
   writeByte(REGB_DRIVE_MODE, DRIVE_TURN);
+  delay(20);
   while(driveInProgress()) delay(10);
 }
-
 bool Rover::driveInProgress(){
   return (readByte(REGA_DRIVE_STATUS)==DRIVE_STATUS_INPROGRESS);
 }
 
-
+void Rover::getDebug(){
+  read16(REGA_DEBUG,3, (uint16_t *) debug);
+}
 
 
 
