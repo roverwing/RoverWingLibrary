@@ -32,16 +32,8 @@ void setup(){
   Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
-  Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  Serial.println("Firmware version: "+ r.fwVersion());
-  Serial.print("Voltage: "); Serial.println(r.getVoltage());
+  //activates RoverWing and prints basic info to Serial
+  r.beginVerbose();
   //configure internal neopixel turn yellow if voltage drops below threshold
   r.setLowVoltage(LOW_VOLTAGE);
   //now let us setup the neopixels
@@ -62,7 +54,7 @@ void loop(){
   // r.setPixelColor(currentPixel, BLUE);
   // you can use the following named colors:
   // RED, GREEN, BLUE, YELLOW, WHITE, OFF
-  r.showPixel(); //this must be called to push the new colors to the actual neopixels
+  r.showPixel(); //this must be called to apply the  new colors 
   //blink the built-in LED of the feather board
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;

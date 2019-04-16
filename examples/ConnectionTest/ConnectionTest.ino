@@ -31,6 +31,9 @@ void setup(){
   Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
+  // the next several lines could be replaced by just one,
+  // r.beginVerbose(); 
+
   Serial.print("Connecting to RoverWing");
   while (!r.begin() ){
     //if connecting fails, wait and try again...

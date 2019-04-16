@@ -30,23 +30,14 @@ void setup(){
   Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
-  Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  //Print basic info
-  Serial.println("Firmware version: "+ r.fwVersion());
-  float v=r.getVoltage();
-  Serial.print("Voltage: "); Serial.print(v);Serial.println("V");
-  //now, let us activate sonars
+  //activates RoverWing and prints basic info to Serial
+  r.beginVerbose();
+  //activate sonars
   //this command activates all three sonars; after activation, RoverWing will
   //continuously fire each of the activated sonars in turn, recording the readings
-  r.activateSonars(SONAR1_ACT+SONAR2_ACT+SONAR3_ACT); //SONARi_ACT are activation 'codes'
-                                                      //(to be precise, bitmasks)
+  //second argument is max distance in mm: if no return echo was received at the time it would take
+  //to get echo form object at this distance, stop waiting for echo and return thsi distance instead
+  r.activateSonars(SONAR1+SONAR2+SONAR3, 3000);
 
   //to change which sonars are activated,  issue another activateSonars() command
   //to deactivate all sonars, use

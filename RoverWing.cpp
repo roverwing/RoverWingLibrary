@@ -12,113 +12,135 @@ const float  microsToMm=0.171f; //half of speed of sound, which is 343 m/s = 0.3
 
  //general functions
 bool Rover::begin(){
-   int i;
-   //try getting response from the roverwing
-   if (readByte(REGA_WHO_AM_I) == ROVERWING_ADDRESS) {
-     //get firmware version
-      uint8_t fw[2];
-      readByte(REGA_FW_VERSION,2,fw);
-      fwVersionMinor=fw[0];
-      fwVersionMajor=fw[1];
-      //set up motors
-      for (i=0; i<2; i++){
-        motorIsReversed[i] = false;
-      }
-      //set up servos
-      for (i=0; i<4; i++){
-        //set servo range 1000...2000 us
-        servoCenterPos[i]=1500;
-        servoHalfRange[i]=500;
-      }
-      //if top cover is present, configure the top display
-      return true;
-   } else {
-     //failed to get correct response
-     //Serial.print("Received WHOAMI value: "); Serial.println((uint8_t)readByte(REGA_WHO_AM_I));
-     return false;
-   }
-
- }
+  int i;
+  //try getting response from the roverwing
+  if (readByte(REGA_WHO_AM_I) == ROVERWING_ADDRESS) {
+   //get firmware version
+    uint8_t fw[2];
+    readByte(REGA_FW_VERSION,2,fw);
+    fwVersionMinor=fw[0];
+    fwVersionMajor=fw[1];
+    //set up motors
+    for (i=0; i<2; i++){
+      motorIsReversed[i] = false;
+    }
+    //set up servos
+    for (i=0; i<4; i++){
+      //set servo range 1000...2000 us
+      servoCenterPos[i]=1500;
+      servoHalfRange[i]=500;
+    }
+    //for tank drive
+    headingSet=false;
+    return true;
+  } else {
+   //failed to get correct response
+   //Serial.print("Received WHOAMI value: "); Serial.println((uint8_t)readByte(REGA_WHO_AM_I));
+   return false;
+  }
+}
 String Rover::fwVersion(){
   return(String(fwVersionMajor)+"."+String(fwVersionMinor));
 }
+void Rover::beginVerbose(){
+  Serial.print("Connecting to RoverWing");
+  while (!begin() ){
+    //if connecting fails, wait and try again...
+    Serial.print(".");
+    delay(200);
+  }
+  Serial.println("");
+  Serial.println("Roverwing is connected");
+  //Print basic info
+  Serial.println("Firmware version: "+ fwVersion());
+  Serial.print("Voltage: "); Serial.print(getVoltage());Serial.println("V");
+}
  //analog inputs
- float Rover::getAnalog(uint8_t input){
-   float result=(float)read16(REGA_ANALOG+2*input)*0.1f*analogScale;
-   analog[input]=result;
-   return result;
- }
- float Rover::getVoltage(){
+float Rover::getAnalog(uint8_t input){
+  float result=(float)read16(REGA_ANALOG+2*input)*0.1f*analogScale;
+  analog[input]=result;
+  return result;
+}
+float Rover::getVoltage(){
    uint16_t rawVoltage;
    rawVoltage = read16(REGA_ANALOG); //voltage = analog0;
    voltage=(float)rawVoltage*0.1f*voltageScale;
    return voltage;
  }
- void Rover::getAllAnalog(){
-   uint16_t raw[7];
-   read16(REGA_ANALOG,7,raw);
-   for (uint8_t i =0; i<7; i++){
-     analog[i]=(float)raw[i]*0.1f*analogScale;
-   }
- }
- //sonars
- void Rover::activateSonars(uint8_t bitmask, int maxDistance){
-   activeSonarsBitmask = bitmask;
-   //Serial.println(bitmask, BIN);
-   write16(REGB_SONAR_TIMEOUT, maxDistance/microsToMm);
-   writeByte(REGB_SONAR_BITMASK, bitmask);
- }
- void Rover::stopSonars(){
-   activeSonarsBitmask=0x00;
-   writeByte(REGB_SONAR_BITMASK, 0x00);
- }
- void Rover::getAllSonar(){
-   uint16_t raw[3];
-   read16(REGA_SONAR, 3, raw);
-   for (uint8_t i=0; i<3; i++){
-     sonar[i]=(float)raw[i]*0.1f;
-   }
- }
- float Rover::getSonar(sonar_t s){
-   float result=(float)read16(REGA_SONAR+2*s)*0.1f;
-   sonar[s]=result;
-   return result;
- }
+void Rover::getAllAnalog(){
+  uint16_t raw[7];
+  read16(REGA_ANALOG,7,raw);
+  for (uint8_t i =0; i<7; i++){
+    analog[i]=(float)raw[i]*0.1f*analogScale;
+  }
+}
+//sonars
+void Rover::activateSonars(uint8_t bitmask, int maxDistance){
+  activeSonarsBitmask = bitmask;
+  //Serial.println(bitmask, BIN);
+  write16(REGB_SONAR_TIMEOUT, maxDistance/microsToMm);
+  writeByte(REGB_SONAR_BITMASK, bitmask);
+}
+void Rover::stopSonars(){
+  activeSonarsBitmask=0x00;
+  writeByte(REGB_SONAR_BITMASK, 0x00);
+}
+void Rover::getAllSonar(){
+  uint16_t raw[3];
+  read16(REGA_SONAR, 3, raw);
+  for (uint8_t i=0; i<3; i++){
+    sonar[i]=(float)raw[i]*0.1f;
+  }
+}
+float Rover::getSonar(sonar_t s){
+  uint8_t i;
+  switch (s) {
+    case SONAR1: i=0; break;
+    case SONAR2: i=1; break;
+    case SONAR3: i=2;
+  }
+  float result=(float)read16(REGA_SONAR+2*i)*0.1f;
+  sonar[s]=result;
+  return result;
+}
 
  //servos
- void Rover::setServo(servo_t s, float pos){
-   uint16_t pulseWidth;
-   pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
-   write16(REGB_SERVO+s, pulseWidth);
- }
- void Rover::setAllServo(float* pos){
-   uint16_t pulseWidth[4];
-   for (uint8_t i =0; i<4; i++) {
-     pulseWidth[i]=1500 + (uint16_t)(pos[i]*1000.0f);
-   }
-   write16(REGB_SERVO, 4, pulseWidth);
- }
- void Rover::setServoRange(servo_t s, int minPulse, int maxPulse){
-   servoCenterPos[s]=(minPulse+maxPulse)/2;
-   servoHalfRange[s]=(maxPulse-minPulse)/2;
- }
-
+void Rover::setServo(servo_t s, float pos){
+  uint16_t pulseWidth;
+  pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
+  write16(REGB_SERVO+s, pulseWidth);
+}
+void Rover::setAllServo(float* pos){
+  uint16_t pulseWidth[4];
+  for (uint8_t i =0; i<4; i++) {
+    pulseWidth[i]=1500 + (uint16_t)(pos[i]*1000.0f);
+  }
+  write16(REGB_SERVO, 4, pulseWidth);
+}
+void Rover::setServoRange(servo_t s, int minPulse, int maxPulse){
+  servoCenterPos[s]=(minPulse+maxPulse)/2;
+  servoHalfRange[s]=(maxPulse-minPulse)/2;
+}
 
 //motors
 void Rover::setMotorPwr(motor_t m, float pwr){
-  int16_t power= (int16_t)(pwr*500.0f);
+  int16_t power= (int16_t)(pwr*MOTOR_MAX_POWER);
   //set mode
+  writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
   writeByte(REGB_MOTOR_MODE+m,(uint8_t)MOTOR_MODE_POWER);
+  headingSet=false;
   //
-  if (power>500) power=500;
-  else if (power<-500) power=-500;
+  if (power>MOTOR_MAX_POWER) power=MOTOR_MAX_POWER;
+  else if (power<-MOTOR_MAX_POWER) power=-MOTOR_MAX_POWER;
   if (motorIsReversed[m]) power=-power;
   write16(REGB_MOTOR_POWER +2*m, (uint16_t)power );
 }
 void Rover::setAllMotorPwr(float pwr1, float pwr2){
   float m = max (fabs(pwr1), fabs(pwr2));
   //set mode
+  writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
   write16(REGB_MOTOR_MODE, (uint16_t)(MOTOR_MODE_POWER<<8|MOTOR_MODE_POWER));
+  headingSet=false;
   //rescale power
   if (m>1.0f) {
    pwr1/=m;
@@ -127,11 +149,11 @@ void Rover::setAllMotorPwr(float pwr1, float pwr2){
   if (motorIsReversed[MOTOR1]) pwr1=-pwr1;
   if (motorIsReversed[MOTOR2]) pwr2=-pwr2;
 
-  int16_t power[2]= {(int16_t)(pwr1*500.0f), (int16_t)(pwr2*500.0f)} ;
+  int16_t power[2]= {(int16_t)(pwr1*MOTOR_MAX_POWER), (int16_t)(pwr2*MOTOR_MAX_POWER)} ;
   write16(REGB_MOTOR_POWER,2,(uint16_t *)power );
 }
 void Rover::stopMotors(){
-  //FIXME: add "float" mode
+  //FIXME: add "coast" mode
   //set mode
   write16(REGB_MOTOR_MODE, (uint16_t)(MOTOR_MODE_POWER<<8|MOTOR_MODE_POWER));
   //set power
@@ -183,7 +205,9 @@ void Rover::setMotorSpeed(motor_t m, float s){ //speed in rpm
   if (motorIsReversed[m]) speed=-speed;
   write32(REGB_MOTOR_TARGET + 4*m, speed );
   //set mode
+  writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
   writeByte(REGB_MOTOR_MODE+m,(uint8_t)MOTOR_MODE_SPEEDPID);
+  headingSet=false;
 }
 
 
@@ -487,59 +511,87 @@ void Rover::configureDrive(driveconfig_t d){
 void Rover::setDriveRampTime(uint16_t t){
   write16(REGB_DRIVE_RAMPTIME, t);
 }
-void Rover::startForward(float power){
+
+void Rover::prepareDrive(float power){
   int16_t p=power*MOTOR_MAX_POWER;
-  p=abs(p);//make sure it is positive!
   write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  if (!headingSet){
+    targetHeading=getYaw();
+    headingSet=true;
+  }
+  write16(REGB_DRIVE_HEADING, (int16_t)(targetHeading*10.0));
+}
+
+void Rover::startForward(float power){
+  if (power<0) power*=-1.0;
+  prepareDrive(power);
   writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT);
 }
+void Rover::startForward(float power, int32_t distance){
+  if (power<0) power*=-1.0;
+  prepareDrive(power);
+  //compute ticks per mm
+  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
+  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
+}
 void Rover::startBackward(float power){
-  int16_t p=power*MOTOR_MAX_POWER;
-  p=-abs(p);//make sure it is negative
-  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
+  if (power<0) power*=-1.0;
+  prepareDrive(-power);
   writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT);
+}
+void Rover::startBackward(float power, int32_t distance){
+  if (power<0) power*=-1.0;
+  prepareDrive(-power);
+  //compute ticks per mm
+  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
+  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
+  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
 }
 void Rover::stop(){
   writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
 }
 int32_t Rover::distanceTravelled(){
-  //FIXME
+  getAllPosition();
+  return (position[MOTOR1]+position[MOTOR2])/(2*PI*drive.wheelDiameter);
 }
+
+
 void Rover::goForward(float power, int32_t distance){
-  int16_t p=power*MOTOR_MAX_POWER;
-  p=abs(p);//make sure it is positive!
-  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
-  //compute ticks per mm
-  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
-  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
-  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
-  delay(20);
+  startForward(power,distance);
+  delay(10);
   while(driveInProgress()) {
     //getDebug();
     //Serial.print("dPos, power :");
     //Serial.print(debug[0]); Serial.print(" "); Serial.println(debug[1]);
-    delay(20);
+    delay(10);
   }
 }
 void Rover::goBackward(float power, int32_t distance){
-  int16_t p=power*MOTOR_MAX_POWER;
-  p=-abs(p);//make sure it is negative!
-  write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
-  //compute ticks per mm
-  float ticksPerMm=(float)motorsConfig[0].encoderCPR/(PI*drive.wheelDiameter);
-  write32(REGB_DRIVE_DISTANCE, (uint32_t)(distance*ticksPerMm));
-  writeByte(REGB_DRIVE_MODE, DRIVE_STRAIGHT_DISTANCE);
+  startBackward(power, distance);
   delay(20);
   while(driveInProgress()) delay(10);
 }
-void Rover::turn(float power, float degrees){
+void Rover::startTurn(float power, float degrees){
   int16_t p=power*MOTOR_MAX_POWER;
   p=abs(p);//make sure it is positive!
   write16(REGB_DRIVE_TARGETPOWER, (uint16_t)p);
-  int16_t d=degrees*10.0f;
-  write16(REGB_DRIVE_TURNANGLE, (uint16_t)d);
+  //determine heading
+  if (!headingSet){
+    targetHeading=getYaw();
+    headingSet=true;
+  }
+  //new  heading
+  targetHeading+=degrees;
+  //normalize
+  if (targetHeading>180.0) targetHeading-=360.0;
+  else if (targetHeading<-180.0) targetHeading +=360.0;
+  write16(REGB_DRIVE_HEADING, (int16_t)(targetHeading*10.0));
   writeByte(REGB_DRIVE_MODE, DRIVE_TURN);
-  delay(20);
+}
+void Rover::turn(float power, float degrees){
+  startTurn(power,degrees);
+  delay(10);
   while(driveInProgress()) delay(10);
 }
 bool Rover::driveInProgress(){

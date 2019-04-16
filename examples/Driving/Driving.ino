@@ -4,9 +4,11 @@ RoverWing Drive  test
 This code is part of RoverWing library: https://github.com/roverwing
 
 This code demonstrates higher level driving function such as "drive forward" or "turn 90 degrees "
-It can be used with any Adafruit Feather board (or compatible) plugged into
-RoverWing  board. RoverWing board must  be powered through the main power connector,
-or it can get power from the Feather.
+It assumes that your rover is using "tank drive", with two identical motors,
+one of which powers the left side, and the other, the right side. See the user guide for details.
+
+You need to change various pieces of configuration to match your robot;
+they are indicate by CHANGE AS NEEDED in comments
 
 Written in 2019 by David Bershadsky, Alexander Kirillov
 
@@ -20,7 +22,9 @@ float yaw, pitch, roll;
 motorconfig_t myMotor; //to hold configuration data for the motors
 driveconfig_t drivetrain; // to hold configuration data about robot
 bool blink=false;
-//IMU calibration
+// CHANGE AS NEEDED
+//IMU calibration. You must know the IMU calibration data;
+//if you do not yet have it, run the IMU example sketch
 int16_t accelOffset[]={656, 41, 300};
 int16_t gyroOffset[]={-140, 145, -64};
 
@@ -32,35 +36,28 @@ void setup(){
   //Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
-  Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
+  //activates RoverWing and prints basic info to Serial
+  r.beginVerbose();
+  Serial.print("Initializing and calibrating the IMU ");
+  r.IMUbegin();
+  delay(500);
+  while (! r.IMUisActive() ) {
     Serial.print(".");
     delay(200);
   }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  Serial.println("Firmware version: "+ r.fwVersion());
-  //initilaize the IMU. It is required for course corrections
-  Serial.println("Initializing and calibrating the IMU");
-  r.IMUbegin();
-  delay(500);
-  if (r.IMUisActive() ){
-    r.IMUsetOffsets(accelOffset, gyroOffset);
-    Serial.println("IMU initialized");
-  } else{
-    //if connecting fails, wait and try again...
-    Serial.print("Failed to initialize IMU");
-    delay(1000);
-  }
 
+  r.IMUsetOffsets(accelOffset, gyroOffset);
+  Serial.println(" ");
+  Serial.println("IMU initialized");
+
+  // CHANGE AS NEEDED
   //configure motors
   //Change the values to match your setup!!!
   myMotor.encoderCPR=1440; //if not using encoders, put 0
   myMotor.noloadRPM=250;   //motor RPM
   r.configureMotor(MOTOR1, myMotor);
   r.configureMotor(MOTOR2, myMotor);
-  //now, setup the drivetrain conifuration
+  //now, setup the drivetrain conifuration. Read the user guide for detailed explanations 
   drivetrain.leftMotor=MOTOR1;
   drivetrain.rightMotor=MOTOR2;
   drivetrain.leftMotorReversed=true;
@@ -73,17 +70,11 @@ void setup(){
 
 }
 void loop(){
-  r.goForward(0.2, 400); //20% power, 400mm
-  /*r.startForward(0.1);
-  for (int i=0; i<16; i++){
-    r.getDebug();
-    Serial.print("Debug info: ");
-    Serial.print(r.debug[0]); Serial.print(" ");
-    Serial.print(r.debug[1]); Serial.print(" ");
-    Serial.println(r.debug[2]);
-    delay(250);
-  }*/
-  r.stop();
+  r.goForward(0.4, 400); //40% power, 400mm
+  /* Alternatively, you could use:
+  r.startForward(0.4);
+  delay(2000);
+  r.stop(); */
   delay(1000);
   r.turn(0.2, 90); //turn clockwise by 90 degree at 50% power
   Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.println(" ");

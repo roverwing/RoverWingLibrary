@@ -13,12 +13,12 @@ enum servo_t {
   SERVO1=0, SERVO2, SERVO3, SERVO4
 };
 enum sonar_t {
-  SONAR1=0, SONAR2, SONAR3
+  SONAR1=1, SONAR2=2, SONAR3=4
 };
-// servo codes used in activation bitmask
+/*// servo codes used in activation bitmask
 #define SONAR1_ACT (0x01u)
 #define SONAR2_ACT (0x02u)
-#define SONAR3_ACT (0x04u)
+#define SONAR3_ACT (0x04u) */
 struct motorconfig_t{
   uint16_t encoderCPR; //encoder counts per revolution of output shaft
   uint16_t noloadRPM;
@@ -152,6 +152,7 @@ class Rover {
     //general functions
     bool begin(); //returns true if init was successfull
     String fwVersion();
+    void beginVerbose();//starts roverwing printing basic info such as fw version to Serial
     //analog inputs
     void setLowVoltage(float v);
     float getAnalog(uint8_t input);
@@ -238,15 +239,24 @@ class Rover {
     // before using these functions, you need to set rover.drive confiuration
     void configureDrive(driveconfig_t d);
     void setDriveRampTime(uint16_t t);//time in ms to go from 0 to full power
+    //forward motion
     void startForward(float power); // between 0..1.0
-    void startBackward(float power);//between  0..1.0
-    void stop();
-    int32_t distanceTravelled();    //returns distance in mm, signed
+    void startForward(float power, int32_t distance); // power between 0..1.0, disatnce in mm
     void goForward(float power, int32_t distance); //distance in mm
-    void goBackward(float power, int32_t distance); //distance in mm
+    //backward motion
+    void startBackward(float power);//between  0..1.0
+    void startBackward(float power, int32_t distance);//power between  0..1.0
+    void goBackward(float power, int32_t distance);   //distance in mm
+    //turns
+    void startTurn(float power, float degrees);
     void turn(float power, float degrees); //power between 0..1.0
                                            // positive angle is for clockwise rotation
+
+    //general drive control
     bool driveInProgress();
+    int32_t distanceTravelled();    //returns distance in mm, signed
+    void stop();
+    float getTargetHeading() const {return targetHeading;}
     //debug
     void getDebug();
 
@@ -265,6 +275,11 @@ class Rover {
     location_t location;
     float declination; //magnetic declination, in degrees
     driveconfig_t drive;
+    // target heading in degrees, as yaw angle. Must be  between -180.0 and 180.0
+    float targetHeading;
+    bool headingSet;
+    // helper function for staright movement
+    void prepareDrive(float power);
     //////////////////////////////////////////////
     //     I2C helper functions
     /////////////////////////////////////////////

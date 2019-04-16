@@ -22,7 +22,7 @@ This example code is in the public domain.
 Rover r; //this is the name of the rover!
 bool blink=false;
 #define NUM_PIXELS 4 //number of connected Neopixels; edit to match your configuration
-#define LOW_VOLTAGE 7.0 //voltage limit; if voltage drops below this limit, internal neopixel turns yellow
+#define LOW_VOLTAGE 7.0 //voltage threshold; if voltage drops below this limit, internal neopixel turns yellow
 uint8_t hues[NUM_PIXELS]; //array of hues of pixels
 
 
@@ -32,31 +32,24 @@ void setup(){
   Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
-  Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  Serial.println("Firmware version: "+ r.fwVersion());
-  Serial.print("Voltage: "); Serial.println(r.getVoltage());
-  //configure internal neopixel turn yellow if voltage drops below threshold
+  //activates RoverWing and prints basic info to Serial
+  r.beginVerbose();
+  //low voltage threshold: internal neopixel will turn yellow if voltage drops below threshold
   r.setLowVoltage(LOW_VOLTAGE);
   //now let us setup the neopixels
   r.setPixelCount(NUM_PIXELS);
   r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
   //setup initial hues
-  for (int i=0; i<NUM_PIXELS; i++){
-    hues[i]=i*255/NUM_PIXELS; // put hues uniformly on the color wheel
+  // note that index i starts with 1
+  for (int i=1; i<=NUM_PIXELS; i++){
+    hues[i]=(i*255)/NUM_PIXELS; // put hues uniformly on the color wheel
   }
 }
 
 void loop(){
   for (int i=1; i<=NUM_PIXELS; i++) {
     //update hues
-    hues[i]+=25; // this way, at every loop we are rotatiang by 25/255, or approximately 1/10 of the revolution of the color wheel
+    hues[i]+=25; // this way, at every loop we are rotating by 25/255, or approximately 1/10 of the revolution of the color wheel
     r.setPixelHSV(i,hues[i], 255, 255);
   }
   r.showPixel(); //this must be called to push the new colors to the actual neopixels

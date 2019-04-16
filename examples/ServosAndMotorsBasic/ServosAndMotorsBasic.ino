@@ -41,16 +41,8 @@ void setup(){
   Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
-  Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  Serial.println("Firmware version: "+ r.fwVersion());
-  Serial.print("Voltage: "); Serial.println(r.getVoltage());
+  //activates RoverWing and prints basic info to Serial
+  r.beginVerbose();
   Serial.println("Starting Servos and Motors test");
   //now, initilaize the servos
   // set the range of PWM signal duration  accepted by servos, in us
