@@ -2,7 +2,7 @@
 An Arduino library for use with RoverWing, a robotics controller for Adafruit Feather boards. 
 
 # Instalation
-Download the zip file of this repository and then follow the [Turtorial](https://www.arduino.cc/en/guide/libraries) on how to install arduino ide libraries.
+Download the zip file of this repository and then follow the [Tutorial](https://www.arduino.cc/en/guide/libraries) on how to install arduino ide libraries.
 ## RoverWing library Tutorial
   **Using the IMU**
   
