@@ -8,6 +8,9 @@ Download the zip file of this repository and then follow the [Tutorial](https://
 # User documentation
 Detailed users guide is available in the Wiki section of RoverWing library github repository: https://github.com/roverwing/RoverWingLibrary/wiki 
 
+
+# Building a basic Robot
+https://github.com/roverwing/RoverWingLibrary/wiki/6.-Building-a-Basic-Robot
 # Additional information 
 
 <a href="https://roverwing.readthedocs.io/en/latest//">Roverwing Home Page</a>
