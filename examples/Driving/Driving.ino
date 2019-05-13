@@ -35,6 +35,7 @@ void setup(){
   Wire.begin();
   //Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
+  r.IMUcalibrate(accelOffset, gyroOffset);
   delay(1000); //wait for 1 second, so that roverwing initializes
   //activates RoverWing and prints basic info to Serial
   r.beginVerbose();
