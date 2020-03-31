@@ -18,13 +18,17 @@ General Functions
    Initializes the RoverWing. Returns true if RoverWing was successfully
    initialized, false otherwise.
 
-.. var:: uint8_t fwVersionMajor
-   Firmware major version. Note that it is a class member, not a function, so do not use parentheses.
+.. member:: uint8_t fwVersionMajor
+
+   Firmware major version. Note that it is a class member, not a function, so
+   do not use parentheses.
 
 .. var:: uint8_t fwVersionMinor
+
    Firmware minor version.
 
 .. function:: String fwVersion()
+
    Returns firmware version (major.minor) as a string, e.g. "1.27"
 
 Voltage Sensing
@@ -47,4 +51,4 @@ voltage drops below specified threshold. To set the low voltage threshold, use
 .. function::  void setLowVoltage(float v)
 
    Sets the low voltage threshold: when the supply voltage drops below this
-   value, the built-in NeoPixel LED blinks yellow.   
+   value, the built-in NeoPixel LED blinks yellow.
