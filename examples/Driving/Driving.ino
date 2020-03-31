@@ -49,6 +49,7 @@ void setup(){
   r.IMUsetOffsets(accelOffset, gyroOffset);
   Serial.println(" ");
   Serial.println("IMU initialized");
+  r.IMUcalibrate(accelOffset, gyroOffset);
 
   // CHANGE AS NEEDED
   //configure motors
