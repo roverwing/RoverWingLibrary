@@ -21,7 +21,7 @@ import re
 
 is_release_build = os.environ.get('READTHEDOCS') == 'True'
 
-project = 'RoverWing board'
+project = 'RoverWing library'
 author = 'David Bershadsky, Alexander Kirillov'
 
 copyright_year = 2020
@@ -117,7 +117,7 @@ html_theme_options = {
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'RoverWingBoardSitedoc'
+htmlhelp_basename = 'RoverWingLibrarySitedoc'
 
 
 
@@ -126,3 +126,9 @@ htmlhelp_basename = 'RoverWingBoardSitedoc'
 
 # Changes imgmath_image_format to svg (default png)
 imgmath_image_format = 'svg'
+
+rst_epilog = """
+.. |guide| replace:: `RoverWing User Guide`_.
+
+.. _RoverWing User Guide: https://roverwing-board.readthedocs.org 
+"""

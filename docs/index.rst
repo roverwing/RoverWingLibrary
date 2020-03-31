@@ -16,7 +16,7 @@ to control these peripherals, which communicates with the Feather board using
 I2C protocol, thus freeing resources of the Feather board for other purposes.
 
 To find more information about RoverWing, please visit
-`RoverWing User Guide <https://roverwing-board.readthedocs.org>`__.
+|guide|.
 
 To use RoverWing, you need to install the RoverWing Arduino library,
 which can be downloaded from http://github.com/roverwing/RoverWingLibrary.
@@ -32,4 +32,3 @@ This user guide describes the features of the library.
     imu
     pid
     top
-    
