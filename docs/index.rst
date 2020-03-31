@@ -17,7 +17,7 @@ I2C protocol, thus freeing resources of the Feather board for other purposes.
 
 To find more information about RoverWing, please visit
 |guide|.
-
+ 
 To use RoverWing, you need to install the RoverWing Arduino library,
 which can be downloaded from http://github.com/roverwing/RoverWingLibrary.
 This library is intended for use with Arduino IDE (version 1.6.2 or later).
