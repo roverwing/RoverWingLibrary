@@ -53,15 +53,15 @@ The code below shows basic usage of RoverWing library::
   }
 
 
-Class Rover is defined in RoverWing.h; this class describes the RoverWing board.
-To access the RoverWing board, you need to create an object of type Rover and
-then initialize it using begin() function. You can use any name you like, but
-you can only have one object of class Rover in your sketch.
+Class Rover is defined in :file:`RoverWing.h`; this class describes the
+RoverWing board. To access the RoverWing board, you need to create an object of
+type Rover and then initialize it using :func:`begin()` function. You can use
+any name you like, but you can only have one object of class Rover in your sketch.
 
 Since the Feather board communicates with the RoverWing using I2C protocol, you
-need to call Wire.begin() before initializing the RoverWing. It is advised that
+need to call :expr:`Wire.begin()` before initializing the RoverWing. It is advised that
 you use fast mode (400 kHz) I2C; if your feather board doesn't support it, or
-you have trouble connecting, comment Wire.setClock() line to use default speed
+you have trouble connecting, comment :expr:`Wire.setClock()` line to use default speed
 (100 kHz).
 
 To test your setup, open the serial monitor (at 9600 bps) and run
