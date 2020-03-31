@@ -59,7 +59,7 @@ type Rover and then initialize it using :func:`begin()` function. You can use
 any name you like, but you can only have one object of class Rover in your sketch.
 
 Since the Feather board communicates with the RoverWing using I2C protocol, you
-need to call :expr:`Wire.begin()` before initializing the RoverWing. It is advised that
+need to call :c:expr:`Wire.begin()` before initializing the RoverWing. It is advised that
 you use fast mode (400 kHz) I2C; if your feather board doesn't support it, or
 you have trouble connecting, comment :expr:`Wire.setClock()` line to use default speed
 (100 kHz).
