@@ -114,7 +114,7 @@ different values, MOTOR1 and . MOTOR2.
 
    :param m: either MOTOR1 or MOTOR2,
    :param pwr: a number  between -1.0 (full power backwards) and 1.0
-   (full power forwards). Setting power to 0 stops the motor (brake).
+               (full power forwards). Setting power to 0 stops the motor (brake).
 
 .. function:: void setAllMotorPwr(float pwr1, float pwr2)
 
@@ -174,7 +174,7 @@ motor position and speed using the functions below.
 .. function::    float getPosition(motor_t m)
 
    Returns current motor position, in revolutions since the last encoder reset.
-   
+
 .. function::   void getAllPosition()
 
    Gets from RoverWing and saves positions of both motors. These positions can
