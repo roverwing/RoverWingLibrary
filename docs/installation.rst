@@ -38,7 +38,19 @@ should see :menuselection:`RoverWing` there.
 
 Basic Usage
 -----------
-The code below shows basic usage of RoverWing library:
+The code below shows basic usage of RoverWing library::
+
+  #include <Wire.h>
+  #include <RoverWing.h>
+
+  Rover myRover; //this is the name of the rover!
+
+  void setup(){
+    Wire.begin();
+    Wire.setClock(400000); //use fast mode (400 kHz)
+    delay(500); //wait for 0.5 second, so that roverwing initializes
+    myRover.begin();
+  }
 
 
 Class Rover is defined in RoverWing.h; this class describes the RoverWing board.
