@@ -8,7 +8,7 @@ as described in Installation and Initialization document.
 All the functions and member variables described below are part of class Rover.
 Thus, if you named your Rover object :code:`myRover`, then to access, say, function
 :func:`begin()` you should use :func:`myRover.begin()`. Similarly, to access
-class member variable :code:`fwVersionMajor`, use :code:`myRover.fwVersionMajor`.
+class member variable ``fwVersionMajor``, use :code:`myRover.fwVersionMajor`.
 
 
 General Functions
