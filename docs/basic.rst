@@ -71,10 +71,10 @@ enumerated type, with four different values, :code:`SERVO1, ... SERVO4`.
    Sets servo pulse operating range.
 
    :param int minPulse,  maxPulse:  minimal and maximal pulse duration, in
-     microseconds. These values can be found in  documentation for your servo;
-     typically :code:`minPulse` is between 500-1000, and
-     :code:`maxPulse` is between 2000-2500. For example, for Hitec servos the range is
-     1900-2100 us.
+       microseconds. These values can be found in  documentation for your servo;
+       typically :code:`minPulse` is between 500-1000, and
+       :code:`maxPulse` is between 2000-2500. For example, for Hitec servos the range is
+       1900-2100 us.
 
    :param s: servo name, should be one of the four values :code:`SERVO1... SERVO4`.
 
@@ -91,7 +91,7 @@ enumerated type, with four different values, :code:`SERVO1, ... SERVO4`.
    Sets all four servos in a single operation.
 
    :param pos: an array of 4 floats: :code:`pos[0]`` will be used for
-   :code:`SERVO1`, :code:`pos[1]` for :code:`SERVO2`, etc.
+       :code:`SERVO1`, :code:`pos[1]` for :code:`SERVO2`, etc.
 
 
 RoverWing library includes an example sketch :file:`MotorsAndServosBasic`,
@@ -106,7 +106,7 @@ using closed loop control based on encoders and IMU, is described in Advanced
 Motor Control section
 
 RoverWing provides a data type for motor names, motor_t. It allows just two
-different values, MOTOR1 and . MOTOR2.
+different values, :enum:`MOTOR1` and  :enumerator:`MOTOR2`.
 
 .. function::   void setMotorPwr(motor_t m, float pwr)
 
@@ -114,11 +114,14 @@ different values, MOTOR1 and . MOTOR2.
 
    :param m: either MOTOR1 or MOTOR2,
    :param pwr: a number  between -1.0 (full power backwards) and 1.0
-               (full power forwards). Setting power to 0 stops the motor (brake).
+        (full power forwards). Setting power to 0 stops the motor (brake).
 
 .. function:: void setAllMotorPwr(float pwr1, float pwr2)
 
-   Sets power of both motors in a single operation. pwr1, pwr2 should be between -1.0 and 1.0; they determine the power sent to MOTOR1 and MOTOR2 respectively.
+   Sets power of both motors in a single operation.
+
+   :param pwr1, pwr2: power values for  MOTOR1 and MOTOR2 respectively. Each
+                      should be between -1.0 and 1.0
 
    This function checks that the inputs are between -1.0 and 1.0; if they are not, it automatically rescales both values to make sure they are within range while keeping their ratio. For example, calling setAllMotors(2.0,1.0) has the same effect as setAllMotors(1.0,0.5).
 
@@ -128,8 +131,12 @@ different values, MOTOR1 and . MOTOR2.
 
 .. function::   void reverseMotor(motor_t m)
 
-   Reverses motor direction. After using this function, power sent to the motor, as well as encoder readings (see below) will be multiplied by -1.
-   RoverWing library includes an example sketch MotorsAndServosBasic, which illustrates the use of these functions.
+   Reverse motor direction. After using this function, power sent to the motor,
+   as well as encoder readings (see below) will be multiplied by -1.
+
+
+RoverWing library includes an example sketch :file:`MotorsAndServosBasic`,
+which illustrates the use of these functions.
 
 Encoders
 --------
@@ -179,20 +186,38 @@ motor position and speed using the functions below.
 
    Gets from RoverWing and saves positions of both motors. These positions can
    be accessed later via property position as described below. Using this
-   function instead of getPosition(MOTOR1); getPosition(MOTOR2) ensures that
-   both positions are taken at the same moment.
+   function instead of :code:`getPosition(MOTOR1); getPosition(MOTOR2);` ensures
+   that both positions are taken at the same moment.
 
-   float position[2]:
-   Positions of motors, in revolution, fetched by getAllPosition() function. position[0] holds position of MOTOR1, and position[1] holds position of MOTOR2. Note that these values are not updated automatically: you need to call getAllPosition() to update them.
-   float getSpeed(motor_t m):
+.. member::   float position[2]
+
+   Positions of motors, in revolution, fetched by getAllPosition() function.
+   :code:`position[0]` holds the position of MOTOR1, and :code:`position[1]` holds
+   the position of MOTOR2. Note that these values are not updated automatically:
+   you need to call :func:`getAllPosition` to update them.
+
+.. function::   float getSpeed(motor_t m)
+
    Returns current speed of motor m, in revolutions per minute (RPM).
-   void getAllSpeed():
-   Gets from RoverWing and saves speeds of both motors. These speeds can be accessed later via property speed as described below. Using this function instead of getSpeed(MOTOR1); getSpeed(MOTOR2); ensures that both speeds are taken at the same moment.
-   float speed[2]:
-   Speeds of motors, in RPM, fetched by getAllSpeed() function. speed[0] holds speed of MOTOR1, and speed[1] holds speed of MOTOR2. Note that these values are not updated automatically: you need to call getAllSpeed() to update them.
-   void resetEncoder(motor_t m):
+
+.. function::   void getAllSpeed()
+
+   Gets from RoverWing and saves speeds of both motors. These speeds can be
+   accessed later via property speed as described below. Using this function
+   instead of getSpeed(MOTOR1); getSpeed(MOTOR2); ensures that both speeds are
+   taken at the same moment.
+
+.. member::   float speed[2]
+   Speeds of motors, in RPM, fetched by :func:`getAllSpeed` function. speed[0] holds
+   speed of MOTOR1, and speed[1] holds speed of MOTOR2. Note that these values
+   are not updated automatically: you need to call :func:`getAllSpeed` to update them.
+
+.. function::   void resetEncoder(motor_t m)
+
    Resets the encoder for motor m.
-   void resetAllEncoder():
+
+.. function:: void resetAllEncoder()
+
    Resets the encoders for both motors.
    Analog sensors
    RoverWing provides 6 analog inputs, using 10-bit analog to digital converter. You can access these values using the functions below.
