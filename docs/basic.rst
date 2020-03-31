@@ -105,14 +105,14 @@ describe basic functions for controlling the motors; more advanced operations,
 using closed loop control based on encoders and IMU, is described in Advanced
 Motor Control section
 
-RoverWing provides a data type for motor names, motor_t. It allows just two
-different values, :enum:`MOTOR1` and  :enumerator:`MOTOR2`.
+RoverWing provides a data type for motor names, ``motor_t``. It allows just two
+different values, ```MOTOR1`` and  ``MOTOR2``.
 
 .. function::   void setMotorPwr(motor_t m, float pwr)
 
    Sets the power sent to a motor.
 
-   :param m: either MOTOR1 or MOTOR2,
+   :param m: either ``MOTOR1`` or ``MOTOR2``
    :param pwr: a number  between -1.0 (full power backwards) and 1.0
         (full power forwards). Setting power to 0 stops the motor (brake).
 
@@ -120,10 +120,13 @@ different values, :enum:`MOTOR1` and  :enumerator:`MOTOR2`.
 
    Sets power of both motors in a single operation.
 
-   :param pwr1, pwr2: power values for  MOTOR1 and MOTOR2 respectively. Each
-                      should be between -1.0 and 1.0
+   :param pwr1, pwr2: power values for  ``MOTOR1`` and ``MOTOR2`` respectively.
+       Each should be between -1.0 and 1.0
 
-   This function checks that the inputs are between -1.0 and 1.0; if they are not, it automatically rescales both values to make sure they are within range while keeping their ratio. For example, calling setAllMotors(2.0,1.0) has the same effect as setAllMotors(1.0,0.5).
+   This function checks that the inputs are between -1.0 and 1.0; if they are
+   not, it automatically rescales both values to make sure they are within range
+   while keeping their ratio. For example, calling ``setAllMotors(2.0,1.0)`` has the
+   same effect as ``setAllMotors(1.0,0.5)``.
 
 .. function::   void stopMotors()
 
@@ -148,10 +151,12 @@ or motor speed.
 Before using encoders, you need to provide some basic info about the motor
 and encoder. To do that:
 
-   1. create motor configuration data, as object of class motorconfig_t, and
-      set appropriate class members
+   1. create motor configuration data, as object of class ``motorconfig_t``, and
+      set class members ``encoderCPR`` (encoder counts per revolution) and
+      ``noloadRPM``.
 
-   2. apply the configuration data to the motor(s)
+   2. apply the configuration data to the motor(s) by calling method
+      ``configureMotor``.
 
 Below is a sample code::
 
@@ -191,90 +196,183 @@ motor position and speed using the functions below.
 
 .. member::   float position[2]
 
-   Positions of motors, in revolution, fetched by getAllPosition() function.
+   Positions of motors, in revolution, fetched by :func:`getAllPosition` function.
    :code:`position[0]` holds the position of MOTOR1, and :code:`position[1]` holds
    the position of MOTOR2. Note that these values are not updated automatically:
    you need to call :func:`getAllPosition` to update them.
 
 .. function::   float getSpeed(motor_t m)
 
-   Returns current speed of motor m, in revolutions per minute (RPM).
+   Returns current speed of motor ``m``, in revolutions per minute (RPM).
 
 .. function::   void getAllSpeed()
 
    Gets from RoverWing and saves speeds of both motors. These speeds can be
    accessed later via property speed as described below. Using this function
-   instead of getSpeed(MOTOR1); getSpeed(MOTOR2); ensures that both speeds are
-   taken at the same moment.
+   instead of ``getSpeed(MOTOR1); getSpeed(MOTOR2);`` ensures that both speeds
+   are taken at the same moment.
 
 .. member::   float speed[2]
-   Speeds of motors, in RPM, fetched by :func:`getAllSpeed` function. speed[0] holds
-   speed of MOTOR1, and speed[1] holds speed of MOTOR2. Note that these values
-   are not updated automatically: you need to call :func:`getAllSpeed` to update them.
+
+   Speeds of motors, in RPM, fetched by :func:`getAllSpeed` function.
+   ``speed[0]`` holds speed of ``MOTOR1``, and ``speed[1]`` holds speed of
+   ``MOTOR2``. Note that these values are not updated automatically: you
+   need to call :func:`getAllSpeed` to update them.
 
 .. function::   void resetEncoder(motor_t m)
 
-   Resets the encoder for motor m.
+   Resets the encoder for motor ``m``.
 
 .. function:: void resetAllEncoder()
 
    Resets the encoders for both motors.
-   Analog sensors
-   RoverWing provides 6 analog inputs, using 10-bit analog to digital converter. You can access these values using the functions below.
 
-   float getAnalog(uint8_t i):
-   Returns reading of analog input i, in volts. Note: index i ranges from 1-6, not 0-5!
-   float getAllAnalog():
-   Gets from RoverWing and saves readings of all 6 analog inputs. These readings can be later accessed using property analog below. Using this function is faster than using six different getAnalog(i) calls; it also ensures that all readings are taken at the same moment, which is important if you want to compare them.
-   float analog[]:
-   Array of analog readings fetched by getAnalog() function. analog[1] holds the reading of analog input 1 (in volts), etc. Note that these values are not automatically updated: you must call getAllAnalog() function to update them. Also, note that you should use indexes starting with 1, not 0.
-   Note
+Analog Sensors
+--------------
 
-   The values returned by these functions are not raw values: RoverWing uses "low-pass" filter. Slightly simplifying, one can say that this filter, instead of returning the results of last reading, returns an average of several last readings. This helps reduce random noise but also introduces a small delay (about 1 ms) in registering changes in analog readings.
-   Sonars
-   RoverWing supports up to three HC-SR04 ultrasonic sensors (sonars). These inexpensive sensors are available from a variety of sources, for example Sparkfun and Amazon. The firmware operates the sonars in continuous mode, cycling all active sonars: after one sonar receives an echo, the distance is to the object is computed and saved and the next available sonar is triggered and sends a sound ping. This process repeats until stopSonars() command is received.
+RoverWing provides 6 analog inputs, using 10-bit analog to digital converter.
+You can access these values using the functions below.
 
-   At startup, no sonars are active; to activate some of the sonars, you need to call activateSonars() function.
+..function::   float getAnalog(uint8_t i)
 
-   RoverWing provides a data type for sonar names, sonar_t. It allows three different values, SONAR1, SONAR2, SONAR3.
+   Returns reading of analog input ``i``, in volts. Note: index ``i``
+   ranges between 1-6, not 0-5!
 
-   As with the analog inputs, sonar readings are passed through a low-pass filter, to smooth out random noise.
+.. function::    float getAllAnalog()
 
-   void activateSonars(uint8_t bitmask, int maxDistance=6000):
-   Activates sonars. Bitmask describes which sonars should be activated (bit 0 for SONAR1, bit1 for SONAR2, etc). The easiest way is to use predefined values SONAR1, SONAR2, SONAR3 which are defined in such a way that calling activateSonars(SONAR1) activates SONAR1. Moreover, they can be added together to form any combination: for example, to activate sonars 1 and 3, use activateSonars(SONAR1+SONAR3).
+   Gets from RoverWing and saves readings of all 6 analog inputs. These readings
+   can be later accessed using property analog below. Using this function is
+   faster than using six different getAnalog(i) calls; it also ensures that all
+   readings are taken at the same moment, which is important if you want to
+   compare them.
 
-   Optional parameter maxDistance specifies maximal distance to an object in mm and is used to determine the timeout time: if no echo is received in the time required for the sound to reach object at this distance and return back, then we stop waiting for echo and return distance maxDistance.
+.. function::   float analog[]
 
-   void stopSonars():
+   Array of analog readings fetched by :func:`getAllAnalog` function. ``analog[1]``
+   holds the reading of analog input 1 (in volts), etc. Note that these values
+   are not automatically updated: you must call :func:`getAllAnalog` function
+   to update them. Also, note that you should use indexes starting with 1, not
+   0.
+
+..  note::
+
+   The values returned by these functions are not raw values: RoverWing uses
+   "low-pass" filter. Slightly simplifying, one can say that this filter,
+   instead of returning the results of last reading, returns an average of
+   several last readings. This helps reduce random noise but also introduces a
+   small delay (about 1 ms) in registering changes in analog readings.
+
+Sonars
+------
+
+RoverWing supports up to three HC-SR04 ultrasonic sensors (sonars). These
+inexpensive sensors are available from a variety of sources, for example
+Sparkfun and Amazon. The firmware operates the sonars in continuous mode,
+cycling all active sonars: after one sonar receives an echo, the distance is to
+the object is computed and saved and the next available sonar is triggered and
+sends a sound ping. This process repeats until :func:`stopSonars` command is
+received.
+
+At startup, no sonars are active; to activate some of the sonars, you need to
+call :func:`activateSonars` function.
+
+RoverWing provides a data type for sonar names, ``sonar_t``. It allows three
+different values, ``SONAR1``, ``SONAR2``, ``SONAR3``.
+
+As with the analog inputs, sonar readings are passed through a low-pass filter,
+to smooth out random noise.
+
+.. function::   void activateSonars(uint8_t bitmask, int maxDistance=6000)
+
+   Activates sonars.
+
+   :param bitmask:  which sonars should be activated (bit 0 for ``SONAR1``,
+       bit1 for ``SONAR2``, etc). The easiest way is to use predefined values
+       ``SONAR1``, ``SONAR2``, ``SONAR3`` which are defined in such a way
+       that calling ``activateSonars(SONAR1)`` activates ``SONAR1``. Moreover,
+       they can be added together to form any combination: for example, to
+       activate sonars 1 and 3, use ``activateSonars(SONAR1+SONAR3)``.
+   :param int maxDistance: (optional) specifies maximal distance to an object in mm and
+       is used to determine the timeout time: if no echo is received in the
+       time required for the sound to reach object at this distance and return,
+       then we stop waiting for echo. In this case the function returns
+       value  ``maxDistance``.
+
+.. function:: void stopSonars()
+
    Stops all sonars.
-   float getSonar(sonar_t s):
-   Get latest distance reading of sonar s.
-   void getAllSonar():
-   Gets the latest readings of all active sonars from the RoverWing and saves them. These values can be later accessed using sonar[] property
-   float sonar[3]:
-   Array of sonar readings fetched by getAllSonar() function, in mm. sonar[0] holds reading for sonar 1, etc. Note that these values are not automatically updated: you must call getAllAnalog() function to update them.
-   NeoPixel
-   RoverWing allows connecting a strip of "smart" LEDs, using WS2812b or SK6812 chips. These LEDs, commonly called "NeoPixels", contain small chips which make them individually addressable: you can independently set colors of different LEDs using just one data line. You can read more about them in Adafruit's Uberguide: https://learn.adafruit.com/adafruit-neopixel-uberguide. Note that RoverWing only allows the RGB NeoPixels; RGB W NeoPixels, which add white LED to the usual RGB, are not supported.
 
-   RoverWing allows you to connect a strip of up to 255 NeoPixels. However, the more NeoPixels you connect, the more power they consume, and the longer it takes to update the whole strip, so please check the power requirements specified in RoverWing user guide if you intend to use more than 20-30 NeoPixels.
+.. function:: float getSonar(sonar_t s)
 
-   Note that RoverWing also contains an internal NeoPixel LED, which blinks green to indicate normal operation, or yellow to indicate low supply voltage. This NeoPixel can not be directly controlled by the user (other than setting the low voltage threshold).
+   Get latest distance reading of sonar ``s``.
 
-   void setPixelCount(uint8_t n):
+.. function::   void getAllSonar()
+
+   Gets the latest readings of all active sonars from the RoverWing and saves
+   them. These values can be later accessed using ``sonar[]`` property
+
+.. member::   float sonar[3]
+
+   Array of sonar readings fetched by getAllSonar() function, in mm. ``sonar[0]``
+   holds reading for sonar 1, etc. Note that these values are not automatically
+   updated: you must call :func:`getAllAnalog` function to update them.
+
+NeoPixel
+--------
+
+RoverWing allows connecting a strip of "smart" LEDs, using WS2812b or SK6812
+chips. These LEDs, commonly called "NeoPixels", contain small chips which make
+them individually addressable: you can independently set colors of different
+LEDs using just one data line. You can read more about them in
+Adafruit's Uberguide: https://learn.adafruit.com/adafruit-neopixel-uberguide.
+Note that RoverWing only allows the RGB NeoPixels; RGB W NeoPixels, which add
+white LED to the usual RGB, are not supported.
+
+RoverWing allows you to connect a strip of up to 255 NeoPixels. However, the
+more NeoPixels you connect, the more power they consume, and the longer it takes
+to update the whole strip, so please check the power requirements specified in
+|guide| if you intend to use more than 20-30 NeoPixels.
+
+Note that RoverWing also contains an internal NeoPixel LED, which blinks green
+to indicate normal operation, or yellow to indicate low supply voltage. This
+NeoPixel can not be directly controlled by the user (other than setting the low
+voltage threshold as described in section `Voltage Sensing`_.
+
+.. function::    void setPixelCount(uint8_t n)
+
    Sets the number of NeoPixels connected to the RoverWing (up to 255)
-   void setPixelBrightness(uint8_t b):
-   Sets brightness for all NeoPixels (including the internal one). Brightness can range from 0-255; usually, brightness of 32 (1/8 of maximum) is bright enough
-   void setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B):
-   Sets color of i-th pixel, using three values for red, blue, and green colors, each ranging 0-255. Note that index i ranges from 1-255, not from 0.
 
-   This color is not applied immediately: see description of showPixel command below.
+.. function::   void setPixelBrightness(uint8_t b)
 
-   void setPixelColor(uint8_t i, uint32_t c):
-   Sets color of i-th pixel. c should be a color in the usual hexadecimal notation: c=0xRRGGBB (see, e.g., https://www.w3schools.com/colors/colors_hexadecimal.asp). As before, i starts with 1 and the color change is not applied immediately.
+   Sets brightness for all NeoPixels (including the internal one). Brightness
+   can range from 0-255; usually, brightness of 32 (1/8 of maximum) is bright
+   enough.
 
-   You can also use one of the named values for color: RED, GREEN, BLUE, WHITE, YELLOW, OFF.
+.. function   void setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B)
 
-   void setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V):
-   Sets color of i-th pixel, using Hue, Saturation, and Value (see, e.g., https://www.w3schools.com/colors/colors_hsl.asp), each ranging 0-255. As before, i starts with 1 and the color change is not applied immediately.
-   void showPixel():
-   After setting individual pixel colors using any combination of functions above, call this function to apply all changes at once.
+   Sets color of ``i``-th pixel, using three values for red, blue, and green colors,
+   each ranging 0-255. Note that index ``i`` ranges from 1-255, not from 0.
+
+   This color is not applied immediately: see description of :func:`showPixel`
+   function below.
+
+.. function::   void setPixelColor(uint8_t i, uint32_t c)
+
+   Sets the color of ``i``-th pixel.
+
+   :param i: pixel index, ranging 1-255
+   :param c: color in the usual hexadecimal notation: ``c=0xRRGGBB`` (see,
+       e.g., https://www.w3schools.com/colors/colors_hexadecimal.asp).
+       You can also use one of the named values for color: ``RED``, ``GREEN``,
+       ``BLUE``, ``WHITE``, ``YELLOW``, ``OFF``.
+
+.. function:: void setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V)
+
+   Sets color of i-th pixel, using Hue, Saturation, and Value (see, e.g.,
+   https://www.w3schools.com/colors/colors_hsl.asp), each ranging 0-255. As
+   before, ``i`` starts with 1 and the color change is not applied immediately.
+
+.. function::   void showPixel()
+
+   After setting individual pixel colors using any combination of functions
+   above, call this function to apply all changes at once.
