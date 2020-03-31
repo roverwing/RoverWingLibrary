@@ -65,4 +65,13 @@ you have trouble connecting, comment :code:`Wire.setClock()` line to use default
 (100 kHz).
 
 To test your setup, open the serial monitor (at 9600 bps) and run
-:menuselection:`ConnectionTest` example (from :menuselection:`File-->Examples-->RoverWing menu`).
+:menuselection:`ConnectionTest` example (from
+:menuselection:`File-->Examples-->RoverWing menu`).
+
+Examples
+--------
+
+The RoverWing library comes with a number of example sketches; as always, they
+are available from :menuselection:`File-->Examples-->RoverWing` menu of Arduino 
+IDE. These example sketches are amply commented, making it easy to adjust the
+code for your purposes.
