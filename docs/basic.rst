@@ -144,6 +144,8 @@ different values, ``MOTOR1`` and  ``MOTOR2``.
 RoverWing library includes an example sketch :file:`MotorsAndServosBasic`,
 which illustrates the use of these functions.
 
+.. _encoders::
+
 Encoders
 --------
 
@@ -181,7 +183,7 @@ the correct encoder CPR value that should be used in the configuration data is
 12*75=900.
 
 The no-load RPM is optional; it is only used for the PID speed control algorithm
-as discussed in ??
+as discussed in section :ref:`pid`.
 
 After the configuration data has been applied to the motors, you can access the
 motor position and speed using the functions below.

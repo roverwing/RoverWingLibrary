@@ -4,6 +4,8 @@ IMU and GPS
 This section describes the functions for using the built-in Inertial Motion
 Unit (IMU) and the external GPS sensor.
 
+.. _imu::
+
 Inertial Motion Unit (IMU)
 --------------------------
 RoverWing contains a built-in Inertial Motion Unit (IMU), which is based on
@@ -77,7 +79,7 @@ normally done  immediately after activation. There are two ways to do this:
    values in your sketch as shown in this code example  (replacing zeros with
    actual values)
 
-.. code_block::
+.. code-block::
 
         int16_t aOffsets[]={0,0,0};
         int16_t gOffsets[]={0,0,0};
