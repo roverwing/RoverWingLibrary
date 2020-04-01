@@ -69,7 +69,7 @@ normally done  immediately after activation. There are two ways to do this:
        memory between resets.
 
        This function will take about a second to execute; during this time,
-       the robot must be completely stationary on flat horizontal surface. 
+       the robot must be completely stationary on flat horizontal surface.
 
 2. If you had previously calibrated the sensor and have recorded the
    calibration offsets, you do not need to repeat the calibration process -
@@ -77,15 +77,15 @@ normally done  immediately after activation. There are two ways to do this:
    values in your sketch as shown in this code example  (replacing zeros with
    actual values)
 
-   .. code_block::
+.. code_block::
 
         int16_t aOffsets[]={0,0,0};
         int16_t gOffsets[]={0,0,0};
+        IMUsetOffsets(aOffsets, gOffsets);
 
-        void IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets);
-
-This function executes almost instantaneously; to be on the safe side, you
-might wait 100 ms before reading the IMU values.
+Function ``IMUsetOffsets()`` applies the given offsets. It executes almost
+instantaneously; to be on the safe side, you might wait 100 ms before reading
+the IMU values.
 
 Reading Values
 ~~~~~~~~~~~~~~
@@ -97,8 +97,8 @@ and computed orientation, using the following functions:
 
    Fetches from the RoverWing raw acceleration data and saves it using member
    variables ``ax``, ``ay``, ``az``, which give the acceleration
-   in x-, y-, and z- directions respectively in in units of 1g (9.81 m/sec^2)
-   as floats.
+   in x-, y-, and z- directions respectively in in units of 1g
+   (9.81 m/:math:`sec^2`) as floats.
 
 .. function:: void getGyro()
 
@@ -202,7 +202,7 @@ Initialization
 
    Stops the GPS sensor.
 
-.. uint8_t GPSstatus()
+.. function:: uint8_t GPSstatus()
 
    Gets current GPS status. Possible values are
    * ``GPS_OFF``: GPS is inactive
@@ -210,6 +210,7 @@ Initialization
    * ``GPS_WAITING``: GPS is active, but is waiting to receive a location fix.
      The sensor switches to this status if it hasn't received a valid GPS
      signal for more than 3 seconds.
+
 Usage
 ~~~~~
 After the GPS has been initialized and received location fix, you can use the

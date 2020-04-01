@@ -18,7 +18,7 @@ General Functions
    Initializes the RoverWing. Returns true if RoverWing was successfully
    initialized, false otherwise.
 
-.. member:: uint8_t fwVersionMajor
+.. function:: uint8_t fwVersionMajor
 
    Firmware major version. Note that it is a class member, not a function, so
    do not use parentheses.
@@ -73,25 +73,28 @@ enumerated type, with four different values, :code:`SERVO1, ... SERVO4`.
    :param int minPulse,  maxPulse:  minimal and maximal pulse duration, in
        microseconds. These values can be found in  documentation for your servo;
        typically :code:`minPulse` is between 500-1000, and
-       :code:`maxPulse` is between 2000-2500. For example, for Hitec servos the range is
-       1900-2100 us.
+       :code:`maxPulse` is between 2000-2500. For example, for Hitec servos the
+       range is 1900-2100 us.
 
-   :param s: servo name, should be one of the four values :code:`SERVO1... SERVO4`.
+   :param s: servo name, should be one of the four values ``SERVO1``, ... ,
+       ``SERVO4``.
 
-.. function:: void setServo(servo_t s, float pos)
+.. function:: void setServo(servo_t s, float position)
 
-   Sets servo to a given position.
+   Sets servo  position.
 
-   :param s: servo name, should be one of the four values :code:`SERVO1... SERVO4`.
+   :param s: servo name, should be one of the four values ``SERVO1``, ...,
+       ``SERVO4``.
 
-   :param pos: should be between -1.0 and 1.0; value 0.0 corresponds to neutral (middle) position.
+   :param float position: a number  between -1.0 and 1.0; value 0.0 corresponds
+       to neutral (middle) position.
 
 .. function:: void setAllServo(float* pos)
 
-   Sets all four servos in a single operation.
+   Sets positions of  all four servos in a single operation.
 
-   :param pos: an array of 4 floats: :code:`pos[0]`` will be used for
-       :code:`SERVO1`, :code:`pos[1]` for :code:`SERVO2`, etc.
+   :param pos: an array of 4 floats: ``pos[0]`` will be used for
+       ``SERVO1``, ``pos[1]`` for ``SERVO2``, etc.
 
 
 RoverWing library includes an example sketch :file:`MotorsAndServosBasic`,
@@ -106,7 +109,7 @@ using closed loop control based on encoders and IMU, is described in Advanced
 Motor Control section
 
 RoverWing provides a data type for motor names, ``motor_t``. It allows just two
-different values, ```MOTOR1`` and  ``MOTOR2``.
+different values, ``MOTOR1`` and  ``MOTOR2``.
 
 .. function::   void setMotorPwr(motor_t m, float pwr)
 
@@ -120,7 +123,7 @@ different values, ```MOTOR1`` and  ``MOTOR2``.
 
    Sets power of both motors in a single operation.
 
-   :param pwr1, pwr2: power values for  ``MOTOR1`` and ``MOTOR2`` respectively.
+   :param float pwr1, pwr2: power values for  ``MOTOR1`` and ``MOTOR2`` respectively.
        Each should be between -1.0 and 1.0
 
    This function checks that the inputs are between -1.0 and 1.0; if they are
@@ -194,7 +197,7 @@ motor position and speed using the functions below.
    function instead of :code:`getPosition(MOTOR1); getPosition(MOTOR2);` ensures
    that both positions are taken at the same moment.
 
-.. member::   float position[2]
+.. function::   float position[2]
 
    Positions of motors, in revolution, fetched by :func:`getAllPosition` function.
    :code:`position[0]` holds the position of MOTOR1, and :code:`position[1]` holds
@@ -212,7 +215,7 @@ motor position and speed using the functions below.
    instead of ``getSpeed(MOTOR1); getSpeed(MOTOR2);`` ensures that both speeds
    are taken at the same moment.
 
-.. member::   float speed[2]
+.. function::   float speed[2]
 
    Speeds of motors, in RPM, fetched by :func:`getAllSpeed` function.
    ``speed[0]`` holds speed of ``MOTOR1``, and ``speed[1]`` holds speed of
@@ -242,8 +245,8 @@ You can access these values using the functions below.
 
    Gets from RoverWing and saves readings of all 6 analog inputs. These readings
    can be later accessed using property analog below. Using this function is
-   faster than using six different getAnalog(i) calls; it also ensures that all
-   readings are taken at the same moment, which is important if you want to
+   faster than using six different ``getAnalog(i)`` calls; it also ensures that
+   all readings are taken at the same moment, which is important if you want to
    compare them.
 
 .. function::   float analog[]
@@ -257,7 +260,7 @@ You can access these values using the functions below.
 ..  note::
 
    The values returned by these functions are not raw values: RoverWing uses
-   "low-pass" filter. Slightly simplifying, one can say that this filter,
+   a "low-pass" filter. Slightly simplifying, one can say that this filter,
    instead of returning the results of last reading, returns an average of
    several last readings. This helps reduce random noise but also introduces a
    small delay (about 1 ms) in registering changes in analog readings.
@@ -311,7 +314,7 @@ to smooth out random noise.
    Gets the latest readings of all active sonars from the RoverWing and saves
    them. These values can be later accessed using ``sonar[]`` property
 
-.. member::   float sonar[3]
+.. function::   float sonar[3]
 
    Array of sonar readings fetched by getAllSonar() function, in mm. ``sonar[0]``
    holds reading for sonar 1, etc. Note that these values are not automatically
