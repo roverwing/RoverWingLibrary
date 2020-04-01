@@ -79,7 +79,7 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
-primary_domain = "c" 
+primary_domain = "c"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -130,7 +130,7 @@ htmlhelp_basename = 'RoverWingLibrarySitedoc'
 imgmath_image_format = 'svg'
 
 rst_epilog = """
-.. |guide| replace:: `RoverWing User Guide`_.
+.. |guide| replace:: `RoverWing User Guide`_
 
 .. _RoverWing User Guide: https://roverwing-board.readthedocs.org
 """
