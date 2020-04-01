@@ -233,7 +233,7 @@ Analog Sensors
 RoverWing provides 6 analog inputs, using 10-bit analog to digital converter.
 You can access these values using the functions below.
 
-..function::   float getAnalog(uint8_t i)
+.. function:: float getAnalog(uint8_t i)
 
    Returns reading of analog input ``i``, in volts. Note: index ``i``
    ranges between 1-6, not 0-5!
