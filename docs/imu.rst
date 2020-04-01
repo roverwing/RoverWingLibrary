@@ -205,6 +205,7 @@ Initialization
 .. function:: uint8_t GPSstatus()
 
    Gets current GPS status. Possible values are
+
    * ``GPS_OFF``: GPS is inactive
    * ``GPS_OK``: GPS is active and has a valid location fix
    * ``GPS_WAITING``: GPS is active, but is waiting to receive a location fix.
