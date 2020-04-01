@@ -19,8 +19,12 @@ algorithm invented by Sebastian Madgwick.)
    Current version of RoverWing firmware requires that the RoverWing be mounted
    horizontally.
 
+Below is the description of functions related to IMU. You can also  check sample
+code in :guilabel:`IMU` example sketch included with RoverWing library.
 
-Initilaization
+
+
+Initialization
 ~~~~~~~~~~~~~~
 
 By default, the IMU is inactive. To start/stop  it, use the functions below.
@@ -31,6 +35,7 @@ By default, the IMU is inactive. To start/stop  it, use the functions below.
 
 
 .. function:: void IMUend()
+
    Stop the IMU
 
 
@@ -64,7 +69,7 @@ normally done  immediately after activation. There are two ways to do this:
        memory between resets.
 
        This function will take about a second to execute; during this time,
-       the robot must be completely stationary.
+       the robot must be completely stationary on flat horizontal surface. 
 
 2. If you had previously calibrated the sensor and have recorded the
    calibration offsets, you do not need to repeat the calibration process -
