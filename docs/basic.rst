@@ -18,12 +18,18 @@ General Functions
    Initializes the RoverWing. Returns true if RoverWing was successfully
    initialized, false otherwise.
 
+.. function:: void beginVerbose()
+
+    More verbose version of :func:`begin`. Initializes the RoverWing and prints
+    to serial monitor firmware version and voltage level. If for some reason
+    initialization failed, it keeps trying until the initialization succeeds. 
+
 .. function:: uint8_t fwVersionMajor
 
    Firmware major version. Note that it is a class member, not a function, so
    do not use parentheses.
 
-.. var:: uint8_t fwVersionMinor
+.. function:: uint8_t fwVersionMinor
 
    Firmware minor version.
 
