@@ -1,4 +1,5 @@
-.. _pid::
+.. _pid:
+
 =============================
 Advanced Motor Control
 =============================
@@ -63,7 +64,7 @@ Before using the tank drive commands, you must:
     drivetrain.wheelDiameter=70;//in mm
     drivetrain.wheelBase=140;   //in mm
     drivetrain.minPower=0.05;   // need at least 5% to move
-    //now save these values
+    //now apply these values
     r.configureDrive(drivetrain);
     r.setDriveRampTime(1000); //set ramping up time to be 1 sec
 
@@ -73,7 +74,9 @@ drivetrain.leftMotor, drivetrain.rightMotor:
     Which motor controls left/right side of the robot
 
 drivetrain.leftMotorReversed, drivetrain.rightMotorReversed:
-    If one of the motors is set so that sending it positive power causes the corresponding side of the robot move backward, set this parameter to true. Do not use reverseMotor function together with this.
+    If one of the motors is set so that sending it positive power causes the
+    corresponding side of the robot move backward, set this parameter to true.
+    Do not use :func:`reverseMotor` function together with this.
 
 drivetrain.wheelDiameter:
     Wheel/sprocket diameter, in mm.
@@ -85,18 +88,26 @@ drivetrain.wheelBase:
 10% off, it is not going to change things much.
 
 drivetrain.minPower:
-
-    Minimal power needed for the robot to move (as fraction of the full power). This parameter is there to avoid the following common problem: when driving for fixed distance, the software reduces power to the motors to achieve smooth stop - but at some moment, power becomes so low that the robot is not moving at all. Setting this parameter avoids this problem: algorithm used by RoverWing will never reduce the power below that level. The value of this parameter depends on the robot weight, floor friction, and motor power. Suggested values are between 0.05 (for a robot on a low-friction surface such as hardwood floor) and 0.2 (for high-friction situations such as thick carpet). If not certain, begin with the value of 0.1.
+    Minimal power needed for the robot to move (as fraction of the full power).
+    This parameter is there to avoid the following common problem: when driving
+    for fixed distance, the software reduces power to the motors to achieve
+    smooth stop - but at some moment, power becomes so low that the robot is not
+    moving at all. Setting this parameter avoids this problem: algorithm used by
+    RoverWing will never reduce the power below that level. The value of this
+    parameter depends on the robot weight, floor friction, and motor power.
+    Suggested values are between 0.05 (for a robot on a low-friction surface
+    such as hardwood floor) and 0.2 (for high-friction situations such as thick
+    carpet). If not certain, begin with the value of 0.1.
 
 setDriveRampTime(int t):
     When starting the motion, it is usually a bad idea to go from robot at rest
-    to maximal power in an instant, same as it is usually a bad idea to stop the
+    to maximal power instantly, just as it is usually a bad idea to stop the
     robot by abruptly changing the motor power from 100% to 0: in both cases,
     this will likely result in the robot skidding on the floor, and probably
     slightly turning in an unpredictable way. To avoid this, when starting the
     robot drive, RoverWing software increases the speed from 0 to the requested
     motion speed gradually; this is called "ramping up" the speed. Similarly,
-    when stopping, RoverWming gradually decreases the robot speed. Function
+    when stopping, RoverWing gradually decreases the robot speed. Function
     ``setDriveRampTime()`` controls the speed of this ramping up process: calling
     ``setDriveTime(t)`` sets the ramping up time to go from 0 to maximal power
     to be   ``t`` milliseconds. For example, ``setDriveTime(1000)`` sets the
@@ -108,7 +119,7 @@ setDriveRampTime(int t):
     would be 0.5 sec.
 
 
-Using tank drive
+Using Tank Drive
 ~~~~~~~~~~~~~~~~
 
 After configuring the tank drive as described in the previous section, you can
@@ -126,7 +137,7 @@ use the following commands.
 
 .. function:: void startForward(float power, int32_t distance)
 
-   Non-blocking version of func:`goForward`. This function starts the robot
+   Non-blocking version of :func:`goForward`. This function starts the robot
    motion and immediately returns; the robot continues driving straight until
    it reaches the specified distance or receives another drive command. You
    can use function :func:`driveInProgress` described below to test whether
@@ -143,7 +154,7 @@ use the following commands.
 
 .. function:: void startBackward(float power, int32_t distance)
 
--- function:: void startBackward(float power)
+.. function:: void startBackward(float power)
 
     Similar to ``goForward``, ``startBackward``, but for moving backwards.
     Note that power and distance should be positive!
@@ -186,3 +197,6 @@ use the following commands.
           delay(10);
         }
         //motion forward has completed!
+
+Setting PID Coefficients
+~~~~~~~~~~~~~~~~~~~~~~~~

@@ -4,7 +4,7 @@ IMU and GPS
 This section describes the functions for using the built-in Inertial Motion
 Unit (IMU) and the external GPS sensor.
 
-.. _imu::
+.. _imu:
 
 Inertial Motion Unit (IMU)
 --------------------------

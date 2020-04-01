@@ -144,7 +144,7 @@ different values, ``MOTOR1`` and  ``MOTOR2``.
 RoverWing library includes an example sketch :file:`MotorsAndServosBasic`,
 which illustrates the use of these functions.
 
-.. _encoders::
+.. _encoders:
 
 Encoders
 --------
