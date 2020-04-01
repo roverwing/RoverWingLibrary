@@ -106,6 +106,7 @@ and computed orientation, using the following functions:
 .. function:: float getPitch()
 
 .. function:: float getRoll()
+
    These functions return yaw, pitch, and roll angles for the robot. These
    three angles describe the robot orientation:
    * yaw is the rotation around the vertical axis (positive angle corresponds to
@@ -175,8 +176,14 @@ and computed orientation, using the following functions:
 
 GPS
 ---
+
+If you have connected a GPS sensor to RoverWing as described in |guide|, you
+can use the functions below to access it.
+
+
 Initialization
 ~~~~~~~~~~~~~~
+
 .. function:: void GPSbegin()
 
    Start the GPS. Note that after starting, it can take the sensor a while to
