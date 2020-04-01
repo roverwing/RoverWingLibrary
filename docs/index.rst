@@ -1,6 +1,6 @@
-===============
-RoverWing board
-===============
+=========================
+RoverWing Arduino Library
+=========================
 .. figure:: images/MainView.jpg
     :alt: RoverWing
     :width: 80%

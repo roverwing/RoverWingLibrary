@@ -21,7 +21,7 @@ algorithm invented by Sebastian Madgwick.)
 
 
 Initilaization
---------------
+~~~~~~~~~~~~~~
 
 By default, the IMU is inactive. To start/stop  it, use the functions below.
 
@@ -30,7 +30,7 @@ By default, the IMU is inactive. To start/stop  it, use the functions below.
    Activate IMU
 
 
-.. function::void IMUend()
+.. function:: void IMUend()
    Stop the IMU
 
 
@@ -42,7 +42,7 @@ By default, the IMU is inactive. To start/stop  it, use the functions below.
 
 
 Calibration
------------
+~~~~~~~~~~~
 
 Before use, the IMU needs to be calibrated. The calibration process determines
 and then applies corrections (offsets)  to the raw data; without these
@@ -72,7 +72,8 @@ normally done  immediately after activation. There are two ways to do this:
    values in your sketch as shown in this code example  (replacing zeros with
    actual values)
 
-   .. code-block::
+   .. code_block::
+
         int16_t aOffsets[]={0,0,0};
         int16_t gOffsets[]={0,0,0};
 
@@ -81,8 +82,9 @@ normally done  immediately after activation. There are two ways to do this:
 This function executes almost instantaneously; to be on the safe side, you
 might wait 100 ms before reading the IMU values.
 
-Reading values
---------------
+Reading Values
+~~~~~~~~~~~~~~
+
 RoverWing allows you to read both the raw data (accelerometer and gyro readings)
 and computed orientation, using the following functions:
 
@@ -256,4 +258,4 @@ The functions below provide some tools for working with location data:
    Functions :func:`distanceTo`, :func:`bearingTo` use flat map model. The
    results are accurate enough for distances up to 10 km, but if you want to
    find the distance between your robot and Mount Everest, you need to write
-   your own code (or google for existing solutions). 
+   your own code (or google for existing solutions).
