@@ -109,6 +109,7 @@ and computed orientation, using the following functions:
 
    These functions return yaw, pitch, and roll angles for the robot. These
    three angles describe the robot orientation:
+
    * yaw is the rotation around the vertical axis (positive angle corresponds to
      clockwise rotation, i.e. right turns), relative to the starting position of
      the robot
@@ -122,6 +123,7 @@ and computed orientation, using the following functions:
    https://en.wikipedia.org/wiki/Aircraft_principal_axes
 
 .. function:: void getOrientationQuat()
+
    Gets robot orientation as a unit quaternion (see
    https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation). The result
    can be accessed using member variable ``float quat[4]``, which contains the
