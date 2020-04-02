@@ -11,8 +11,8 @@ use these functions, you need to have the graphics library
 `U8G2 <https://github.com/olikraus/u8g2/>` installed; you can do it easily by
 using Arduino IDE library manager.
 
-RoverWing library includes a sample script illustrating the use of RoverWing top;
-this script can be found under :menuselection:`File-->Examples-->RoverWing-->TopCover`.
+RoverWing library includes a sample sketch illustrating the use of RoverWing top;
+this sketch can be found under :menuselection:`File-->Examples-->RoverWing-->TopCover`.
 
 Initialization
 --------------
@@ -49,7 +49,7 @@ RoverWing top contains two buttons, labelled :guilabel:`Button A` and
 board: button B is connected to the pin next to SCL, and button A, to the next
 pin. Unfortunately, pin numbers assigned to this pins depend on which Feather
 board you are using; for this reason, you need to include the definitions in
-your script, as illustrated above.
+your sketch, as illustrated above.
 
 For Feather boards based on Cortex M0, Atmega 328P, or 32u4 chipsets, the pin
 numbers are 6 (button A) and 5 (button B).
@@ -91,7 +91,7 @@ example, to turn the middle LED red and the two outer green, you can use
 
     r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
     r.setPixelColor(1,GREEN);
-    r.setPixelColor(2,OFF);
+    r.setPixelColor(2,RED);
     r.setPixelColor(3,GREEN);
     r.showPixel();
 
@@ -114,7 +114,7 @@ on SSD1306 chipset. This display has 128*32 resolution - enough for up to 3
 lines of text (you could try and put 4 lines, but it would be barely readable).
 It is connected directly  to the SDA and SCL pins of Feather board and you can
 use a library of your choice to control it. RoverWing expects that you have
-installed `U8G2 <https://github.com/olikraus/u8g2/>` library and creates an
+installed `U8G2 <https://github.com/olikraus/u8g2/>`__ library and creates an
 object ``topDisplay`` of class ``U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C``.
 You can use any functions defined by ``U8G2`` graphics library (see
 `U8G2 User Guide <https://github.com/olikraus/u8g2/wiki>`__). In particular,
@@ -133,9 +133,9 @@ that these functions are global --- they are not methods of any class.
 
 .. function:: void displayMessage(String line1)
 
-.. function:: void displayMessage(String line1, String line2);
+.. function:: void displayMessage(String line1, String line2)
 
-.. function:: void displayMessage(String line1, String Lien2, String line3);
+.. function:: void displayMessage(String line1, String Lien2, String line3)
 
    Output  one, two, or three lines on the top display. This function uses
    the same font for 1- and 2- line messages, and a different, slightly
@@ -149,12 +149,9 @@ sketch the following lines::
 
 replacing the font names by a font of your choice from the list of fonts
 included with ``U8G2`` library; full list can be found
-`here <https://github.com/olikraus/u8g2/wiki/fntlistall>`__
+`here <https://github.com/olikraus/u8g2/wiki/fntlistall>`__.
 
 .. warning::
 
    The font definitions must appear in your sketch *before* the line
    ``#include <RoverWingTop.h>``.
-
-
-   
