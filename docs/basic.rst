@@ -22,7 +22,7 @@ General Functions
 
     More verbose version of :func:`begin`. Initializes the RoverWing and prints
     to serial monitor firmware version and voltage level. If for some reason
-    initialization failed, it keeps trying until the initialization succeeds. 
+    initialization failed, it keeps trying until the initialization succeeds.
 
 .. function:: uint8_t fwVersionMajor
 
@@ -327,6 +327,8 @@ to smooth out random noise.
    Array of sonar readings fetched by getAllSonar() function, in mm. ``sonar[0]``
    holds reading for sonar 1, etc. Note that these values are not automatically
    updated: you must call :func:`getAllAnalog` function to update them.
+
+.. _neopixel:
 
 NeoPixel
 --------
