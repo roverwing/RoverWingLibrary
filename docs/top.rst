@@ -3,12 +3,19 @@ Using RoverWing Top
 ===================
 
 RoverWing top is an optional accessory to RoverWing, which includes
-a small prototyping area, on/off switch, three NeoPixel LEDs and two butons,
-and a 3-line display. It is described in detail in |guide|.
+a small prototyping area, on/off switch, three NeoPixel LEDs and two buttons,
+and a 3-line display. It is described in detail in |guide|. A photo of the
+RoverWing with the top attached is shown below.
+
+.. figure:: images/top.jpg
+    :alt: RoverWing with top
+    :width: 60%
+
+    RoverWing board with the top attached. 
 
 RoverWing library includes some functions for use with the RoverWing top. To
 use these functions, you need to have the graphics library
-`U8G2 <https://github.com/olikraus/u8g2/>` installed; you can do it easily by
+`U8G2 <https://github.com/olikraus/u8g2/>`__ installed; you can do it easily by
 using Arduino IDE library manager.
 
 RoverWing library includes a sample sketch illustrating the use of RoverWing top;
@@ -57,7 +64,7 @@ For HUZZAH32-ESP32 Feather, these are pin numbers 32 (button A) and 14 (button B
 
 .. figure:: images/feather-bluefruit.jpg
     :alt: Feather Bluefruit
-    :width: 80%
+    :width: 60%
 
     Adafruit Bluefruit Feather, based on M0 chip, top view. Buttons A and B of
     RoverWing top are connected to  pins  6 and 5 respectively.
@@ -69,7 +76,7 @@ For HUZZAH32-ESP32 Feather, these are pin numbers 32 (button A) and 14 (button B
 
 
 Pins connected to buttons  are normally HIGH; pressing the button pulls it LOW.
-You can read the  pin values in the usual way, using `digitalRead(BUTTON_A)`;
+You can read the  pin values in the usual way, using ``digitalRead(BUTTON_A)``;
 in addition, you can also use the ``waitForButton()`` function below.
 
 .. function:: void waitForButton(uint8_t button)
@@ -129,7 +136,7 @@ the following functions are most useful.
    Clears the display, erasing all contents.
 
 In addition, the following functions are defined in :file:`RoverWing.h`. Note
-that these functions are global --- they are not methods of any class.
+that these functions are global - they do not belong to any class.
 
 .. function:: void displayMessage(String line1)
 
