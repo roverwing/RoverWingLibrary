@@ -32,3 +32,5 @@ This user guide describes the features of the library.
     imu
     pid
     top
+    license
+    
