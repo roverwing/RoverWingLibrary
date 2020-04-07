@@ -9,7 +9,7 @@ peripherals, which communicates with the Feather board using I2C protocol,
 thus freeing resources of the Feather board for other purposes.
 
 This repository contains an Arduino library necessary to access all features of
-RoverWing. Detalied documentation, including installation instrauctions, is
+RoverWing. Detailed documentation, including installation instructions, is
 available at http://roverwing-library.readthedocs.io.
 
 
@@ -22,5 +22,5 @@ authors at roverwingboard@gmail.com
 
 License
 =======
-RoverWing Library is distributed under GNU General Public License, version 3.
-Full text of the license is included in LICENSE file in this repository.
+RoverWing Library is distributed under GNU Lesser General Public License, version 3.
+Full text of the license is included in COPYING file in this repository.
