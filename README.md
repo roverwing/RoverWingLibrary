@@ -1,22 +1,26 @@
-# RoverWing library
-An Arduino library for use with <a href="https://roverwing.github.io/RoverWingHardware/">RoverWing</a>, a robotics controller for Adafruit Feather boards. 
+RoverWing Arduino Library
+=========================
+An Arduino Library for [RoverWing](https://roverwing-board.readthedocs.io), a
+robotics  extension board   for Adafruit's Feather boards. RoverWing  
+provides motor drivers, Inertial Motion Unit (IMU), and connection ports for
+servos, sonars, GPS,and other peripherals commonly used by mobile robots.
+It also contains a microcontroller preloaded with firmware to control these
+peripherals, which communicates with the Feather board using I2C protocol,
+thus freeing resources of the Feather board for other purposes.
 
-# Instalation
-Download the zip file of this repository and then follow the [Tutorial](https://www.arduino.cc/en/guide/libraries) on how to install arduino ide libraries.
-
-
-# User documentation
-Detailed users guide is available in the Wiki section of RoverWing library github repository: https://github.com/roverwing/RoverWingLibrary/wiki 
-
-
-# Building a basic Robot
-https://github.com/roverwing/RoverWingLibrary/wiki/6.-Building-a-Basic-Robot
-# Additional information 
-
-<a href="https://roverwing.readthedocs.io/en/latest//">Roverwing Home Page</a>
-
-<a href="https://roverwing.github.io/RoverWingHardware/">Hardware</a>
-
-<a href="https://roverwing.github.io/RoverWingFirmware/">Firmware</a>
+This repository contains an Arduino library necessary to access all features of
+RoverWing. Detalied documentation, including installation instrauctions, is
+available at http://roverwing-library.readthedocs.io.
 
 
+Authors
+=======
+RoverWing library has been created by David Bershadsky and Alexander Kirillov,
+both of [FTC team 4137 Islandbots](http://islandbots.org). You can contact the
+authors at roverwingboard@gmail.com
+
+
+License
+=======
+RoverWing Library is distributed under GNU General Public License, version 3.
+Full text of the license is included in LICENSE file in this repository.
