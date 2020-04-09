@@ -9,12 +9,12 @@ Unit (IMU) and the external GPS sensor.
 Inertial Motion Unit (IMU)
 --------------------------
 RoverWing contains a built-in Inertial Motion Unit (IMU), which is based on
-MPU6500 chip from Invensense. This chip combines a 3-axis accelerometer and a
+ICM42605 chip from Invensense. This chip combines a 3-axis accelerometer and a
 3-axis gyro sensor, which provide information about acceleration and rotational
 speed. RoverWing firmware combines the sensor data to provide information
 about rover orientation in space, in the form of Yaw, Pitch, and Roll angles.
 (RoverWing's firmware is based on the work of
-`Kris Winer <https://github.com/kriswiner>`_ and uses data fusion
+`Kris Winer <https://github.com/kriswiner>`__ and uses data fusion
 algorithm invented by Sebastian Madgwick.)
 
 .. note::
@@ -139,7 +139,9 @@ and computed orientation, using the following functions:
   ``q=quat[0]+i*quat[1]+j*quat[2]+k*quat[3]``
 
 .. Compass
-    RoverWing provides a connector for attaching a combined GPS and a compass (magnetometer) sensor. If you have such a sensor connected, you can activate it and use to determine absolute orientation using the functions below.
+    RoverWing provides a connector for attaching a combined GPS and a compass
+    (magnetometer) sensor. If you have such a sensor connected, you can activate
+    it and use to determine absolute orientation using the functions below.
 
     Note:
 
@@ -228,8 +230,10 @@ following functions to access the GPS coordinates.
 
 .. function:: double longitude()
 
-   Return the robot latitude and longitude in degrees. Note that these
-   coordinates refer to the location fetched at last call of
+   Return the robot latitude and longitude in degrees, following the usual
+   conventions: latitude ranges from -180 (South Pole) to 180 (North Pole);
+   longitude ranges from  -180 (west of Greenwich) to 180 (east of Grennwich).
+   Note that these coordinates refer to the location fetched at last call of
    :func:`getGPSlocation`.
 
 .. function:: int32_t latitudeL()
@@ -258,18 +262,18 @@ defined in :file:`RoverWing.h` as follows::
 
 The functions below provide some tools for working with location data:
 
-.. function:: void saveGPSlocation(location_t & l)
+.. function:: void saveGPSlocation(location_t & loc)
 
-   Saves current robot location to variable ``l``.
+   Saves current robot location to variable ``loc``.
 
-.. function:: float distanceTo(const location_t & l )
+.. function:: float distanceTo(const location_t & loc )
 
-   Returns distance from current robot location to location l, in meters.
+   Returns distance from current robot location to location ``loc``, in meters.
 
-.. function:: float bearingTo(const location_t & l )
+.. function:: float bearingTo(const location_t & loc )
 
-   Returns bearing from current robot location to l. The bearing is measured in
-   degrees and ranges from -180 to 180, with North being 0.
+   Returns bearing from current robot location to ``loc``. The bearing is
+   measured in degrees and ranges from -180 to 180, with North being 0.
 
 .. note::
 

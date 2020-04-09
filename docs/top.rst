@@ -11,7 +11,7 @@ RoverWing with the top attached is shown below.
     :alt: RoverWing with top
     :width: 60%
 
-    RoverWing board with the top attached. 
+    RoverWing board with the top attached.
 
 RoverWing library includes some functions for use with the RoverWing top. To
 use these functions, you need to have the graphics library
@@ -28,8 +28,8 @@ The sample code below shows basic  initialization necessary to use RoverWing top
     #include <Wire.h>
     #include <RoverWing.h>
     #include <RoverWingTop.h> //library for use with the top display and buttons
-    #define BUTTON_A 6
-    #define BUTTON_B 5
+    #define BUTTON_A 5
+    #define BUTTON_B 6
 
     Rover r; //this is the name of the rover!
     void setup(){
@@ -37,6 +37,8 @@ The sample code below shows basic  initialization necessary to use RoverWing top
         pinMode(BUTTON_B, INPUT_PULLUP);
         Wire.begin();
         Wire.setClock(400000); //use fast mode (400 kHz)
+        // declare the NeoPixels
+        r.setPixelCount(3);
         //initialize the top display
         topDisplay.begin();
         topDisplay.clearBuffer();
@@ -53,21 +55,21 @@ Buttons
 
 RoverWing top contains two buttons, labelled :guilabel:`Button A` and
 :guilabel:`Button B`. These buttons are connected to two pins of the Feather
-board: button B is connected to the pin next to SCL, and button A, to the next
+board: button A is connected to the pin next to SCL, and button B, to the next
 pin. Unfortunately, pin numbers assigned to this pins depend on which Feather
 board you are using; for this reason, you need to include the definitions in
 your sketch, as illustrated above.
 
 For Feather boards based on Cortex M0, Atmega 328P, or 32u4 chipsets, the pin
-numbers are 6 (button A) and 5 (button B).
-For HUZZAH32-ESP32 Feather, these are pin numbers 32 (button A) and 14 (button B).
+numbers are 5 (button A) and 6 (button B).
+For HUZZAH32-ESP32 Feather, these are pin numbers 14 (button A) and 32 (button B).
 
 .. figure:: images/feather-bluefruit.jpg
     :alt: Feather Bluefruit
     :width: 60%
 
     Adafruit Bluefruit Feather, based on M0 chip, top view. Buttons A and B of
-    RoverWing top are connected to  pins  6 and 5 respectively.
+    RoverWing top are connected to  pins  5 and 6 respectively.
 
 .. note::
    Instead of ``BUTTON_A`` and ``BUTTON_B``, you can define  your own names for
@@ -92,7 +94,7 @@ LEDs
 
 RoverWing top contains three NeoPixel LEDs, which are connected to the NeoPixel
 output port of RoverWing and can be controlled using functions described in
-:ref:`neopixel`.  These LEDs have indices 1 through 3 (right to left). For
+:ref:`neopixel` section.  These LEDs have indices 1 through 3 (right to left). For
 example, to turn the middle LED red and the two outer green, you can use
 ::
 
@@ -104,7 +106,10 @@ example, to turn the middle LED red and the two outer green, you can use
 
 RoverWing top also contains additional NeoPixel port, allowing one to connect
 additional NeoPixel strips. In this case, the indices of these NeoPixels will
-start with 4.
+start with 4, and the number of NeoPixels which you set using
+``setPixelCount()`` must include  the three NeoPixels of the RoverWing Top and
+the externally connected NeoPixels. 
+
 
 .. warning::
 
@@ -160,5 +165,5 @@ included with ``U8G2`` library; full list can be found
 
 .. warning::
 
-   The font definitions must appear in your sketch *before* the line
+   The font definitions must appear in your sketch **before** the line
    ``#include <RoverWingTop.h>``.

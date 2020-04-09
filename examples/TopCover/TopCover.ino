@@ -31,12 +31,12 @@ This example code is in the public domain.
 
 
 //pin numbers for buttons.
-//Button B uses pin next to SCL; button A, the next pin
+//Button A uses pin next to SCL; button B, the next pin
 //For feather boards based on Cortex M0, Atmega 328P, or 32u4 chipsets, the pin numbers are
-// 6 (button A) and 5 (button B)
-//For HUZZAH32-ESP32 Feather, these are pin numbers 32 (button A) and 14 (button B)
-#define BUTTON_A 32
-#define BUTTON_B 14
+// 5 (button A) and 6 (button B)
+//For HUZZAH32-ESP32 Feather, these are pin numbers 14 (button A) and 32 (button B)
+#define BUTTON_A 14
+#define BUTTON_B 32
 
 Rover r; //this is the name of the rover!
 float v;//voltage

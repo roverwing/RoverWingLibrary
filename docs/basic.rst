@@ -24,18 +24,20 @@ General Functions
     to serial monitor firmware version and voltage level. If for some reason
     initialization failed, it keeps trying until the initialization succeeds.
 
-.. function:: uint8_t fwVersionMajor
+.. function:: String fwVersion()
+
+   Returns firmware version (major.minor) as a string, e.g. "1.27"
+
+.. var:: uint8_t fwVersionMajor
 
    Firmware major version. Note that it is a class member, not a function, so
    do not use parentheses.
 
-.. function:: uint8_t fwVersionMinor
+.. var:: uint8_t fwVersionMinor
 
    Firmware minor version.
 
-.. function:: String fwVersion()
 
-   Returns firmware version (major.minor) as a string, e.g. "1.27"
 
 Voltage Sensing
 ---------------
@@ -297,12 +299,13 @@ to smooth out random noise.
 
    Activates sonars.
 
-   :param bitmask:  which sonars should be activated (bit 0 for ``SONAR1``,
-       bit1 for ``SONAR2``, etc). The easiest way is to use predefined values
-       ``SONAR1``, ``SONAR2``, ``SONAR3`` which are defined in such a way
-       that calling ``activateSonars(SONAR1)`` activates ``SONAR1``. Moreover,
-       they can be added together to form any combination: for example, to
-       activate sonars 1 and 3, use ``activateSonars(SONAR1+SONAR3)``.
+   :param bitmask:  which sonars should be activated (least significant bit for
+       ``SONAR1``, next bit for ``SONAR2``, etc). The easiest way is to use
+       predefined values ``SONAR1``, ``SONAR2``, ``SONAR3`` which are defined in
+       such a way that calling ``activateSonars(SONAR1)`` activates ``SONAR1``.
+       Moreover, they can be added together to form any combination: for
+       example, to activate sonars 1 and 3, use
+       ``activateSonars(SONAR1+SONAR3)``.
    :param int maxDistance: (optional) specifies maximal distance to an object in mm and
        is used to determine the timeout time: if no echo is received in the
        time required for the sound to reach object at this distance and return,
@@ -361,6 +364,10 @@ voltage threshold as described in section `Voltage Sensing`_.
    can range from 0-255; usually, brightness of 32 (1/8 of maximum) is bright
    enough.
 
+   This setting (as well as colors of individual pixels set using ``setPixelRGB()``
+   and ``setPixelHSV()`` functions) is not applied immediately; you need to call
+   :func:`showPixel` function to apply them.
+
 .. function   void setPixelRGB(uint8_t i, uint8_t R, uint8_t G, uint8_t B)
 
    Sets color of ``i``-th pixel, using three values for red, blue, and green colors,
@@ -371,7 +378,9 @@ voltage threshold as described in section `Voltage Sensing`_.
 
 .. function::   void setPixelColor(uint8_t i, uint32_t c)
 
-   Sets the color of ``i``-th pixel.
+   Sets the color of ``i``-th pixel.    This color is not applied immediately:
+   see description of :func:`showPixel`   function below.
+
 
    :param i: pixel index, ranging 1-255
    :param c: color in the usual hexadecimal notation: ``c=0xRRGGBB`` (see,
