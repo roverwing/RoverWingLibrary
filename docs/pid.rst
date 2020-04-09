@@ -204,7 +204,7 @@ Setting PID Coefficients
 For advanced users, below is the detailed explanation of the PID algorithm used
 by RoverWing firmware.
 
-The motor power is determined by standard formula of PID algorithm:
+The motor power is determined by the standard formula of PID algorithm:
 
 .. math::
    P=K_p e+\frac{K_p}{T_i}\int e\, dt +K_p T_d \frac{d}{dt} e
@@ -237,6 +237,7 @@ oscillations, but they take some time for the motor speed to stabilize.
 Advanced users can change them and set their own PID coefficients as shown in
 the sketch below.
 
+::
 
     motorconfig_t myMotor;
     myMotor.encoderCPR = 1440;
