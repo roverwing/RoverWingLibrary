@@ -201,13 +201,47 @@ use the following commands.
 Setting PID Coefficients
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Advanced users can set their own PID coefficients for the motors as illustrated
-in this example sketch::
+For advanced users, below is the detailed explanation of the PID algorithm used
+by RoverWing firmware.
+
+The motor power is determined by standard formula of PID algorithm:
+
+.. math::
+   P=K_p e+\frac{K_p}{T_i}\int e\, dt +K_p T_d \frac{d}{dt} e
+
+where:
+
+:math:`P` is motor power (ranging from -1.0 to 1.0)
+
+:math:`e=v_{desired}-v_{actual}` is the error, i.e. the  difference of desired and actual motor
+speeds (measured in encoder tics/sec)
+
+:math:`\int e dt` and :math:`\frac{d}{dt}e` are the integral and derivative
+of the error, measured in encoder tics and tics/:math:`sec^2` respectively
+
+:math:`K_p, T_i, T_d` are the PID coefficients.
+
+
+The behavior of the PID algorithm is determined by these coefficients; for
+example, if the coefficient :math:`K_p` is too small, it will take the motor a
+long time to stabilize to the desired speed; if the coefficient :math:`K_p` is
+too large, you might get oscillations. Choosing the correct coefficients
+requires significant experience and is certainly outside the scope of this user
+guide.
+
+
+RoverWing software sets some default values for the PID coefficients based on
+motor maximal RPM and encoder tics per revolution. These default values are
+somewhat conservative: they are almost certain to avoid instability and large
+oscillations, but they take some time for the motor speed to stabilize.
+Advanced users can change them and set their own PID coefficients as shown in
+the sketch below.
+
 
     motorconfig_t myMotor;
     myMotor.encoderCPR = 1440;
     float noloadRPM = 250; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
-    float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max speed in encoder counts/s
+    float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max motor speed in encoder counts/s
     float Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
     float Ti=0.3;           // time constant for integral gain, in seconds
     float Td=0.1;           // time constant for differential gain, in seconds
