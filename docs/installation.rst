@@ -1,3 +1,5 @@
+.. _installation:
+
 ===============================
 Installation And Initialization
 ===============================
@@ -72,6 +74,6 @@ Examples
 --------
 
 The RoverWing library comes with a number of example sketches; as always, they
-are available from :menuselection:`File-->Examples-->RoverWing` menu of Arduino 
+are available from :menuselection:`File-->Examples-->RoverWing` menu of Arduino
 IDE. These example sketches are amply commented, making it easy to adjust the
 code for your purposes.

@@ -3,7 +3,7 @@ Basic Functions
 ===============
 This section describes basic functions provided by RoverWing library. This
 documentation assumes that you have connected and initialized the RoverWing
-as described in Installation and Initialization document.
+as described in :ref:`installation` section .
 
 All the functions and member variables described below are part of class Rover.
 Thus, if you named your Rover object :code:`myRover`, then to access, say, function
