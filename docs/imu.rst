@@ -77,9 +77,7 @@ normally done  immediately after activation. There are two ways to do this:
    calibration offsets, you do not need to repeat the calibration process -
    you can just use  the previously found values. To do that, enter the offset
    values in your sketch as shown in this code example  (replacing zeros with
-   actual values)
-
-.. code-block::
+   actual values)::
 
         int16_t aOffsets[]={0,0,0};
         int16_t gOffsets[]={0,0,0};
