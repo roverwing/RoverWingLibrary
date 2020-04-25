@@ -199,7 +199,7 @@ use the following commands.
         //motion forward has completed!
 
 Setting PID Coefficients
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 For advanced users, below is the detailed explanation of the PID algorithm used
 by RoverWing firmware.
@@ -241,21 +241,13 @@ the sketch below.
 
     motorconfig_t myMotor;
     myMotor.encoderCPR = 1440;
-    float noloadRPM = 250; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
-    float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max motor speed in encoder counts/s
-    float Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
-    float Ti=0.3;           // time constant for integral gain, in seconds
-    float Td=0.1;           // time constant for differential gain, in seconds
-    float iLim = 1.0*Ti/Kp; // limit on integral error; this value guarantees that integral term will be at most 1.0*maxspeed
-    // now, enter the PID values in motor configuration.
-    // You can either use the values suggested above, or enter your own values
-    myMotor.Kp=Kp;
-    myMotor.Ti=Ti;         //can't be zero; to disable I term, make Ti large, e.g. 100000.0
-    myMotor.Td=Td;         //to disable differential term, make Td=0
-    myMotor.iLim=iLim;     // to disable integral limit, make iLim negative e.g. -1.0
+    myMotor.noloadRPM = 250; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
+    float maxspeed=myMotor.encoderCPR*myMotor.noloadRPM/60.0; //max motor speed in encoder counts/s
+    myMotor.Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
+    myMotor.Ti=0.3;           // time constant for integral gain, in seconds. To disable I term, make Ti large, e.g. 100000.0
+    myMotor.Td=0.1;           // time constant for differential gain, in seconds. To disable differential term, make Td=0.0
+    myMotor.iLim = 1.0*myMotor.Ti/myMotor.Kp; // limit on integral error; this value guarantees that integral term will be at most 1.0*maxspeed
+                                              // to disable integral limit, make iLim negative e.g. -1.0
     //finally, configure the motors
     r.configureMotor(MOTOR1, myMotor);
     r.configureMotor(MOTOR2, myMotor);
-
-
-(Detailed explanation of all these parameters to be added soon.)

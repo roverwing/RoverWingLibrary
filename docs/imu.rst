@@ -230,7 +230,7 @@ following functions to access the GPS coordinates.
 
    Return the robot latitude and longitude in degrees, following the usual
    conventions: latitude ranges from -180 (South Pole) to 180 (North Pole);
-   longitude ranges from  -180 (west of Greenwich) to 180 (east of Grennwich).
+   longitude ranges from  -180 (west of Greenwich) to 180 (east of Greenwich).
    Note that these coordinates refer to the location fetched at last call of
    :func:`getGPSlocation`.
 
