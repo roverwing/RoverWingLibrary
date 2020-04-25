@@ -36,14 +36,7 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(5000); //wait for 1 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
-  while (!r.begin() ){
-    //if connecting fails, wait and try again...
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("");
-  Serial.println("Roverwing is connected");
-  Serial.println("Firmware version: "+ r.fwVersion());
+  r.beginVerbose();
   Serial.println("Initializing and calibrating the IMU");
   r.IMUbegin();
   delay(500);
@@ -82,8 +75,20 @@ void loop(){
   Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.print(" ");
   Serial.print("Pitch: "); Serial. print(r.getPitch());  Serial.print(" ");
   Serial.print("Roll: "); Serial. print(r.getRoll());  Serial.println(" ");
+  // if desired, uncomment the lines below to see raw gyro and accelerometer data:
+  /*
+    r.getAccel();
+    Serial.print("Accel: ");
+    Serial.print(r.ax); Serial.print(" ");
+    Serial.print(r.ay); Serial.print(" ");
+    Serial.print(r.az); Serial.print(" ");
+    r.getGyro();
+    Serial.print("Gyro: ");
+    Serial.print(r.gx); Serial.print(" ");
+    Serial.print(r.gy); Serial.print(" ");
+    Serial.print(r.gz); Serial.println(" ");
+  */
   delay(300);
-
   //do the blink
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;
