@@ -284,8 +284,8 @@ void Rover::getAccel(){
   int16_t accel[3];
   read16(REGA_ACCEL,3, (uint16_t*)accel);
   ax=(float)accel[0]*aScale;
-  ay=(float)accel[0]*aScale;
-  az=(float)accel[0]*aScale;
+  ay=(float)accel[1]*aScale;
+  az=(float)accel[2]*aScale;
 }
 void Rover::getGyro(){
   int16_t gyro[3];

@@ -30,7 +30,7 @@ In addition to that, you will need to install the RoverWing library. To do that,
 please download the library as a zip file by clicking on green :guilabel:`Clone or download`
 button in the top right corner of RoverWing library github repository at
 http://github.com/roverwing/RoverWingLibrary/ and choose
-:menuselection:`Download ZIP`. After downloading, start Arduino IDE and select
+:guilabel:`Download ZIP`. After downloading, start Arduino IDE and select
 in the menu :menuselection:`Sketch-->Include Library-->Add .ZIP Library`.
 
 After installation, restart Arduino IDE and verify that library was successfully
