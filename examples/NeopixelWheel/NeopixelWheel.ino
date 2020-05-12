@@ -40,17 +40,17 @@ void setup(){
   r.setPixelCount(NUM_PIXELS);
   r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
   //setup initial hues
-  // note that index i starts with 1
-  for (int i=1; i<=NUM_PIXELS; i++){
+  for (int i=0; i<NUM_PIXELS; i++){
     hues[i]=(i*255)/NUM_PIXELS; // put hues uniformly on the color wheel
   }
 }
 
 void loop(){
-  for (int i=1; i<=NUM_PIXELS; i++) {
+  for (int i=0; i<NUM_PIXELS; i++) {
     //update hues
     hues[i]+=25; // this way, at every loop we are rotating by 25/255, or approximately 1/10 of the revolution of the color wheel
-    r.setPixelHSV(i,hues[i], 255, 255);
+    // note that index i starts with 1
+    r.setPixelHSV(i+1,hues[i], 255, 255);
   }
   r.showPixel(); //this must be called to push the new colors to the actual neopixels
   //blink the built-in LED of the feather board

@@ -269,8 +269,8 @@ class Rover {
     bool motorIsReversed[2];
     // records servo center position and half range for each servo
     // full range is [center-halfrange, center+halfrange]
-    uint8_t servoCenterPos[4];
-    uint8_t servoHalfRange[4];
+    uint16_t servoCenterPos[4];
+    uint16_t servoHalfRange[4];
     //current location
     location_t location;
     float declination; //magnetic declination, in degrees

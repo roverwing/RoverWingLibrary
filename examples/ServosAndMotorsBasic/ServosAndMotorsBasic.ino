@@ -48,10 +48,10 @@ void setup(){
   // set the range of PWM signal duration  accepted by servos, in us
   // this is optional; if you do no t set it explicitly, default value of 1000-2000
   // will be used
-  r.setServoRange(SERVO1, 1900,2100); //this is  the range for HiTec servos,
-  r.setServoRange(SERVO2, 1900,2100); //see https://hitecrcd.com/faqs/servos/general-servos
-  r.setServoRange(SERVO3, 1900,2100);
-  r.setServoRange(SERVO4, 1900,2100);
+  r.setServoRange(SERVO1, 900,2100); //this is  the range for HiTec servos,
+  r.setServoRange(SERVO2, 900,2100); //see https://hitecrcd.com/faqs/servos/general-servos
+  r.setServoRange(SERVO3, 900,2100);
+  r.setServoRange(SERVO4, 900,2100);
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
   //reverse one of the motors
   r.reverseMotor(MOTOR2);

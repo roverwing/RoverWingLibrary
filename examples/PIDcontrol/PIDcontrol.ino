@@ -41,14 +41,14 @@ void setup(){
   //now, configure the motors.
 
   //This data is for Pololu plasic gearmotors
-  myMotor.encoderCPR = 1440;   // encoder counts per revolution of output shaft
+  myMotor.encoderCPR = 1120;   // encoder counts per revolution of output shaft
                                // this should count all observable encoder events,
                                // rise/fall of channel A and rise/fall of channel B
 
   //If you do not know the best PID coefficicients for your motor,
   // try using the values below and adjust as needed. If you do know the values
   // already, you can comment these lines
-  float noloadRPM = 250; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
+  float noloadRPM = 140; // the motor RPM under maximal power; you can find it by running example sketch "Servos and Motors Basic"
   float maxspeed=myMotor.encoderCPR*noloadRPM/60.0; //max speed in encoder counts/s
   float Kp=0.6/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
   float Ti=0.3;           // time constant for integral gain, in seconds

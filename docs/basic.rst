@@ -344,7 +344,7 @@ Adafruit's Uberguide: https://learn.adafruit.com/adafruit-neopixel-uberguide.
 Note that RoverWing only allows the RGB NeoPixels; RGB W NeoPixels, which add
 white LED to the usual RGB, are not supported.
 
-RoverWing allows you to connect a strip of up to 255 NeoPixels. However, the
+RoverWing allows you to connect a strip of up to 128 NeoPixels. However, the
 more NeoPixels you connect, the more power they consume, and the longer it takes
 to update the whole strip, so please check the power requirements specified in
 |guide| if you intend to use more than 20-30 NeoPixels.
@@ -352,11 +352,11 @@ to update the whole strip, so please check the power requirements specified in
 Note that RoverWing also contains an internal NeoPixel LED, which blinks green
 to indicate normal operation, or yellow to indicate low supply voltage. This
 NeoPixel can not be directly controlled by the user (other than setting the low
-voltage threshold as described in section `Voltage Sensing`_.
+voltage threshold as described in section `Voltage Sensing`_).
 
 .. function::    void setPixelCount(uint8_t n)
 
-   Sets the number of NeoPixels connected to the RoverWing (up to 255)
+   Sets the number of NeoPixels connected to the RoverWing (up to 128)
 
 .. function::   void setPixelBrightness(uint8_t b)
 

@@ -109,11 +109,12 @@ void Rover::setServo(servo_t s, float pos){
   uint16_t pulseWidth;
   pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
   write16(REGB_SERVO+s, pulseWidth);
+  //Serial.print("Setting servo "); Serial.print(s); Serial.print(" pulsewidth: "); Serial.println(pulseWidth);
 }
 void Rover::setAllServo(float* pos){
   uint16_t pulseWidth[4];
   for (uint8_t i =0; i<4; i++) {
-    pulseWidth[i]=1500 + (uint16_t)(pos[i]*1000.0f);
+    pulseWidth[i]=servoCenterPos[i] + (uint16_t)(pos[i]*servoHalfRange[i]);
   }
   write16(REGB_SERVO, 4, pulseWidth);
 }
