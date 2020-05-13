@@ -10,7 +10,7 @@ measure voltage at main power connector; they are useless if RoverWing is
 powered by the  Feather board.
 
 This example expects that you have connected a string of Neopixels (3 color only - no white)
-to the neopixel port of the RoverWing; max allowed is 45 pixels.
+to the neopixel port of the RoverWing; max allowed is 128 pixels.
 
 Written in 2019 by David Bershadsky, Alexander Kirillov
 
@@ -21,7 +21,7 @@ This example code is in the public domain.
 
 Rover r; //this is the name of the rover!
 bool blink=false;
-#define NUM_PIXELS 4 //number of connected Neopixels; edit to match your configuration
+#define NUM_PIXELS 8 //number of connected Neopixels; edit to match your configuration
 #define LOW_VOLTAGE 7.0 //voltage threshold; if voltage drops below this limit, internal neopixel turns yellow
 uint8_t hues[NUM_PIXELS]; //array of hues of pixels
 
@@ -49,7 +49,7 @@ void loop(){
   for (int i=0; i<NUM_PIXELS; i++) {
     //update hues
     hues[i]+=25; // this way, at every loop we are rotating by 25/255, or approximately 1/10 of the revolution of the color wheel
-    // note that index i starts with 1
+    // note that first argument is i+1, not i: it should range 1.. NUM_PIXELS
     r.setPixelHSV(i+1,hues[i], 255, 255);
   }
   r.showPixel(); //this must be called to push the new colors to the actual neopixels

@@ -32,9 +32,9 @@ int16_t gyroOffset[]={0,0,0};
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
   Wire.begin();
-  //Wire.setClock(400000); //use fast mode (400 kHz)
+  Wire.setClock(400000); //use fast mode (400 kHz)
   Serial.begin(9600); //debugging terminal
-  delay(5000); //wait for 1 second, so that roverwing initializes
+  delay(500); //wait for 0.5 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
   r.beginVerbose();
   Serial.println("Initializing and calibrating the IMU");
@@ -50,7 +50,7 @@ void setup(){
     r.IMUsetOffsets(accelOffset, gyroOffset);
   } else {
     Serial.println("Starting calibration. Please make sure robot is completely stationary and level.");
-    Serial.println("The process will take about a second");
+    Serial.println("The process will take about 10 seconds");
     //delay(1000);
     r.IMUcalibrate(accelOffset, gyroOffset);
     Serial.println("Calibration complete. For future reference, here are the found offsets:");
@@ -78,12 +78,12 @@ void loop(){
   // if desired, uncomment the lines below to see raw gyro and accelerometer data:
   /*
     r.getAccel();
-    Serial.print("Accel: ");
+    Serial.print("Accel (g): ");
     Serial.print(r.ax); Serial.print(" ");
     Serial.print(r.ay); Serial.print(" ");
-    Serial.print(r.az); Serial.print(" ");
+    Serial.print(r.az); Serial.print("     ");
     r.getGyro();
-    Serial.print("Gyro: ");
+    Serial.print("Gyro (deg/s): ");
     Serial.print(r.gx); Serial.print(" ");
     Serial.print(r.gy); Serial.print(" ");
     Serial.print(r.gz); Serial.println(" ");
