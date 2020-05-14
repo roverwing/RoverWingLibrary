@@ -108,8 +108,8 @@ float Rover::getSonar(sonar_t s){
 void Rover::setServo(servo_t s, float pos){
   uint16_t pulseWidth;
   pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
-  write16(REGB_SERVO+s, pulseWidth);
-  //Serial.print("Setting servo "); Serial.print(s); Serial.print(" pulsewidth: "); Serial.println(pulseWidth);
+  write16(REGB_SERVO+2*s, pulseWidth);
+  Serial.print("Setting servo "); Serial.print(s); Serial.print(" pulsewidth: "); Serial.println(pulseWidth);
 }
 void Rover::setAllServo(float* pos){
   uint16_t pulseWidth[4];

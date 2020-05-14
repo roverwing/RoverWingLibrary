@@ -16,7 +16,7 @@ power supply, set MAX_POWER  to 0.8f; then 7.2*0.8=5.76, which is less than 6V.
 
 
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */
@@ -44,9 +44,9 @@ void setup(){
   //activates RoverWing and prints basic info to Serial
   r.beginVerbose();
   Serial.println("Starting Servos and Motors test");
-  //now, initilaize the servos
+  //now, initialize the servos
   // set the range of PWM signal duration  accepted by servos, in us
-  // this is optional; if you do no t set it explicitly, default value of 1000-2000
+  // this is optional; if you do not set it explicitly, default value of 1000-2000
   // will be used
   r.setServoRange(SERVO1, 900,2100); //this is  the range for HiTec servos,
   r.setServoRange(SERVO2, 900,2100); //see https://hitecrcd.com/faqs/servos/general-servos
@@ -55,7 +55,7 @@ void setup(){
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
   //reverse one of the motors
   r.reverseMotor(MOTOR2);
-  //if your motors are equipped with encoders, uncommnet the lines below and change as necessary
+  //if your motors are equipped with encoders, uncomment the lines below and change as necessary
   myMotor.encoderCPR = 1440;  //encoder counts per revolution of output shaft
                               //"count" refers to any observable change - rise/fall on channel A or B
   r.configureMotor(MOTOR1, myMotor);
@@ -87,6 +87,7 @@ void loop(){
   //now, wait
   delay(500);
   //uncomment if your motors are equipped with encoders
+  /*
   //get current encoder values - position (in revolutions) and speed (RPM)
   r.getAllPosition();
   r.getAllSpeed();
@@ -94,5 +95,5 @@ void loop(){
   Serial.print(" "); Serial.println(r.position[MOTOR2]);
   Serial.print("Current motor speed (RPM): "); Serial.print(r.speed[MOTOR1]);
   Serial.print(" "); Serial.println(r.speed[MOTOR2]);
-
+  */
 }

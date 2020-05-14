@@ -46,18 +46,18 @@ void setup(){
   r.saveGPSlocation(base);
 }
 void loop(){
-  r.getGPSlocation(); //update curretn location
-  distance=r.distanceTo(base); //distance in meters
-  if (printCounter==0) {
-    //time to print header
-    Serial.println("Latitude     Longitude     Dist from start ");
-    printCounter=20;
-  }
-  Serial.print(r.latitude(),6); Serial.print(" "); Serial.print(r.longitude(),6);
-  Serial.print(" "); Serial.println(distance);
-  delay(500);
-  //do the blink
-  digitalWrite(LED_BUILTIN, blink);
-  blink=!blink;
-  printCounter--;
+    r.getGPSlocation(); //update current location
+    distance=r.distanceTo(base); //distance in meters
+    if (printCounter==0) {
+      //time to print header
+      Serial.println("Latitude    Longitude     Dist from start (m) ");
+      printCounter=20;
+    }
+    Serial.print(r.latitude(),6); Serial.print("   "); Serial.print(r.longitude(),6);
+    Serial.print("     "); Serial.println(distance);
+    delay(500);
+    //do the blink
+    digitalWrite(LED_BUILTIN, blink);
+    blink=!blink;
+    printCounter--;
 }
