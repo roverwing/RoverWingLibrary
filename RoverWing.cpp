@@ -162,6 +162,7 @@ void Rover::stopMotors(){
   write16(REGB_MOTOR_POWER,2,(uint16_t *)power );
 }
 void Rover::configureMotor(motor_t m, motorconfig_t c){
+  uint16_t maxSpeed=  c.encoderCPR*(c.noloadRPM / 60.0); //maximal motor speed in encoder ticks/s
   motorsConfig[m].encoderCPR=c.encoderCPR;
   motorsConfig[m].noloadRPM=c.noloadRPM;
   if (c.Kp>0){
@@ -188,10 +189,12 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
                     motorsConfig[m].Kp*motorsConfig[m].Td, //Kd
                     motorsConfig[m].iLim};
   if (m==MOTOR1) {
+    write16(REGB_MOTOR_MAXSPEED, maxSpeed);
     write32(REGB_MOTOR1_PID, 4, (uint32_t *)PIDcoef);
     //Serial.print("Setting PID coef1: Ilim=");
     //Serial.println(PIDcoef[3],5);
   } else {
+    write16(REGB_MOTOR_MAXSPEED+2, maxSpeed);        
     write32(REGB_MOTOR2_PID, 4, (uint32_t *)PIDcoef);
     //Serial.print("Setting PID coef2: Ilim=");
     //Serial.println(PIDcoef[3],5);

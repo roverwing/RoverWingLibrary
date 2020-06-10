@@ -131,9 +131,9 @@ Bytes  Offset name     value               data type  description
 ------ MOTOR POWER       -------------
 46-47  REGB_MOTOR_POWER motorPower[0]      int16    motor power, -500...500
 48-49                   motorPower[1]      int16
------- MOTOR STEERING    -------------
-50-51  REGB_MOTOR_STEERING steering[0]     int16  see description in motor.h
-52-53                      steering[1]     int16
+------ MOTOR MAX SPEED    -------------
+50-51  REGB_MOTOR_MAXSPEED motorMaxspeed[0]     uint16  Maximal motor speed, in enc ticks/s
+52-53                      motorMaxspeed[1]     uint16
 54-55  unused
 ------ MOTOR TARGET      -------------
 56-59  REGB_MOTOR_TARGET motorTarget[0]    int32   in speed PID mode: speed  in enc ticks/s
@@ -202,7 +202,7 @@ Bytes  Offset name     value               data type  description
 #define REGB_ENC_RESET         42
 #define REGB_MOTOR_MODE        43
 #define REGB_MOTOR_POWER       46
-#define REGB_MOTOR_STEERING    50
+#define REGB_MOTOR_MAXSPEED    50
 #define REGB_MOTOR_TARGET      56
 #define REGB_IMU_CONFIG        64
 #define REGB_GYRO_OFFSET       66
