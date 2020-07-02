@@ -109,7 +109,7 @@ void Rover::setServo(servo_t s, float pos){
   uint16_t pulseWidth;
   pulseWidth = servoCenterPos[s] + (uint16_t)(pos*servoHalfRange[s]);
   write16(REGB_SERVO+2*s, pulseWidth);
-  Serial.print("Setting servo "); Serial.print(s); Serial.print(" pulsewidth: "); Serial.println(pulseWidth);
+  //Serial.print("Setting servo "); Serial.print(s); Serial.print(" pulsewidth: "); Serial.println(pulseWidth);
 }
 void Rover::setAllServo(float* pos){
   uint16_t pulseWidth[4];
@@ -139,7 +139,7 @@ void Rover::setMotorPwr(motor_t m, float pwr){
 void Rover::setAllMotorPwr(float pwr1, float pwr2){
   float m = max (fabs(pwr1), fabs(pwr2));
   //set mode
-  writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
+  //writeByte(REGB_DRIVE_MODE, DRIVE_OFF);
   write16(REGB_MOTOR_MODE, (uint16_t)(MOTOR_MODE_POWER<<8|MOTOR_MODE_POWER));
   headingSet=false;
   //rescale power
@@ -194,7 +194,7 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
     //Serial.print("Setting PID coef1: Ilim=");
     //Serial.println(PIDcoef[3],5);
   } else {
-    write16(REGB_MOTOR_MAXSPEED+2, maxSpeed);        
+    write16(REGB_MOTOR_MAXSPEED+2, maxSpeed);
     write32(REGB_MOTOR2_PID, 4, (uint32_t *)PIDcoef);
     //Serial.print("Setting PID coef2: Ilim=");
     //Serial.println(PIDcoef[3],5);
@@ -601,6 +601,8 @@ void Rover::turn(float power, float degrees){
 bool Rover::driveInProgress(){
   return (readByte(REGA_DRIVE_STATUS)==DRIVE_STATUS_INPROGRESS);
 }
+
+
 
 void Rover::getDebug(){
   read16(REGA_DEBUG,3, (uint16_t *) debug);

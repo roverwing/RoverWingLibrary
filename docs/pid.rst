@@ -198,6 +198,14 @@ use the following commands.
         }
         //motion forward has completed!
 
+.. warning::
+   Setting motor speed manually using :func:`setMotorPwr` or similar functions
+   while a drive operation is in progress can lead to unpredictable behavior.
+   To avoid this,  use :func:`stop` to make sure that all drive operations
+   are complete before starting manual control of the motors. 
+
+
+
 Setting PID Coefficients
 ------------------------
 
