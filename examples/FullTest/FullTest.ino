@@ -74,7 +74,7 @@ void setup() {
     }
     if (testMotors && (encoderCPR > 0)) {
         motorconfig_t myMotor;
-        myMotor.encoderCPR = 1440;  //encoder counts per revolution of output shaft
+        myMotor.encoderCPR = encoderCPR;  //encoder counts per revolution of output shaft
         r.configureMotor(MOTOR1, myMotor);
         r.configureMotor(MOTOR2, myMotor);
     }
