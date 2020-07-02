@@ -23,11 +23,13 @@ Rover r; //this is the name of the rover!
 #define LOW_VOLTAGE 7.0 //voltage threshold; if voltage drops below this limit, internal neopixel turns yellow
 uint8_t hues[NUM_PIXELS]; //array of hues of pixels
 //set variables below to enable/disable testing of different peripherals
+bool testAnalogs=true;
 bool testIMU=true;
 bool testGPS=true;
 bool testServos=true;
 bool testSonars=true;
 bool testMotors=true;
+
 // if motors are equipped with encoders, please also provide encoder Counts per Revolution 
 // (of output shaft of the motor). Otherwise, leave this parameter 0
 uint16_t encoderCPR=0;
@@ -43,6 +45,7 @@ bool blink = false;
 
 //setup 
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
     Wire.begin();
     Wire.setClock(400000); //use fast mode (400 kHz)
     Serial.begin(9600);
@@ -94,6 +97,20 @@ void setup() {
     } 
 }
 void loop() {
+    //analog inputs 
+    Serial.print("Voltage: "); Serial.println(r.getVoltage());
+    if (testAnalogs) {
+        r.getAllAnalog(); //fetches values from RoverBoard and saves them in r.analog[] array
+        Serial.print("Analog inputs:");
+        for (int i=1; i<=6; i++){
+            Serial.print("  ");
+            Serial.print(r.analog[i]); //note that index i runs 1..6, not 0..5 !
+                                   // values of analog[i] are floats, representing
+                                   // the voltage; they range 0 - 3.3 volts
+        }
+        Serial.println(" ");
+    }
+
     //compute new power for servos and motors, which should be changing periodically, with period of 10 sec
     int k=millis() %10000; //ranges from 0-9999
     //now, create a sawtooth function 
