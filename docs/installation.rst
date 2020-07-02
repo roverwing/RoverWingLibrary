@@ -35,8 +35,8 @@ in the menu :menuselection:`Sketch-->Include Library-->Add .ZIP Library`.
 
 After installation, restart Arduino IDE and verify that library was successfully
 installed opening in the main menu :menuselection:`File-->Examples`; scroll all
-the way down to section :menuselection:`Examples from custom libraries` and you
-should see :menuselection:`RoverWing` there.
+the way down to section :guilabel:`Examples from custom libraries` and you
+should see :guilabel:`RoverWing` there.
 
 Basic Usage
 -----------

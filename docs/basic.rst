@@ -82,7 +82,7 @@ enumerated type, with four different values, :code:`SERVO1, ... SERVO4`.
        microseconds. These values can be found in  documentation for your servo;
        typically :code:`minPulse` is between 500-1000, and
        :code:`maxPulse` is between 2000-2500. For example, for Hitec servos the
-       range is 1900-2100 us.
+       range is 900-2100 us.
 
    :param s: servo name, should be one of the four values ``SERVO1``, ... ,
        ``SERVO4``.

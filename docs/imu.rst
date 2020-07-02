@@ -70,7 +70,7 @@ normally done  immediately after activation. There are two ways to do this:
        persistent storage, so there is no way to save these values to the board
        memory between resets.
 
-       This function will take about a second to execute; during this time,
+       This function will take about 10  seconds to execute; during this time,
        the robot must be completely stationary on flat horizontal surface.
 
 2. If you had previously calibrated the sensor and have recorded the
@@ -113,7 +113,9 @@ and computed orientation, using the following functions:
 .. function:: float getRoll()
 
    These functions return yaw, pitch, and roll angles for the robot. These
-   three angles describe the robot orientation:
+   three angles describe the robot orientation as described below (this assumes
+   that RoverWing is mounted horizontally on the robot, with power supply
+   connector facing the back of the robot and the USB port on the right). 
 
    * yaw is the rotation around the vertical axis (positive angle corresponds to
      clockwise rotation, i.e. right turns), relative to the starting position of

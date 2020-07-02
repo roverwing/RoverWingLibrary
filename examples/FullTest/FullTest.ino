@@ -32,7 +32,7 @@ bool testMotors=true;
 
 // if motors are equipped with encoders, please also provide encoder Counts per Revolution 
 // (of output shaft of the motor). Otherwise, leave this parameter 0
-uint16_t encoderCPR=0;
+uint16_t encoderCPR=1120;
 //various temporary variables
 float power = 0.0; //motor power
 uint32_t last_print=0; //time of last debugging print, in ms 
@@ -124,7 +124,7 @@ void loop() {
         if (encoderCPR > 0) {
             r.getAllPosition();
             Serial.print("Encoder 1 : ");
-            Serial.print(r.position[0]);
+            Serial.print(r.position[0]); //position in revolutions of motor shaft 
             Serial.print(" , ");
             Serial.print("Encoder 2 : ");
             Serial.println(r.position[1]);
