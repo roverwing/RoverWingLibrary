@@ -12,7 +12,7 @@ powered by the  Feather board.
 IMPORTANT: analog inputs voltage should not exceed 3.3V, otherwise the RoverWing
 can be permanently damaged!
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */

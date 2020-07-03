@@ -9,7 +9,7 @@ or it can get power from the Feather. The voltage readings returned by getVoltag
 measure voltage at main power connector; they are useless if RoverWing is
 powered by the  Feather board.
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain
 */
@@ -32,7 +32,7 @@ void setup(){
   Serial.begin(9600); //debugging terminal
   delay(1000); //wait for 1 second, so that roverwing initializes
   // the next several lines could be replaced by just one,
-  // r.beginVerbose(); 
+  // r.beginVerbose();
 
   Serial.print("Connecting to RoverWing");
   while (!r.begin() ){

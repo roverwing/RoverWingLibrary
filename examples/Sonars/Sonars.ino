@@ -13,7 +13,7 @@ To use this code, you need to connect one or more sonars (HC-SR04 or compatible)
 to RoverWing
 
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */

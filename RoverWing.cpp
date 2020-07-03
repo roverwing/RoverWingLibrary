@@ -262,20 +262,21 @@ void  Rover::IMUbegin(){
 void  Rover::IMUend(){
   writeByte(REGB_IMU_CONFIG, 0x00);
 }
-void Rover::IMUcalibrate(int16_t * aOffsets, int16_t * gOffsets){
-  uint8_t i;
+void Rover::IMUcalibrate(){
   writeByte(REGB_IMU_CONFIG, IMU_CONFIG_CALIBRATE);
   delay(500);
   //wait until completed
   while (readByte(REGA_IMU_STATUS) != IMU_OK) delay(100);
   //get calculated offsets
-  read16(REGA_ACCEL_OFFSET,3, (uint16_t *) aOffsets);
-  read16(REGA_GYRO_OFFSET,3, (uint16_t *) gOffsets);
+  //read16(REGA_ACCEL_OFFSET,3, (uint16_t *) aOffsets);
+  //read16(REGA_GYRO_OFFSET,3, (uint16_t *) gOffsets);
 }
+/*
 void Rover::IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets){
   write16(REGB_ACCEL_OFFSET, 3, (uint16_t *)aOffsets);
   write16(REGB_GYRO_OFFSET, 3, (uint16_t *)gOffsets);
 }
+*/
 bool Rover::IMUisActive(){
   byte b=readByte(REGA_IMU_STATUS);
   Serial.println(b);

@@ -7,9 +7,9 @@ It can be used with any Adafruit Feather board (or compatible) plugged into
 RoverWing  board.
 
 For this test, RoverWing must be  powered through the main power connector,
-using 7-14V power source, and a GPS receiver connceted to the GPS port.
+using 7-14V power source, and a GPS receiver connected to the GPS port.
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */

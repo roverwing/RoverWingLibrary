@@ -21,12 +21,9 @@ Rover r; //this is the name of the rover!
 float yaw, pitch, roll;
 uint8_t i;
 bool blink=false;
-//if you already know the offsets for accelerometer and gyro,
-//change this variable to true:
-bool haveOffsets = false;
-// and enter the values below
-int16_t accelOffset[]={0,0,0};
-int16_t gyroOffset[]={0,0,0};
+//if this is the first time using the IMU, calibration is needed, so change
+//variable below to true
+bool needCalibration = false;
 
 
 void setup(){
@@ -37,7 +34,7 @@ void setup(){
   delay(500); //wait for 0.5 second, so that roverwing initializes
   Serial.print("Connecting to RoverWing");
   r.beginVerbose();
-  Serial.println("Initializing and calibrating the IMU");
+  Serial.println("Initializing the IMU");
   r.IMUbegin();
   delay(500);
   if (! r.IMUisActive() ){
@@ -45,30 +42,15 @@ void setup(){
     return;
   }
   //if we reached here, IMU is ok
-  if (haveOffsets){
-    Serial.println("Applying hardcoded offsets: ");
-    r.IMUsetOffsets(accelOffset, gyroOffset);
-  } else {
+  if (needCalibration) {
     Serial.println("Starting calibration. Please make sure robot is completely stationary and level.");
     Serial.println("The process will take about 10 seconds");
     //delay(1000);
-    r.IMUcalibrate(accelOffset, gyroOffset);
-    Serial.println("Calibration complete. For future reference, here are the found offsets:");
+    r.IMUcalibrate();
+    Serial.println("Calibration complete.");
   }
-  //let us print results
-  Serial.print("Accelerometer:");
-  for (i=0;i<3;i++) {
-    Serial.print("  ");
-    Serial.print(accelOffset[i]);
-  }
-  Serial.println(" ");
-  Serial.print("Gyro:");
-  for (i=0;i<3;i++) {
-    Serial.print("  ");
-    Serial.print(gyroOffset[i]);
-  }
-  Serial.println(" ");
-  Serial.println("Now, let us test the  calibrated IMU...");
+
+  Serial.println("Now, let us test the   IMU...");
   delay(2000);
 }
 void loop(){

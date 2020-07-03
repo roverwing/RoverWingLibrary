@@ -30,20 +30,17 @@ bool testServos=true;
 bool testSonars=true;
 bool testMotors=true;
 
-// if motors are equipped with encoders, please also provide encoder Counts per Revolution 
+// if motors are equipped with encoders, please also provide encoder Counts per Revolution
 // (of output shaft of the motor). Otherwise, leave this parameter 0
 uint16_t encoderCPR=1120;
 //various temporary variables
 float power = 0.0; //motor power
-uint32_t last_print=0; //time of last debugging print, in ms 
-//for storing accelerometer and gyro offsets
-int16_t accelOffset[]={0,0,0};
-int16_t gyroOffset[]={0,0,0};
-//for blinking built-in LED 
+uint32_t last_print=0; //time of last debugging print, in ms
+//for blinking built-in LED
 bool blink = false;
 
 
-//setup 
+//setup
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     Wire.begin();
@@ -52,7 +49,7 @@ void setup() {
     delay(500); //wait for 0.5 second, so that roverwing initializes
     Serial.print("Connecting to RoverWing");
     r.beginVerbose();
-    //initialize  IMU 
+    //initialize  IMU
     if (testIMU){
         r.IMUbegin();
         delay(100);
@@ -60,14 +57,14 @@ void setup() {
             Serial.println("IMU not found!");
             return;
         }
-        //calibrate 
+        //calibrate
         Serial.println("Starting IMU calibration. Please make sure robot is completely stationary and level.");
         Serial.println("The process will take about 10 seconds");
         delay(1000);
-        r.IMUcalibrate(accelOffset, gyroOffset);
+        r.IMUcalibrate();
         Serial.println("Calibration complete.");
-    } 
-    //initialize GPS          
+    }
+    //initialize GPS
     if (testGPS) {
         r.GPSbegin();
         Serial.println("GPS started. It may take a while to get a location fix");
@@ -78,7 +75,7 @@ void setup() {
         r.configureMotor(MOTOR1, myMotor);
         r.configureMotor(MOTOR2, myMotor);
     }
-    
+
     //low voltage threshold: internal neopixel will turn yellow if voltage drops below threshold
     r.setLowVoltage(LOW_VOLTAGE);
 
@@ -93,11 +90,11 @@ void setup() {
         }
     }
     if (testSonars){
-        r.activateSonars(SONAR1+SONAR2+SONAR3, 3000); //max distance is 3000 mm = 3m 
-    } 
+        r.activateSonars(SONAR1+SONAR2+SONAR3, 3000); //max distance is 3000 mm = 3m
+    }
 }
 void loop() {
-    //analog inputs 
+    //analog inputs
     Serial.print("Voltage: "); Serial.println(r.getVoltage());
     if (testAnalogs) {
         r.getAllAnalog(); //fetches values from RoverBoard and saves them in r.analog[] array
@@ -113,9 +110,9 @@ void loop() {
 
     //compute new power for servos and motors, which should be changing periodically, with period of 10 sec
     int k=millis() %10000; //ranges from 0-9999
-    //now, create a sawtooth function 
+    //now, create a sawtooth function
     if ( k <= 5000) {
-        power = -1.0+2.0*(float)k/5000; //lineary increase from -1.0 (when k=0) to 1.0 (when k=5000) 
+        power = -1.0+2.0*(float)k/5000; //lineary increase from -1.0 (when k=0) to 1.0 (when k=5000)
     } else {
         power = -1.0+2.0*(float)(10000-k)/5000; //linearly decrease from 1.0 (when k=5000) to -1.0 (when k=10000)
     }
@@ -124,7 +121,7 @@ void loop() {
         if (encoderCPR > 0) {
             r.getAllPosition();
             Serial.print("Encoder 1 : ");
-            Serial.print(r.position[0]); //position in revolutions of motor shaft 
+            Serial.print(r.position[0]); //position in revolutions of motor shaft
             Serial.print(" , ");
             Serial.print("Encoder 2 : ");
             Serial.println(r.position[1]);
@@ -136,16 +133,16 @@ void loop() {
         r.setServo(SERVO3, power);
         r.setServo(SERVO4, power);
     }
-    
+
     if (testIMU){
         Serial.print("Yaw : ");
         Serial.print(r.getYaw());
         Serial.print(" , ");
-        
+
         Serial.print("Pitch: ");
         Serial.print(r.getPitch());
         Serial.print(" , ");
-        
+
         Serial.print("Roll: ");
         Serial.println(r.getRoll());
     }
@@ -166,11 +163,11 @@ void loop() {
     if (testGPS) {
         r.getGPSlocation();
         Serial.print("latitude : ");
-        Serial.print(r.latitude(),6); 
+        Serial.print(r.latitude(),6);
         Serial.print(" , ");
         Serial.print("longitude : ");
         Serial.println(r.longitude(),6);
-    } 
+    }
 
     if (NUM_PIXELS > 0 ) {
         for (int i = 1; i <= NUM_PIXELS; i++) {

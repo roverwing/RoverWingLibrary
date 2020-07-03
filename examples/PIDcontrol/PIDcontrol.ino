@@ -14,7 +14,7 @@ at 3.3V.
 Finally, you need to adjust the motor confiuration data to suit  your motors
 
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */

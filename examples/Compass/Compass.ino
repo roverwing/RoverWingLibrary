@@ -16,7 +16,7 @@ sensor is provided by GPS port.
 
 
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */

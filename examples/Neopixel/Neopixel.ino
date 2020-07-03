@@ -12,7 +12,7 @@ powered by the  Feather board.
 This example expects that you have connected a string of Neopixels (3 color only - no white)
 to the neopixel port of the RoverWing; max allowed is 45 pixels.
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */
@@ -22,7 +22,7 @@ This example code is in the public domain.
 Rover r; //this is the name of the rover!
 bool blink=false;
 int currentPixel=0;
-#define NUM_PIXELS 2 //number of connected Neopixels; edit to match your configuration
+#define NUM_PIXELS 8 //number of connected Neopixels; edit to match your configuration
 #define LOW_VOLTAGE 8.0 //voltage limit; if voltage drops below this limit, internal neopixel turns yellow
 
 
@@ -54,7 +54,7 @@ void loop(){
   // r.setPixelColor(currentPixel, BLUE);
   // you can use the following named colors:
   // RED, GREEN, BLUE, YELLOW, WHITE, OFF
-  r.showPixel(); //this must be called to apply the  new colors 
+  r.showPixel(); //this must be called to apply the  new colors
   //blink the built-in LED of the feather board
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;

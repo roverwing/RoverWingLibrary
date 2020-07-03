@@ -10,7 +10,10 @@ one of which powers the left side, and the other, the right side. See the user g
 You need to change various pieces of configuration to match your robot;
 they are indicate by CHANGE AS NEEDED in comments
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+It is assumed that IMU has already been calibrated - otherwise, add IMU
+calibration (check sample code in "IMU" example sketch).
+
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */
@@ -22,11 +25,6 @@ float yaw, pitch, roll;
 motorconfig_t myMotor; //to hold configuration data for the motors
 driveconfig_t drivetrain; // to hold configuration data about robot
 bool blink=false;
-// CHANGE AS NEEDED
-//IMU calibration. You must know the IMU calibration data;
-//if you do not yet have it, run the IMU example sketch
-int16_t accelOffset[]={656, 41, 300};
-int16_t gyroOffset[]={-140, 145, -64};
 
 
 
@@ -46,7 +44,6 @@ void setup(){
     delay(200);
   }
 
-  r.IMUsetOffsets(accelOffset, gyroOffset);
   Serial.println(" ");
   Serial.println("IMU initialized");
   r.IMUcalibrate(accelOffset, gyroOffset);
@@ -58,7 +55,7 @@ void setup(){
   myMotor.noloadRPM=250;   //motor RPM
   r.configureMotor(MOTOR1, myMotor);
   r.configureMotor(MOTOR2, myMotor);
-  //now, setup the drivetrain conifuration. Read the user guide for detailed explanations 
+  //now, setup the drivetrain conifuration. Read the user guide for detailed explanations
   drivetrain.leftMotor=MOTOR1;
   drivetrain.rightMotor=MOTOR2;
   drivetrain.leftMotorReversed=true;

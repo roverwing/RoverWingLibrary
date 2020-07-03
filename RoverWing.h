@@ -191,10 +191,10 @@ class Rover {
                       //During this time, robot should be absolutely still and even
                       //Avoid using other commnads that communicate with the robot during this time
     void IMUend();    //deactivate IMU
-    void IMUcalibrate(int16_t * aOffsets, int16_t * gOffsets);
+    void IMUcalibrate();
                                           //calibrates IMU; saves found offsets for gyro in array
                                           // offsets, for future use
-    void IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets);
+    //oid IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets);
     bool IMUisActive();
     void getOrientationQuat();
     void getAccel();

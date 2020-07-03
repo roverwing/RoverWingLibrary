@@ -12,7 +12,7 @@ powered by the  Feather board.
 This example expects that you have connected a string of Neopixels (3 color only - no white)
 to the neopixel port of the RoverWing; max allowed is 128 pixels.
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */
