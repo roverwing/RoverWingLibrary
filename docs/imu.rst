@@ -53,39 +53,25 @@ Calibration
 
 Before use, the IMU needs to be calibrated. The calibration process determines
 and then applies corrections (offsets)  to the raw data; without these
-corrections, the  data returned by the sensor is very inaccurate. This is
-normally done  immediately after activation. There are two ways to do this:
+corrections, the  data returned by the sensor is very inaccurate.
 
-1. If you haven't yet calibrated the sensor before (or want to recalibrate it),
-   use the following function:
+If you haven't  calibrated the sensor before (or want to recalibrate it),
+use the following function:
 
-   .. function:: void IMUcalibrate(int16_t * aOffsets, int16_t * gOffsets)
+.. function:: void IMUcalibrate()
 
        This function will determine and
-       apply the corrections; it will also save these corrections in arrays
-       ``aOffsets`` (for accelerometer offsets) and ``gOffsets`` (for gyro offsets).
-       These arrays must be created before calling ``IMUcalibrate`` function.
-       You can print these values to serial monitor and write them down for future
-       use. Unfortunately, current version of RoverWing doesn't have any
-       persistent storage, so there is no way to save these values to the board
-       memory between resets.
+       apply the corrections; it will also save these corrections in the
+       flash storage of the RoverWing microcontroller, where they will be
+       stored for future use.  This data is preserved even after you disconnect
+       power from your RoverWing board (much like the usual USB flash drive).
 
        This function will take about 10  seconds to execute; during this time,
-       the robot must be completely stationary on flat horizontal surface.
+       the robot must be completely stationary on a flat horizontal surface.
 
-2. If you had previously calibrated the sensor and have recorded the
-   calibration offsets, you do not need to repeat the calibration process -
-   you can just use  the previously found values. To do that, enter the offset
-   values in your sketch as shown in this code example  (replacing zeros with
-   actual values)::
-
-        int16_t aOffsets[]={0,0,0};
-        int16_t gOffsets[]={0,0,0};
-        IMUsetOffsets(aOffsets, gOffsets);
-
-Function ``IMUsetOffsets()`` applies the given offsets. It executes almost
-instantaneously; to be on the safe side, you might wait 100 ms before reading
-the IMU values.
+If you had previously calibrated the sensor, you do not need to repeat the
+calibration process - by default, upon initialization the IMU loads previously
+saved calibration values.
 
 Reading Values
 ~~~~~~~~~~~~~~
@@ -115,7 +101,7 @@ and computed orientation, using the following functions:
    These functions return yaw, pitch, and roll angles for the robot. These
    three angles describe the robot orientation as described below (this assumes
    that RoverWing is mounted horizontally on the robot, with power supply
-   connector facing the back of the robot and the USB port on the right). 
+   connector facing the back of the robot and the USB port on the right).
 
    * yaw is the rotation around the vertical axis (positive angle corresponds to
      clockwise rotation, i.e. right turns), relative to the starting position of
