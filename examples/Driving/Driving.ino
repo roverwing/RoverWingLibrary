@@ -36,7 +36,7 @@ void setup(){
   delay(1000); //wait for 1 second, so that roverwing initializes
   //activates RoverWing and prints basic info to Serial
   r.beginVerbose();
-  Serial.print("Initializing and calibrating the IMU ");
+  Serial.print("Initializing the IMU ");
   r.IMUbegin();
   delay(500);
   while (! r.IMUisActive() ) {
@@ -46,7 +46,8 @@ void setup(){
 
   Serial.println(" ");
   Serial.println("IMU initialized");
-  r.IMUcalibrate(accelOffset, gyroOffset);
+  //If you haven't yet calibrated the IMU, uncomment the line below
+  //r.IMUcalibrate();
 
   // CHANGE AS NEEDED
   //configure motors
@@ -65,7 +66,7 @@ void setup(){
   //now save these values
   r.configureDrive(drivetrain);
   r.setDriveRampTime(1000); //set ramping up time to be 1 sec
-
+  delay(1000);
 }
 void loop(){
   r.goForward(0.4, 400); //40% power, 400mm
@@ -74,7 +75,7 @@ void loop(){
   delay(2000);
   r.stop(); */
   delay(1000);
-  r.turn(0.2, 90); //turn clockwise by 90 degree at 50% power
+  r.turn(0.3, 90); //turn clockwise by 90 degree at 30% power
   Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.println(" ");
   delay(1000);
 }

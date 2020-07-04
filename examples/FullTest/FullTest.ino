@@ -49,6 +49,11 @@ void setup() {
     delay(500); //wait for 0.5 second, so that roverwing initializes
     Serial.print("Connecting to RoverWing");
     r.beginVerbose();
+    //initialize GPS
+    if (testGPS) {
+        r.GPSbegin();
+        Serial.println("GPS started. It may take a while to get a location fix");
+    }
     //initialize  IMU
     if (testIMU){
         r.IMUbegin();
@@ -64,11 +69,7 @@ void setup() {
         r.IMUcalibrate();
         Serial.println("Calibration complete.");
     }
-    //initialize GPS
-    if (testGPS) {
-        r.GPSbegin();
-        Serial.println("GPS started. It may take a while to get a location fix");
-    }
+
     if (testMotors && (encoderCPR > 0)) {
         motorconfig_t myMotor;
         myMotor.encoderCPR = encoderCPR;  //encoder counts per revolution of output shaft
