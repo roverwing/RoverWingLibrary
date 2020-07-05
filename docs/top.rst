@@ -7,7 +7,7 @@ a small prototyping area, on/off switch, three NeoPixel LEDs and two buttons,
 and a 3-line display. It is described in detail in |guide|. A photo of the
 RoverWing with the top attached is shown below.
 
-.. figure:: images/top.jpg
+.. figure:: images/top-1.5.jpg
     :alt: RoverWing with top
     :width: 60%
 
@@ -108,7 +108,7 @@ RoverWing top also contains additional NeoPixel port, allowing one to connect
 additional NeoPixel strips. In this case, the indices of these NeoPixels will
 start with 4, and the number of NeoPixels which you set using
 ``setPixelCount()`` must include  the three NeoPixels of the RoverWing Top and
-the externally connected NeoPixels. 
+the externally connected NeoPixels.
 
 
 .. warning::
