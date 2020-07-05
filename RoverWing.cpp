@@ -171,16 +171,15 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
     motorsConfig[m].Td=c.Td;
     motorsConfig[m].iLim=c.iLim;
   } else {
-    motorsConfig[m].Ti=1.0;
-    /*//let us try some defaults
+    //let us try some defaults
     float maxspeed=c.encoderCPR*c.noloadRPM/60.0f; //maximal speed, encoder ticks/s
-    float Kp=1.4/maxspeed; //thus, error of 0.5 maxspeed makes proportional term be 25% of maximal power
-    Serial.print("Maxspeed: "); Serial.println(maxspeed);
-    Serial.print("Kp: "); Serial.println(Kp,4);
+    float Kp=1.4/maxspeed; //thus, error of 0.5 maxspeed makes proportional term be 70% of maximal power
+    //Serial.print("Maxspeed: "); Serial.println(maxspeed);
+    //Serial.print("Kp: "); Serial.println(Kp,4);
     motorsConfig[m].Kp=Kp;
-    motorsConfig[m].Ti=1.0; //set Ti=0.5 s
+    motorsConfig[m].Ti=1.0; //set Ti=1 s
     motorsConfig[m].Td=0.1; //set Td=0.1 s
-    motorsConfig[m].Ilim=500; //FIXME*/
+    motorsConfig[m].Ilim=1.0*motorsConfig[m].Ti/Kp; //FIXME
   }
   //
 
@@ -506,12 +505,12 @@ void Rover::configureDrive(driveconfig_t d){
                       d.Kp*d.Td, //Kd
                       d.iLim};
    write32(REGB_DRIVE_PID_COEF, 4, (uint32_t *)PIDcoef);
-   Serial.print("MaxSpeed: ");
+   /*Serial.print("MaxSpeed: ");
    Serial.println(maxSpeed);
    Serial.print("MaxTurnSpeed: ");
    Serial.println(maxTurnSpeed);
    Serial.print("Kp: ");
-   Serial.println(d.Kp,6);
+   Serial.println(d.Kp,6);*/
 }
 void Rover::setDriveRampTime(uint16_t t){
   write16(REGB_DRIVE_RAMPTIME, t);

@@ -73,6 +73,10 @@ If you had previously calibrated the sensor, you do not need to repeat the
 calibration process - by default, upon initialization the IMU loads previously
 saved calibration values.
 
+Note that the IMU is somewhat sensitive to temperature changes, so if the
+temperature changes (e.g., you moved your robot from indoors to the street for
+testing), it is advised that you recalibrate the IMU.
+
 Reading Values
 ~~~~~~~~~~~~~~
 
@@ -217,7 +221,7 @@ following functions to access the GPS coordinates.
 .. function:: double longitude()
 
    Return the robot latitude and longitude in degrees, following the usual
-   conventions: latitude ranges from -180 (South Pole) to 180 (North Pole);
+   conventions: latitude ranges from -90 (South Pole) to 90 (North Pole);
    longitude ranges from  -180 (west of Greenwich) to 180 (east of Greenwich).
    Note that these coordinates refer to the location fetched at last call of
    :func:`getGPSlocation`.
@@ -232,7 +236,7 @@ following functions to access the GPS coordinates.
 .. function:: uint32_t GPStimestamp()
 
    Returns time when the last GPS location fix was received, in milliseconds
-   since reboot.
+   since reboot of the RoverWing board.
 
 Location Data
 ~~~~~~~~~~~~~
@@ -250,7 +254,7 @@ The functions below provide some tools for working with location data:
 
 .. function:: void saveGPSlocation(location_t & loc)
 
-   Saves current robot location to variable ``loc``.
+   Saves current robot location to variable ``loc`` ot type ``location_t``.
 
 .. function:: float distanceTo(const location_t & loc )
 
@@ -266,4 +270,5 @@ The functions below provide some tools for working with location data:
    Functions :func:`distanceTo`, :func:`bearingTo` use flat map model. The
    results are accurate enough for distances up to 10 km, but if you want to
    find the distance between your robot and Mount Everest, you need to write
-   your own code (or google for existing solutions).
+   your own code or google for existing solutions (unless you are within 10
+   km of Mount Everest). 

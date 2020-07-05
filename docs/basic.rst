@@ -48,7 +48,7 @@ Measurements are accurate to about 2% (this is determined by the resistors
 used in the circuit).
 
 In addition, the built-in NeoPixel LED, which normally blinks green to indicate
-that the firmware is loaded, can be programmed to turn yellow when the supply
+that the firmware is loaded, can be programmed to turn red when the supply
 voltage drops below specified threshold. To set the low voltage threshold, use
 :func:`setLowVoltage` function described below.
 
@@ -350,7 +350,7 @@ to update the whole strip, so please check the power requirements specified in
 |guide| if you intend to use more than 20-30 NeoPixels.
 
 Note that RoverWing also contains an internal NeoPixel LED, which blinks green
-to indicate normal operation, or yellow to indicate low supply voltage. This
+to indicate normal operation, or red to indicate low supply voltage. This
 NeoPixel can not be directly controlled by the user (other than setting the low
 voltage threshold as described in section `Voltage Sensing`_).
 

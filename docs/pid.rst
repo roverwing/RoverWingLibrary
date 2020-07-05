@@ -202,7 +202,7 @@ use the following commands.
    Setting motor speed manually using :func:`setMotorPwr` or similar functions
    while a drive operation is in progress can lead to unpredictable behavior.
    To avoid this,  use :func:`stop` to make sure that all drive operations
-   are complete before starting manual control of the motors. 
+   are complete before starting manual control of the motors.
 
 
 
@@ -215,11 +215,15 @@ by RoverWing firmware.
 The motor power is determined by the standard formula of PID algorithm:
 
 .. math::
-   P=K_p e+\frac{K_p}{T_i}\int e\, dt +K_p T_d \frac{d}{dt} e
+   P=P_0+ K_p e+\frac{K_p}{T_i}\int e\, dt +K_p T_d \frac{d}{dt} e
 
 where:
 
 :math:`P` is motor power (ranging from -1.0 to 1.0)
+
+:math:`P_0=v_{desired}/v_{max}` is the zero-level approximation; here
+:math:`v_{desired}` is the requested speed and :math:`v_{max}` is the maximal
+possible motor speed, which is determined by motor's no-load RPM.
 
 :math:`e=v_{desired}-v_{actual}` is the error, i.e. the  difference of desired and actual motor
 speeds (measured in encoder tics/sec)
@@ -259,3 +263,8 @@ the sketch below.
     //finally, configure the motors
     r.configureMotor(MOTOR1, myMotor);
     r.configureMotor(MOTOR2, myMotor);
+
+.. note::
+   If you are manually setting PID coefficients, you must set all of them.
+   Leaving any of the values unset will result in unpredictable results.
+    
