@@ -147,7 +147,7 @@ that these functions are global - they do not belong to any class.
 
 .. function:: void displayMessage(String line1, String line2)
 
-.. function:: void displayMessage(String line1, String Lien2, String line3)
+.. function:: void displayMessage(String line1, String line2, String line3)
 
    Output  one, two, or three lines on the top display. This function uses
    the same font for 1- and 2- line messages, and a different, slightly
