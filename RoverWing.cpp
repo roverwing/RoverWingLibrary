@@ -173,13 +173,13 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
   } else {
     //let us try some defaults
     float maxspeed=c.encoderCPR*c.noloadRPM/60.0f; //maximal speed, encoder ticks/s
-    float Kp=1.4/maxspeed; //thus, error of 0.5 maxspeed makes proportional term be 70% of maximal power
+    float Kp=0.8/maxspeed; //thus, error of 0.5 maxspeed makes proportional term be 40% of maximal power
     //Serial.print("Maxspeed: "); Serial.println(maxspeed);
     //Serial.print("Kp: "); Serial.println(Kp,4);
     motorsConfig[m].Kp=Kp;
-    motorsConfig[m].Ti=1.0; //set Ti=1 s
-    motorsConfig[m].Td=0.1; //set Td=0.1 s
-    motorsConfig[m].Ilim=1.0*motorsConfig[m].Ti/Kp; //FIXME
+    motorsConfig[m].Ti=0.5; //in seconds
+    motorsConfig[m].Td=0.0; //in secodns - thid disables differentail term 
+    motorsConfig[m].iLim=0.2*motorsConfig[m].Ti/Kp; //FIXME
   }
   //
 

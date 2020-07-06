@@ -21,12 +21,20 @@ This example code is in the public domain.
 #include <Wire.h>
 #include <RoverWing.h>
 
+//some target paremeters. CHange to match your motors' configuration
+#define ENCODERCPR 1120 //encoder counts per revolution
+                       // this should count all observable encoder events,
+                       // rise/fall of channel A and rise/fall of channel B
+
+#define NOLOADRPM 140   //motor no-load speed, in RPM
+#define TARGETSPEED 100 //target motr speed, in RPM
+
 
 Rover r; //this is the name of the rover!
 bool blink=false;
 int loopCount=0;
 //motor power
-float speed=100; //motor speed in RPM
+float speed=TARGETSPEED; //target motor speed in RPM
 motorconfig_t myMotor; //to hold configuration data for the motor
 
 void setup(){
@@ -42,17 +50,15 @@ void setup(){
 
   // This data is for AndyMark's  NeveRest 40  gearmotor.
   // Change to match your motor.
-  myMotor.encoderCPR = 1120;   // encoder counts per revolution of output shaft
-                               // this should count all observable encoder events,
-                               // rise/fall of channel A and rise/fall of channel B
-  myMotor.noloadRPM = 140;
+  myMotor.encoderCPR = ENCODERCPR;   // encoder counts per revolution of output shaft
+  myMotor.noloadRPM = NOLOADRPM;
   //If you do not know the best PID coefficicients for your motor,
   // try using the values below and adjust as needed. If you do know the values
   // already, you can comment these lines
   float maxspeed=myMotor.encoderCPR*myMotor.noloadRPM/60.0; //max speed in encoder counts/s
-  myMotor.Kp=0.4/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
-  myMotor.Ti=0.3;           // time constant for integral gain, in seconds
-  myMotor.Td=0.1;           // time constant for differential gain, in seconds. to disable differential term, make Td=0
+  myMotor.Kp=0.8/maxspeed;  //suggested proportional  gain. If the motor is too slow to achieve desired speed, increase; if the motor starts oscillating, decrease.
+  myMotor.Ti=0.5;           // time constant for integral gain, in seconds
+  myMotor.Td=0.0;           // time constant for differential gain, in seconds. to disable differential term, make Td=0
   myMotor.iLim = 0.2*myMotor.Ti/myMotor.Kp;
                          // limit on integral error; this value guarantees that integral term will be at most 0.2*maxspeed
                          // to disable integral limit, make iLim negative e.g. -1.0
