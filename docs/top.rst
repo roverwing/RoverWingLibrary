@@ -83,10 +83,18 @@ in addition, you can also use the ``waitForButton()`` function below.
 
 .. function:: void waitForButton(uint8_t button)
 
+.. function:: bool waitForButton(uint8_t button, int timeout)
+
    Pauses execution of the program until the button is pressed.
 
    :param uint8_t button: button to be pressed. Can be a pin number or a
        defined constant such as ``BUTTON_A``.
+   :param int timeout: timeout in milliseconds (optional). If this parameter
+       is given, the function will wait until either the button is pressed
+       (in which case it returns ``true``) or given number of milliseconds
+       passes (in which case it returns ``false``). If no timeout parameter
+       is given, the function doesn't return any value.
+
 
 
 LEDs
@@ -152,6 +160,9 @@ that these functions are global - they do not belong to any class.
    Output  one, two, or three lines on the top display. This function uses
    the same font for 1- and 2- line messages, and a different, slightly
    smaller, font  for 3-line messages.
+   Note that the arguments should be of type ``String``, so if you need to
+   output a number, you should turn it into a string first, e.g.
+   ``displayMessage("Current time", String(millis()));``
 
 You can change the fonts used for messages by adding in the beginning of your
 sketch the following lines::

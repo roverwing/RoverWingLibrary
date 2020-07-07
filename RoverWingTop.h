@@ -15,3 +15,4 @@ void displayMessage(String line1, String line2, String line3);
 void displayMessage(String line1, String line2);
 void displayMessage(String line1);
 void waitForButton(uint8_t pin);
+bool waitForButton(uint8_t pin, uint32_t timeout);

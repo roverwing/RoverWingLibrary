@@ -178,7 +178,7 @@ void Rover::configureMotor(motor_t m, motorconfig_t c){
     //Serial.print("Kp: "); Serial.println(Kp,4);
     motorsConfig[m].Kp=Kp;
     motorsConfig[m].Ti=0.5; //in seconds
-    motorsConfig[m].Td=0.0; //in secodns - thid disables differentail term 
+    motorsConfig[m].Td=0.0; //in secodns - thid disables differentail term
     motorsConfig[m].iLim=0.2*motorsConfig[m].Ti/Kp; //FIXME
   }
   //
@@ -596,7 +596,7 @@ void Rover::startTurn(float power, float degrees){
 void Rover::turn(float power, float degrees){
   startTurn(power,degrees);
   delay(10);
-  while(driveInProgress()) delay(10);
+  while(driveInProgress()) delay(10);  
 }
 bool Rover::driveInProgress(){
   return (readByte(REGA_DRIVE_STATUS)==DRIVE_STATUS_INPROGRESS);

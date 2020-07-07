@@ -15,7 +15,7 @@ This example also uses U8G2 graphics library (https://github.com/olikraus/u8g2/)
 (you can easily do it using Arduino library manager).
 
 
-Written in 2019 by David Bershadsky, Alexander Kirillov
+Written in 2020 by David Bershadsky, Alexander Kirillov
 
 This example code is in the public domain.
 */
@@ -35,8 +35,8 @@ This example code is in the public domain.
 //For feather boards based on Cortex M0, Atmega 328P, or 32u4 chipsets, the pin numbers are
 // 5 (button A) and 6 (button B)
 //For HUZZAH32-ESP32 Feather, these are pin numbers 14 (button A) and 32 (button B)
-#define BUTTON_A 14
-#define BUTTON_B 32
+#define BUTTON_A 5
+#define BUTTON_B 6
 
 Rover r; //this is the name of the rover!
 float v;//voltage

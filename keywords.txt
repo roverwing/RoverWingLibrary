@@ -42,6 +42,7 @@ resetAllEncoder       	KEYWORD2
 IMUbegin              	KEYWORD2
 IMUend                	KEYWORD2
 IMUisActive           	KEYWORD2
+IMUcalibrate           	KEYWORD2
 getOrientationQuat    	KEYWORD2
 getAccel              	KEYWORD2
 getGyro               	KEYWORD2
@@ -122,4 +123,4 @@ MAG_OK          	LITERAL1
 TWO_LINE_FONT   	LITERAL1
 THREE_LINE_FONT 	LITERAL1
 DRIVE_STATUS_COMPLETE 	LITERAL1
-DRIVE_STATUS_INPROGRESS 	LITERAL1 
+DRIVE_STATUS_INPROGRESS 	LITERAL1

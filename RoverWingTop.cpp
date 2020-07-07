@@ -39,3 +39,10 @@ void displayMessage(String line1){
 void waitForButton(uint8_t pin){
   while(digitalRead(pin)) delay(10);
 }
+bool waitForButton(uint8_t pin, uint32_t timeout){
+  uint32_t endTime=millis()+timeout;
+  while(millis()<=endTime)  {
+    if (digitalRead(pin)==LOW) return(true);
+  }
+  return false;
+}

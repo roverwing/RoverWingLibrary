@@ -97,7 +97,10 @@ drivetrain.minPower:
     parameter depends on the robot weight, floor friction, and motor power.
     Suggested values are between 0.05 (for a robot on a low-friction surface
     such as hardwood floor) and 0.2 (for high-friction situations such as thick
-    carpet). If not certain, begin with the value of 0.1.
+    carpet). If not certain, begin with higher values (such as 0.3) and then
+    decrease. If you find that the robot never completes drive operations such
+    as :func:`turn` or func:`goForward`, it indicates that your ``minPower`` value
+    is too low.  
 
 setDriveRampTime(int t):
     When starting the motion, it is usually a bad idea to go from robot at rest
@@ -267,4 +270,3 @@ the sketch below.
 .. note::
    If you are manually setting PID coefficients, you must set all of them.
    Leaving any of the values unset will result in unpredictable results.
-    

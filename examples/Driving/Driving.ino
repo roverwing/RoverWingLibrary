@@ -19,6 +19,11 @@ This example code is in the public domain.
 */
 #include <Wire.h>
 #include <RoverWing.h>
+//set some constan values. Change to match your hardware
+#define ENCODERCPR 1220 //encoder counts per revolution (of motor output shaft). Set to 0 if not using encoders
+#define NOLOADRPM 160 //motor no-load RPM
+
+
 
 Rover r; //this is the name of the rover!
 float yaw, pitch, roll;
@@ -49,17 +54,16 @@ void setup(){
   //If you haven't yet calibrated the IMU, uncomment the line below
   //r.IMUcalibrate();
 
-  // CHANGE AS NEEDED
   //configure motors
-  //Change the values to match your setup!!!
-  myMotor.encoderCPR=1440; //if not using encoders, put 0
-  myMotor.noloadRPM=250;   //motor RPM
+  myMotor.encoderCPR=ENCODERCPR;
+  myMotor.noloadRPM=NOLOADRPM;
   r.configureMotor(MOTOR1, myMotor);
   r.configureMotor(MOTOR2, myMotor);
   //now, setup the drivetrain conifuration. Read the user guide for detailed explanations
   drivetrain.leftMotor=MOTOR1;
   drivetrain.rightMotor=MOTOR2;
   drivetrain.leftMotorReversed=true;
+  //CHANGE AS NEEDED
   drivetrain.wheelDiameter=70;//in mm
   drivetrain.wheelBase=140;   //in mm
   drivetrain.minPower=0.05;   // need at least 5% to move
@@ -69,13 +73,21 @@ void setup(){
   delay(1000);
 }
 void loop(){
-  r.goForward(0.4, 400); //40% power, 400mm
-  /* Alternatively, you could use:
-  r.startForward(0.4);
-  delay(2000);
-  r.stop(); */
+  //go forward!! 
+  if (ENCODERCPR>0) {
+      //we have encoders!
+      r.goForward(0.4, 400); //40% power, 400mm
+  }  else {
+      //without encoders, can only go for fixed time
+      r.startForward(0.4);
+      delay(2000);
+      r.stop();
+  }
   delay(1000);
-  r.turn(0.3, 90); //turn clockwise by 90 degree at 30% power
+  r.turn(0.3, 90); //turn clockwise  90 degree at 30% power
   Serial.print("Yaw: "); Serial. print(r.getYaw());  Serial.println(" ");
   delay(1000);
+  //do the blink
+  digitalWrite(LED_BUILTIN, blink);
+  blink=!blink;
 }
