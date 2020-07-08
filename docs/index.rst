@@ -1,7 +1,7 @@
 =========================
 RoverWing Arduino Library
 =========================
-.. figure:: images/MainView.jpg
+.. figure:: images/MainView2020.jpg
     :alt: RoverWing
     :width: 80%
 
@@ -33,4 +33,3 @@ This user guide describes the features of the library.
     pid
     top
     license
-    
