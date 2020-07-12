@@ -70,10 +70,10 @@ void setup(){
   //now save these values
   r.configureDrive(drivetrain);
   r.setDriveRampTime(1000); //set ramping up time to be 1 sec
-  delay(1000);
+  delay(2000);
 }
 void loop(){
-  //go forward!! 
+  //go forward!!
   if (ENCODERCPR>0) {
       //we have encoders!
       r.goForward(0.4, 400); //40% power, 400mm

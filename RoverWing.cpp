@@ -458,6 +458,21 @@ void Rover::setPixelHSV(uint8_t i, uint8_t H, uint8_t S, uint8_t V){
 void Rover::showPixel(){
   writeByte(REGB_PIXEL_COMMAND, 0x01);
 }
+void Rover::setTopLED(uint32_t color){
+    setPixelColor(1, color);
+    setPixelColor(2, color);
+    setPixelColor(3, color);
+    showPixel();
+}
+void Rover::setTopLED(uint32_t color1,uint32_t color2, uint32_t color3){
+    setPixelColor(1, color1);
+    setPixelColor(2, color2);
+    setPixelColor(3, color3);
+    showPixel();
+}
+
+
+
 //drive
 void Rover::configureDrive(driveconfig_t d){
   drive=d;
@@ -596,7 +611,7 @@ void Rover::startTurn(float power, float degrees){
 void Rover::turn(float power, float degrees){
   startTurn(power,degrees);
   delay(10);
-  while(driveInProgress()) delay(10);  
+  while(driveInProgress()) delay(10);
 }
 bool Rover::driveInProgress(){
   return (readByte(REGA_DRIVE_STATUS)==DRIVE_STATUS_INPROGRESS);

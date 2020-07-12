@@ -77,7 +77,8 @@ For HUZZAH32-ESP32 Feather, these are pin numbers 14 (button A) and 32 (button B
 
 
 
-Pins connected to buttons  are normally HIGH; pressing the button pulls it LOW.
+Pins connected to buttons should be configured as ``INPUT_PULLUP``; this way,
+they will normally be HIGH, and  pressing the button pulls it LOW.
 You can read the  pin values in the usual way, using ``digitalRead(BUTTON_A)``;
 in addition, you can also use the ``waitForButton()`` function below.
 
@@ -95,7 +96,8 @@ in addition, you can also use the ``waitForButton()`` function below.
        passes (in which case it returns ``false``). If no timeout parameter
        is given, the function doesn't return any value.
 
-
+Note that ``waitForButton()`` function is  global - it doesn't do not belong to
+any class.
 
 LEDs
 ----
@@ -112,9 +114,26 @@ example, to turn the middle LED red and the two outer green, you can use
     r.setPixelColor(3,GREEN);
     r.showPixel();
 
+Alternatively, you can use function :func:`setTopLED` described below.
+
+.. function:: void setTopLED(uint32_t color)
+
+.. function:: void setTopLED(uint32_t color1, uint32_t color2, uint32_t color3)
+
+  Sets the colors of the Top NeoPixel LEDs. Each argument must be a color in
+  the usual hexadecimal notation: ``c=0xRRGGBB`` (see,
+  e.g., https://www.w3schools.com/colors/colors_hexadecimal.asp).
+  You can also use one of the named values for color: ``RED``, ``GREEN``,
+  ``BLUE``, ``WHITE``, ``YELLOW``, ``OFF``. If only one argument is given,
+  the same color is applied to all three NeoPixels. This function takes effect
+  immediately: you do not need to call ``showPixel()``.
+
+Note that ``setTopLED()`` function belongs to class ``Rover``, so it should be
+called as ``r.setTopLED()``, where ``r`` is the name of your rover. 
+
 RoverWing top also contains additional NeoPixel port, allowing one to connect
-additional NeoPixel strips. In this case, the indices of these NeoPixels will
-start with 4, and the number of NeoPixels which you set using
+additional NeoPixel strips. In this case, the indices of externally connected
+NeoPixels will start with 4, and the number of NeoPixels which you set using
 ``setPixelCount()`` must include  the three NeoPixels of the RoverWing Top and
 the externally connected NeoPixels.
 

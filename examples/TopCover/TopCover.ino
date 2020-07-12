@@ -39,7 +39,6 @@ This example code is in the public domain.
 #define BUTTON_B 6
 
 Rover r; //this is the name of the rover!
-float v;//voltage
 bool blink=true;
 void setup() {
   pinMode(BUTTON_A, INPUT_PULLUP);
@@ -65,8 +64,8 @@ void setup() {
   r.setPixelBrightness(64); //1/4 of full brightness - this is already quite bright
   //give user time to read the info
   delay(3000);
-  displayMessage("Press  A", "  to continue");
-  waitForButton(BUTTON_A);
+  displayMessage("Press  B", "  to continue");
+  waitForButton(BUTTON_B);
   displayMessage("Continuing...");
 }
 
@@ -74,17 +73,12 @@ void loop(void) {
   //let us blink the three neopixels on top
   //they have indices 1, 2, 3, (counting clockwise)
   if (blink){
-    r.setPixelColor(1,GREEN);
-    r.setPixelColor(2,OFF);
-    r.setPixelColor(3,GREEN);
+      r.setTopLED(GREEN, OFF, GREEN);
   } else {
-    r.setPixelColor(1,OFF);
-    r.setPixelColor(2,RED);
-    r.setPixelColor(3,OFF);
+      r.setTopLED( OFF, RED, OFF);
   }
-  r.showPixel();
   blink=!blink;
   delay(250);
   uint16_t time =millis()/1000;//time in seconds
-  displayMessage("   "+String(time));
+  displayMessage("Time: "+String(time));
 }

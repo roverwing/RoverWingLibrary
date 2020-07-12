@@ -58,8 +58,9 @@ struct motorconfig_t{
 #define RED 0xFF0000
 #define GREEN 0x00FF00
 #define BLUE 0x0000FF
-#define YELLOW 0xFFFF00
-#define WHITE 0XFFFFFF
+#define YELLOW 0xAA9900
+#define ORANGE 0xAA5500
+#define WHITE 0xFFFFFF
 #define OFF 0x000000
 /* ***************************************
  * GPS
@@ -234,6 +235,8 @@ class Rover {
     void setPixelRGB(uint8_t pixel_index, uint8_t R, uint8_t G, uint8_t B);
     void setPixelHSV(uint8_t pixel_index, uint8_t H, uint8_t S, uint8_t V); //pixel color, in hue-saturation-value form
     void showPixel();   //after setting individual pixel colors, you need to use this to make the changes effective
+    void setTopLED(uint32_t color);
+    void setTopLED(uint32_t color1,uint32_t color2, uint32_t color3);
 
     //Rover driving
     // before using these functions, you need to set rover.drive confiuration

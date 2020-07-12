@@ -9,6 +9,7 @@ motor_t 	KEYWORD1
 servo_t 	KEYWORD1
 sonar_t 	KEYWORD1
 motorconfig_t 	KEYWORD1
+driveconfig_t 	KEYWORD1
 location_t 	KEYWORD1
 
 #######################################
@@ -73,7 +74,8 @@ setDeclination        	KEYWORD2
 setPixelCount         	KEYWORD2
 setPixelBrightness    	KEYWORD2
 setPixelRGB           	KEYWORD2
-etPixelHSV            	KEYWORD2
+setPixelHSV           	KEYWORD2
+setTopLED             	KEYWORD2
 showPixel             	KEYWORD2
 displayMessage        	KEYWORD2
 waitForButton         	KEYWORD2
@@ -82,6 +84,7 @@ configureDrive        	KEYWORD2
 setDriveRampTime      	KEYWORD2
 startForward          	KEYWORD2
 startBackward         	KEYWORD2
+startTurn             	KEYWORD2
 stop                  	KEYWORD2
 distanceTravelled     	KEYWORD2
 goForward             	KEYWORD2
@@ -112,6 +115,7 @@ RED             	LITERAL1
 BLUE            	LITERAL1
 GREEN           	LITERAL1
 YELLOW          	LITERAL1
+ORANGE          	LITERAL1
 WHITE           	LITERAL1
 OFF             	LITERAL1
 GPS_OFF         	LITERAL1

@@ -59,7 +59,7 @@ voltage drops below specified threshold. To set the low voltage threshold, use
 .. function::  void setLowVoltage(float v)
 
    Sets the low voltage threshold: when the supply voltage drops below this
-   value, the built-in NeoPixel LED blinks yellow.
+   value, the built-in NeoPixel LED blinks red.
 
 
 
@@ -69,7 +69,7 @@ Servos
 RoverWing provides connection for up to four servos, using standard PWM pulse
 signal. By default, RoverWing uses pulses of duration 1000us-2000us for
 controlling the servos; if you are using servos with a different range, you
-can change it using setServoRange command.
+can change it using :func:`setServoRange` command.
 
 RoverWing provides a data type for servo names, :code:`servo_t`. It is an
 enumerated type, with four different values, :code:`SERVO1, ... SERVO4`.
