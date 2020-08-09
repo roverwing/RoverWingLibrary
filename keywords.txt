@@ -16,6 +16,7 @@ location_t 	KEYWORD1
 # Methods and Functions
 #######################################
 begin                 	KEYWORD2
+beginVerbose          	KEYWORD2
 fwVersion             	KEYWORD2
 setLowVoltage         	KEYWORD2
 getAnalog             	KEYWORD2
