@@ -1,7 +1,7 @@
 =========================
 RoverWing Arduino Library
 =========================
-.. figure:: images/MainView2020.jpg
+.. figure:: images/MainView-2020-12.jpg
     :alt: RoverWing
     :width: 80%
 

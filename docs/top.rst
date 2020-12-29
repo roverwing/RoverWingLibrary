@@ -7,7 +7,7 @@ a small prototyping area, on/off switch, three NeoPixel LEDs and two buttons,
 and a 3-line display. It is described in detail in |guide|. A photo of the
 RoverWing with the top attached is shown below.
 
-.. figure:: images/top-1.5.jpg
+.. figure:: images/top2020.jpg
     :alt: RoverWing with top
     :width: 60%
 
@@ -129,7 +129,7 @@ Alternatively, you can use function :func:`setTopLED` described below.
   immediately: you do not need to call ``showPixel()``.
 
 Note that ``setTopLED()`` function belongs to class ``Rover``, so it should be
-called as ``r.setTopLED()``, where ``r`` is the name of your rover. 
+called as ``r.setTopLED()``, where ``r`` is the name of your rover.
 
 RoverWing top also contains additional NeoPixel port, allowing one to connect
 additional NeoPixel strips. In this case, the indices of externally connected
