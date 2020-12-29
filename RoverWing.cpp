@@ -1,5 +1,5 @@
 #include "RoverWing.h"
-const float voltageScale=(3.3f/1023.0f)*(122.0f/22.0f); //voltage divider uses 100k and 22k resistors
+const float voltageScale=(3.3f/1023.0f)*(1+(37.4/9.53)); //voltage divider uses 37.4k and 9.53k resistors
 const float analogScale=(3.3f/1023.0f);
 const float aScale=1/16384.0f; //acceleration scale: this is the value of LSB of accel data, in g
 const float gScale=250.0f / 32768.0f; //gyro resolution, in (deg/s)/LSB
@@ -266,16 +266,7 @@ void Rover::IMUcalibrate(){
   delay(500);
   //wait until completed
   while (readByte(REGA_IMU_STATUS) != IMU_OK) delay(100);
-  //get calculated offsets
-  //read16(REGA_ACCEL_OFFSET,3, (uint16_t *) aOffsets);
-  //read16(REGA_GYRO_OFFSET,3, (uint16_t *) gOffsets);
 }
-/*
-void Rover::IMUsetOffsets(int16_t * aOffsets, int16_t * gOffsets){
-  write16(REGB_ACCEL_OFFSET, 3, (uint16_t *)aOffsets);
-  write16(REGB_GYRO_OFFSET, 3, (uint16_t *)gOffsets);
-}
-*/
 bool Rover::IMUisActive(){
   byte b=readByte(REGA_IMU_STATUS);
   Serial.println(b);

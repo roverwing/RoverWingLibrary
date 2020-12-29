@@ -21,9 +21,10 @@ Rover r; //this is the name of the rover!
 float yaw, pitch, roll;
 uint8_t i;
 bool blink=false;
-//if this is the first time using the IMU, calibration is needed, so change
-//variable below to true
-bool needCalibration = false;
+//if this is the first time using the IMU, calibration is needed
+// if you have already calibrated the IMU recentlym there is no need to repeat
+// it; in this case, repalce the value below by false  
+bool needCalibration = true;
 
 
 void setup(){
