@@ -82,7 +82,7 @@ void Rover::activateSonars(uint8_t bitmask, int maxDistance){
   writeByte(REGB_SONAR_BITMASK, bitmask);
 }
 void Rover::stopSonars(){
-  activeSonarsBitmask=0x00;
+  activeSonarsBitmask=0x00;  
   writeByte(REGB_SONAR_BITMASK, 0x00);
 }
 void Rover::getAllSonar(){
@@ -144,8 +144,8 @@ void Rover::setAllMotorPwr(float pwr1, float pwr2){
   headingSet=false;
   //rescale power
   if (m>1.0f) {
-   pwr1/=m;
-   pwr2/=m;
+    pwr1/=m;
+    pwr2/=m;
   }
   if (motorIsReversed[MOTOR1]) pwr1=-pwr1;
   if (motorIsReversed[MOTOR2]) pwr2=-pwr2;

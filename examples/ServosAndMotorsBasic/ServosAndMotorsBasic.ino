@@ -22,7 +22,16 @@ This example code is in the public domain.
 */
 #include <Wire.h>
 #include <RoverWing.h>
-#define MAX_POWER 1.0f
+//If your motors are equipped with encoders, enter appropriate value below
+#define ENCODERCPR 0 //encoder counts per revolution
+                     // this should count all observable encoder events,
+                     // rise/fall of channel A and rise/fall of channel B
+
+// Enter minimum and maximum pulse duration for your servos, in microseconds.
+// If not sure, use default values - they shoudl be OK for most servos.
+// For HiTec servos, the MINPUSLE is 900, and MAXPULSE is 2100
+#define SERVO_MINPULSE 1000
+#define SERVO_MAXPULSE 2000
 
 Rover r; //this is the name of the rover!
 bool blink=false;
@@ -48,16 +57,15 @@ void setup(){
   // set the range of PWM signal duration  accepted by servos, in us
   // this is optional; if you do not set it explicitly, default value of 1000-2000
   // will be used
-  r.setServoRange(SERVO1, 900,2100); //this is  the range for HiTec servos,
-  r.setServoRange(SERVO2, 900,2100); //see https://hitecrcd.com/faqs/servos/general-servos
-  r.setServoRange(SERVO3, 900,2100);
-  r.setServoRange(SERVO4, 900,2100);
+  r.setServoRange(SERVO1, SERVO_MINPULSE,SERVO_MAXPULSE); //this is  the range for HiTec servos,
+  r.setServoRange(SERVO2, SERVO_MINPULSE,SERVO_MAXPULSE); //see https://hitecrcd.com/faqs/servos/general-servos
+  r.setServoRange(SERVO3, SERVO_MINPULSE,SERVO_MAXPULSE);
+  r.setServoRange(SERVO4, SERVO_MINPULSE,SERVO_MAXPULSE);
   r.setAllServo(servoPos); //sets all 4 servos to given positions at once
   //reverse one of the motors
   r.reverseMotor(MOTOR2);
-  //if your motors are equipped with encoders, uncomment the lines below and change as necessary
-  myMotor.encoderCPR = 1440;  //encoder counts per revolution of output shaft
-                              //"count" refers to any observable change - rise/fall on channel A or B
+  //set encoder CPR
+  myMotor.encoderCPR = ENCODERCPR;
   r.configureMotor(MOTOR1, myMotor);
   r.configureMotor(MOTOR2, myMotor);
 }
@@ -80,20 +88,19 @@ void loop(){
   //check if the next step would exceed the range - if so, reverse the sweep direction
   // fabs is the absolute value function for floats; regular abs doesn't work on floats,
   // see https://github.com/arduino/reference-en/issues/362
-  if (fabs(power+pwrDelta)>MAX_POWER) pwrDelta =-pwrDelta;
+  if (fabs(power+pwrDelta)>1.0) pwrDelta =-pwrDelta;
   //do the blink
   digitalWrite(LED_BUILTIN, blink);
   blink=!blink;
   //now, wait
   delay(500);
-  //uncomment if your motors are equipped with encoders
-  /*
+
   //get current encoder values - position (in revolutions) and speed (RPM)
+  // If you do not have encoders, you can comment the lines below.
   r.getAllPosition();
   r.getAllSpeed();
   Serial.print("Current motor position (revolutions): "); Serial.print(r.position[MOTOR1]);
   Serial.print(" "); Serial.println(r.position[MOTOR2]);
   Serial.print("Current motor speed (RPM): "); Serial.print(r.speed[MOTOR1]);
   Serial.print(" "); Serial.println(r.speed[MOTOR2]);
-  */
 }
