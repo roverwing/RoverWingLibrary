@@ -26,15 +26,12 @@ To use RoverWing, you need Arduino IDE (version 1.6.2 or later) with the
 support package for your Feather board; please see your Feather board
 documentation for instructions on installing the hardware support package.
 
-In addition to that, you will need to install the RoverWing library. To do that,
-please visit RoverWing Library github repository:
-http://github.com/roverwing/RoverWingLibrary/releases/. FInd the latest release
-and  click on  :guilabel:`Source code (zip)` to download the zip file of the
-release. After downloading, start Arduino IDE and select
-in the menu :menuselection:`Sketch-->Include Library-->Add .ZIP Library` and
-navigate to the downloaded zip file.
+In addition to that, you will need to install the RoverWing library. The easiest way
+to do that is by using Arduino Library Manager, by selecting from the menu
+ :menuselection:`Tools-->Manage Libraries...` and entering `roverwing` in the
+ search field.
 
-After installation, restart Arduino IDE and verify that library was successfully
+After installation,  verify that library was successfully
 installed by opening in the main menu :menuselection:`File-->Examples`; scroll all
 the way down to section :guilabel:`Examples from custom libraries` and you
 should see :guilabel:`RoverWing` there.
