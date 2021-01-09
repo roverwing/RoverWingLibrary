@@ -28,8 +28,8 @@ documentation for instructions on installing the hardware support package.
 
 In addition to that, you will need to install the RoverWing library. The easiest way
 to do that is by using Arduino Library Manager, by selecting from the menu
- :menuselection:`Tools-->Manage Libraries...` and entering `roverwing` in the
- search field.
+:menuselection:`Tools-->Manage Libraries...` and entering `roverwing` in the
+search field.
 
 After installation,  verify that library was successfully
 installed by opening in the main menu :menuselection:`File-->Examples`; scroll all
